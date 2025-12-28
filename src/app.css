@@ -1,0 +1,109 @@
+/* 1. Box Sizing: The most important rule in CSS */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* 3. Set core body defaults */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased; /* Crisp text for the HUD look */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 4. Media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 5. Inherit fonts for form controls (inputs often ignore global fonts) */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  background: none;
+  border: none;
+}
+
+/* 6. Text overflow safety */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* 7. Root stacking context */
+#root, /* React/standard IDs */
+#__next, /* Next.js */
+#svelte /* SvelteKit default target */ { 
+  isolation: isolate;
+  height: 100%;
+}
+
+/* After reset */
+
+:root {
+  /* --- PALETTE: THE VOID --- */
+  --void: #050505;
+  --grid: #1a1a1a;
+  --text-dim: #888;
+  --text-main: #e0e0e0;
+
+  /* --- PALETTE: THE SIGNAL --- */
+  --cyber-cyan: #00f0ff;    /* System / Logic */
+  --cyber-magenta: #ff00ff; /* Art / Chaos */
+  --cyber-red: #ff2a6d;     /* Hardware / Critical */
+
+  /* --- FONTS --- */
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  /* --- SHARED EFFECTS --- */
+  --glow-cyan: 0 0 10px rgba(0, 240, 255, 0.5);
+  --glow-red: 0 0 10px rgba(255, 42, 109, 0.5);
+}
+
+body {
+  background-color: var(--void);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  overflow-x: hidden; /* Prevent glitch overflow */
+}
+
+/* --- REUSABLE UTILITIES --- */
+.text-dim { color: var(--text-dim); }
+.text-cyan { color: var(--cyber-cyan); }
+.text-red { color: var(--cyber-red); }
+
+/* --- GLOBAL ANIMATIONS --- */
+@keyframes skew-shake {
+  0% { transform: skewX(0deg) translate(0, 0); }
+  25% { transform: skewX(5deg) translate(2px, 2px); }
+  50% { transform: skewX(-5deg) translate(-2px, -2px); }
+  75% { transform: skewX(2deg) translate(1px, -1px); }
+  100% { transform: skewX(0deg) translate(0, 0); }
+}
+
+@keyframes pulse-opacity {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
