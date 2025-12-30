@@ -19,14 +19,15 @@ This project uses **Svelte 5.43.8** with runes. NEVER use legacy Svelte syntax.
 
 ### TypeScript
 - **Always** use TypeScript for new components
-- Define `Props` interface for all components that accept props
+- **Use `type` instead of `interface`** for all type definitions
+- Define `Props` type for all components that accept props
 - Import types from 'svelte': `Component`, `Snippet`, etc.
 - Example:
   ```typescript
-  interface Props {
+  type Props = {
     title: string;
     count?: number;
-  }
+  };
   let { title, count = 0 }: Props = $props();
   ```
 
