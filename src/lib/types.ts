@@ -29,3 +29,35 @@ export type ProductFrontmatter = {
 		[key: string]: string;
 	};
 };
+
+export type InvoiceFrontmatter = {
+	paginaType: 'factuur';
+	factuurnr: string; // e.g., "2026-0042"
+	datum: string; // ISO date
+	vervaldatum: string; // ISO date
+
+	verzender: {
+		naam: string;
+		gegevens: string[];
+		kvk: string;
+		btw: string;
+		iban: string;
+	};
+
+	klant: {
+		naam: string;
+		adres: string[];
+		btw_id?: string;
+	};
+
+	regels: Array<{
+		omschrijving: string;
+		toelichting: string;
+		aantal: number;
+		tarief: number;
+	}>;
+
+	btw_verlegd: boolean;
+	valuta?: string; // Default: 'EUR'
+	taal?: string; // Default: 'nl-NL'
+};
