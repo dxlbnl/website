@@ -55,6 +55,7 @@ export type InvoiceFrontmatter = {
 		toelichting: string;
 		aantal: number;
 		tarief: number;
+		btw_tarief?: number;
 	}>;
 
 	btw_verlegd: boolean;

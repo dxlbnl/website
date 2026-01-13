@@ -20,7 +20,23 @@
 	};
 
 	const calculateTotal = (invoice: (typeof invoices)[0]) => {
-		return invoice.regels.reduce((sum, regel) => sum + regel.aantal * regel.tarief, 0);
+		const subtotaal = invoice.regels.reduce(
+			(sum, regel) => sum + regel.aantal * regel.tarief,
+			0
+		);
+
+		if (invoice.btw_verlegd) {
+			return subtotaal; // No BTW when reversed
+		}
+
+		// Calculate BTW
+		const btwBedrag = invoice.regels.reduce((sum, regel) => {
+			const lijnTotaal = regel.aantal * regel.tarief;
+			const btwPercentage = regel.btw_tarief ?? 21;
+			return sum + lijnTotaal * (btwPercentage / 100);
+		}, 0);
+
+		return subtotaal + btwBedrag;
 	};
 
 	const getStatus = (vervaldatum: string) => {

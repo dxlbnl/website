@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import QRCode from 'qrcode';
+	import html2canvas from 'html2canvas';
+	import jsPDF from 'jspdf';
 
 	let { data }: { data: PageData } = $props();
 	let invoice = $derived(data.invoice);
@@ -18,10 +20,40 @@
 			day: '2-digit'
 		});
 
+	// Calculate subtotal (sum of all line items excluding BTW)
 	let subtotaal = $derived(
 		invoice.regels.reduce((sum, regel) => sum + regel.aantal * regel.tarief, 0)
 	);
-	let totaal = $derived(subtotaal); // BTW is 0 bij export
+
+	// Group BTW amounts by rate (calculate breakdown first)
+	let btwBreakdown = $derived.by(() => {
+		if (invoice.btw_verlegd) {
+			return [];
+		}
+
+		const breakdown = new Map<number, number>();
+
+		invoice.regels.forEach((regel) => {
+			const lijnTotaal = regel.aantal * regel.tarief;
+			const btwPercentage = regel.btw_tarief ?? 21; // Default to 21%
+			const lijnBtw = lijnTotaal * (btwPercentage / 100);
+
+			breakdown.set(btwPercentage, (breakdown.get(btwPercentage) || 0) + lijnBtw);
+		});
+
+		return Array.from(breakdown.entries()).sort((a, b) => b[0] - a[0]); // Sort by rate descending
+	});
+
+	// Calculate total BTW from breakdown
+	let btwBedrag = $derived(
+		invoice.btw_verlegd ? 0 : btwBreakdown.reduce((sum, [_, amount]) => sum + amount, 0)
+	);
+
+	// Check if multiple rates are used
+	let hasMultipleRates = $derived(btwBreakdown.length > 1);
+
+	// Total = Subtotal + BTW
+	let totaal = $derived(subtotaal + btwBedrag);
 
 	// QR Code generation
 	let qrCanvas: HTMLCanvasElement;
@@ -41,7 +73,150 @@
 			});
 		}
 	});
+
+	// PDF download function with proper pagination
+	const downloadPDF = async () => {
+		const element = document.querySelector('.faceplate') as HTMLElement;
+		if (!element) return;
+
+		// Create PDF
+		const pdf = new jsPDF('p', 'mm', 'a4');
+		const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
+		const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
+
+		// Measure elements directly from the page
+		const header = element.querySelector('.panel-header') as HTMLElement;
+		const ioGrid = element.querySelector('.io-grid') as HTMLElement;
+		const divider = element.querySelector('.module-divider') as HTMLElement;
+		const tableHeader = element.querySelector('.grid-table .row.header') as HTMLElement;
+		const masterSection = element.querySelector('.master-section') as HTMLElement;
+		const footer = element.querySelector('.panel-footer') as HTMLElement;
+		const firstLineItem = element.querySelector('.grid-table .row.item') as HTMLElement;
+
+		// Get pixel heights
+		const fixedHeaderHeightPx =
+			(header?.offsetHeight || 0) +
+			(ioGrid?.offsetHeight || 0) +
+			(divider?.offsetHeight || 0) +
+			(tableHeader?.offsetHeight || 0);
+
+		const footerHeightPx = (masterSection?.offsetHeight || 0) + (footer?.offsetHeight || 0);
+		const lineItemHeightPx = firstLineItem?.offsetHeight || 0;
+
+		// Convert pixel heights to mm (based on element width to PDF width ratio)
+		const elementWidthPx = element.offsetWidth;
+		const pxToMmRatio = pdfWidth / elementWidthPx;
+
+		const fixedHeaderHeightMm = fixedHeaderHeightPx * pxToMmRatio;
+		const footerHeightMm = footerHeightPx * pxToMmRatio;
+		const lineItemHeightMm = lineItemHeightPx * pxToMmRatio;
+		const tableHeaderHeightMm = (tableHeader?.offsetHeight || 0) * pxToMmRatio;
+
+		// Calculate available space for line items (with minimal padding)
+		const padding = 5; // mm
+		const firstPageAvailableMm = pdfHeight - fixedHeaderHeightMm - footerHeightMm - padding;
+		const otherPageAvailableMm = pdfHeight - tableHeaderHeightMm - footerHeightMm - padding;
+
+		const firstPageItems = Math.max(1, Math.floor(firstPageAvailableMm / lineItemHeightMm));
+		const otherPageItems = Math.max(1, Math.floor(otherPageAvailableMm / lineItemHeightMm));
+
+		// Split line items into pages
+		const pages: number[][] = [];
+		let remainingItems = invoice.regels.length;
+		let currentIndex = 0;
+
+		// First page
+		const firstPageCount = Math.min(firstPageItems, remainingItems);
+		pages.push(Array.from({ length: firstPageCount }, (_, i) => i));
+		currentIndex += firstPageCount;
+		remainingItems -= firstPageCount;
+
+		// Subsequent pages
+		while (remainingItems > 0) {
+			const itemsThisPage = Math.min(otherPageItems, remainingItems);
+			pages.push(Array.from({ length: itemsThisPage }, (_, i) => currentIndex + i));
+			currentIndex += itemsThisPage;
+			remainingItems -= itemsThisPage;
+		}
+
+		// Render each page
+		for (let pageIdx = 0; pageIdx < pages.length; pageIdx++) {
+			const isFirstPage = pageIdx === 0;
+			const isLastPage = pageIdx === pages.length - 1;
+			const itemIndices = pages[pageIdx];
+
+			// Clone and modify invoice for this page
+			const pageClone = element.cloneNode(true) as HTMLElement;
+			pageClone.style.position = 'absolute';
+			pageClone.style.left = '-9999px';
+			pageClone.style.width = element.offsetWidth + 'px';
+			document.body.appendChild(pageClone);
+
+			// Remove header on non-first pages
+			if (!isFirstPage) {
+				const headerToRemove = pageClone.querySelector('.panel-header');
+				const ioGridToRemove = pageClone.querySelector('.io-grid');
+				headerToRemove?.remove();
+				ioGridToRemove?.remove();
+			}
+
+			// Remove footer on non-last pages
+			if (!isLastPage) {
+				const masterToRemove = pageClone.querySelector('.master-section');
+				const footerToRemove = pageClone.querySelector('.panel-footer');
+				masterToRemove?.remove();
+				footerToRemove?.remove();
+			}
+
+			// Filter line items for this page
+			const lineItemsContainer = pageClone.querySelector('.grid-table');
+			if (lineItemsContainer) {
+				const allItems = Array.from(lineItemsContainer.querySelectorAll('.row.item'));
+				allItems.forEach((item, idx) => {
+					if (!itemIndices.includes(idx)) {
+						item.remove();
+					}
+				});
+			}
+
+			// Wait for render
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			// Capture this page
+			const canvas = await html2canvas(pageClone, {
+				scale: 3,
+				useCORS: true,
+				backgroundColor: null,
+				logging: false
+			});
+
+			document.body.removeChild(pageClone);
+
+			// Add to PDF
+			if (pageIdx > 0) {
+				pdf.addPage();
+			}
+
+			const imgData = canvas.toDataURL('image/png');
+			const imgWidth = pdfWidth;
+			const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+			// Fit to page height if needed
+			if (imgHeight > pdfHeight) {
+				const scaledHeight = pdfHeight;
+				const scaledWidth = (canvas.width * pdfHeight) / canvas.height;
+				pdf.addImage(imgData, 'PNG', 0, 0, scaledWidth, scaledHeight);
+			} else {
+				pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+			}
+		}
+
+		// Download
+		pdf.save(`factuur-${invoice.factuurnr}.pdf`);
+	};
 </script>
+
+<button onclick={downloadPDF} class="pdf-button"> 📄 Download PDF </button>
 
 <div class="faceplate">
 	<!-- RACK MOUNT SCREWS (Decorative) -->
@@ -140,10 +315,31 @@
 				<span>SUBTOTAAL</span>
 				<span>{fmt(subtotaal)}</span>
 			</div>
-			<div class="calc-row">
-				<span>BTW {invoice.btw_verlegd ? '(0% - verlegd)' : '(21%)'}</span>
-				<span>€ 0,00</span>
-			</div>
+			<!-- BTW Display: Show breakdown if multiple rates, otherwise single line -->
+			{#if invoice.btw_verlegd}
+				<div class="calc-row">
+					<span>BTW (0% - verlegd)</span>
+					<span>{fmt(0)}</span>
+				</div>
+			{:else if hasMultipleRates}
+				<!-- Show breakdown when multiple rates are present -->
+				{#each btwBreakdown as [rate, amount]}
+					<div class="calc-row btw-breakdown">
+						<span>BTW ({rate}%)</span>
+						<span>{fmt(amount)}</span>
+					</div>
+				{/each}
+				<div class="calc-row btw-total">
+					<span>Totaal BTW</span>
+					<span>{fmt(btwBedrag)}</span>
+				</div>
+			{:else}
+				<!-- Single BTW rate -->
+				<div class="calc-row">
+					<span>BTW ({btwBreakdown[0]?.[0] ?? 21}%)</span>
+					<span>{fmt(btwBedrag)}</span>
+				</div>
+			{/if}
 			<div class="final-output">
 				<label>TE BETALEN</label>
 				<span class="value">{fmt(totaal)}</span>
@@ -537,5 +733,53 @@
 		font-size: 0.7rem;
 		text-align: center;
 		opacity: 0.6;
+	}
+
+	.calc-row.btw-breakdown {
+		font-size: 0.85rem;
+		opacity: 0.9;
+		padding-left: 1rem;
+	}
+
+	.calc-row.btw-total {
+		font-weight: bold;
+		border-top: 1px solid var(--line);
+		padding-top: 0.5rem;
+		margin-top: 0.25rem;
+	}
+
+	/* PDF Download Button */
+	.pdf-button {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		padding: 0.75rem 1.5rem;
+		background: var(--accent);
+		color: var(--bg);
+		border: none;
+		border-radius: 4px;
+		font-family: var(--font-mono);
+		font-weight: bold;
+		font-size: 0.9rem;
+		cursor: pointer;
+		z-index: 1000;
+		box-shadow: 0 2px 8px rgba(0, 240, 255, 0.3);
+		transition: all 0.2s ease;
+	}
+
+	.pdf-button:hover {
+		background: #00d4e0;
+		box-shadow: 0 4px 12px rgba(0, 240, 255, 0.5);
+		transform: translateY(-2px);
+	}
+
+	.pdf-button:active {
+		transform: translateY(0);
+	}
+
+	@media print {
+		.pdf-button {
+			display: none;
+		}
 	}
 </style>
