@@ -1,65 +1,28 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import QRCode from 'qrcode';
-	import html2canvas from 'html2canvas';
-	import jsPDF from 'jspdf';
+	import Panel from '$lib/ui/Panel.svelte';
+	import CrtOverlay from '$lib/ui/Overlay.svelte';
+	import {
+		calculateInvoice,
+		formatCurrency,
+		formatDate,
+		generatePaymentUrl,
+		generateInvoicePDF
+	} from '$lib/invoice';
 
 	let { data }: { data: PageData } = $props();
 	let invoice = $derived(data.invoice);
 
-	const fmt = (n: number) =>
-		new Intl.NumberFormat(invoice.taal || 'nl-NL', {
-			style: 'currency',
-			currency: invoice.valuta || 'EUR'
-		}).format(n);
+	// Calculations (reactive)
+	let calculations = $derived(calculateInvoice(invoice));
+	let paymentUrl = $derived(generatePaymentUrl(calculations.total, invoice.factuurnr));
 
-	const formatDate = (dateStr: string) =>
-		new Date(dateStr).toLocaleDateString('nl-NL', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit'
-		});
-
-	// Calculate subtotal (sum of all line items excluding BTW)
-	let subtotaal = $derived(
-		invoice.regels.reduce((sum, regel) => sum + regel.aantal * regel.tarief, 0)
-	);
-
-	// Group BTW amounts by rate (calculate breakdown first)
-	let btwBreakdown = $derived.by(() => {
-		if (invoice.btw_verlegd) {
-			return [];
-		}
-
-		const breakdown = new Map<number, number>();
-
-		invoice.regels.forEach((regel) => {
-			const lijnTotaal = regel.aantal * regel.tarief;
-			const btwPercentage = regel.btw_tarief ?? 21; // Default to 21%
-			const lijnBtw = lijnTotaal * (btwPercentage / 100);
-
-			breakdown.set(btwPercentage, (breakdown.get(btwPercentage) || 0) + lijnBtw);
-		});
-
-		return Array.from(breakdown.entries()).sort((a, b) => b[0] - a[0]); // Sort by rate descending
-	});
-
-	// Calculate total BTW from breakdown
-	let btwBedrag = $derived(
-		invoice.btw_verlegd ? 0 : btwBreakdown.reduce((sum, [_, amount]) => sum + amount, 0)
-	);
-
-	// Check if multiple rates are used
-	let hasMultipleRates = $derived(btwBreakdown.length > 1);
-
-	// Total = Subtotal + BTW
-	let totaal = $derived(subtotaal + btwBedrag);
+	// Formatter bound to invoice locale
+	const fmt = (n: number) => formatCurrency(n, invoice);
 
 	// QR Code generation
 	let qrCanvas: HTMLCanvasElement;
-	let paymentUrl = $derived(
-		`https://bunq.me/dexterlabs/${totaal.toFixed(2)}/${encodeURIComponent(`Factuur ${invoice.factuurnr}`)}`
-	);
 
 	$effect(() => {
 		if (qrCanvas && paymentUrl) {
@@ -74,199 +37,65 @@
 		}
 	});
 
-	// PDF download function with proper pagination
+	// PDF download handler
 	const downloadPDF = async () => {
 		const element = document.querySelector('.faceplate') as HTMLElement;
 		if (!element) return;
 
-		// Create PDF
-		const pdf = new jsPDF('p', 'mm', 'a4');
-		const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
-		const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
-
-		// Measure elements directly from the page
-		const header = element.querySelector('.panel-header') as HTMLElement;
-		const ioGrid = element.querySelector('.io-grid') as HTMLElement;
-		const divider = element.querySelector('.module-divider') as HTMLElement;
-		const tableHeader = element.querySelector('.grid-table .row.header') as HTMLElement;
-		const masterSection = element.querySelector('.master-section') as HTMLElement;
-		const footer = element.querySelector('.panel-footer') as HTMLElement;
-		const firstLineItem = element.querySelector('.grid-table .row.item') as HTMLElement;
-
-		// Get pixel heights
-		const fixedHeaderHeightPx =
-			(header?.offsetHeight || 0) +
-			(ioGrid?.offsetHeight || 0) +
-			(divider?.offsetHeight || 0) +
-			(tableHeader?.offsetHeight || 0);
-
-		const footerHeightPx = (masterSection?.offsetHeight || 0) + (footer?.offsetHeight || 0);
-		const lineItemHeightPx = firstLineItem?.offsetHeight || 0;
-
-		// Convert pixel heights to mm (based on element width to PDF width ratio)
-		const elementWidthPx = element.offsetWidth;
-		const pxToMmRatio = pdfWidth / elementWidthPx;
-
-		const fixedHeaderHeightMm = fixedHeaderHeightPx * pxToMmRatio;
-		const footerHeightMm = footerHeightPx * pxToMmRatio;
-		const lineItemHeightMm = lineItemHeightPx * pxToMmRatio;
-		const tableHeaderHeightMm = (tableHeader?.offsetHeight || 0) * pxToMmRatio;
-
-		// Calculate available space for line items (with minimal padding)
-		const padding = 5; // mm
-		const firstPageAvailableMm = pdfHeight - fixedHeaderHeightMm - footerHeightMm - padding;
-		const otherPageAvailableMm = pdfHeight - tableHeaderHeightMm - footerHeightMm - padding;
-
-		const firstPageItems = Math.max(1, Math.floor(firstPageAvailableMm / lineItemHeightMm));
-		const otherPageItems = Math.max(1, Math.floor(otherPageAvailableMm / lineItemHeightMm));
-
-		// Split line items into pages
-		const pages: number[][] = [];
-		let remainingItems = invoice.regels.length;
-		let currentIndex = 0;
-
-		// First page
-		const firstPageCount = Math.min(firstPageItems, remainingItems);
-		pages.push(Array.from({ length: firstPageCount }, (_, i) => i));
-		currentIndex += firstPageCount;
-		remainingItems -= firstPageCount;
-
-		// Subsequent pages
-		while (remainingItems > 0) {
-			const itemsThisPage = Math.min(otherPageItems, remainingItems);
-			pages.push(Array.from({ length: itemsThisPage }, (_, i) => currentIndex + i));
-			currentIndex += itemsThisPage;
-			remainingItems -= itemsThisPage;
-		}
-
-		// Render each page
-		for (let pageIdx = 0; pageIdx < pages.length; pageIdx++) {
-			const isFirstPage = pageIdx === 0;
-			const isLastPage = pageIdx === pages.length - 1;
-			const itemIndices = pages[pageIdx];
-
-			// Clone and modify invoice for this page
-			const pageClone = element.cloneNode(true) as HTMLElement;
-			pageClone.style.position = 'absolute';
-			pageClone.style.left = '-9999px';
-			pageClone.style.width = element.offsetWidth + 'px';
-			document.body.appendChild(pageClone);
-
-			// Remove header on non-first pages
-			if (!isFirstPage) {
-				const headerToRemove = pageClone.querySelector('.panel-header');
-				const ioGridToRemove = pageClone.querySelector('.io-grid');
-				headerToRemove?.remove();
-				ioGridToRemove?.remove();
-			}
-
-			// Remove footer on non-last pages
-			if (!isLastPage) {
-				const masterToRemove = pageClone.querySelector('.master-section');
-				const footerToRemove = pageClone.querySelector('.panel-footer');
-				masterToRemove?.remove();
-				footerToRemove?.remove();
-			}
-
-			// Filter line items for this page
-			const lineItemsContainer = pageClone.querySelector('.grid-table');
-			if (lineItemsContainer) {
-				const allItems = Array.from(lineItemsContainer.querySelectorAll('.row.item'));
-				allItems.forEach((item, idx) => {
-					if (!itemIndices.includes(idx)) {
-						item.remove();
-					}
-				});
-			}
-
-			// Wait for render
-			await new Promise((resolve) => setTimeout(resolve, 100));
-
-			// Capture this page
-			const canvas = await html2canvas(pageClone, {
-				scale: 3,
-				useCORS: true,
-				backgroundColor: null,
-				logging: false
-			});
-
-			document.body.removeChild(pageClone);
-
-			// Add to PDF
-			if (pageIdx > 0) {
-				pdf.addPage();
-			}
-
-			const imgData = canvas.toDataURL('image/png');
-			const imgWidth = pdfWidth;
-			const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-			// Fit to page height if needed
-			if (imgHeight > pdfHeight) {
-				const scaledHeight = pdfHeight;
-				const scaledWidth = (canvas.width * pdfHeight) / canvas.height;
-				pdf.addImage(imgData, 'PNG', 0, 0, scaledWidth, scaledHeight);
-			} else {
-				pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-			}
-		}
-
-		// Download
-		pdf.save(`factuur-${invoice.factuurnr}.pdf`);
+		await generateInvoicePDF({ invoice, element });
 	};
 </script>
 
-<button onclick={downloadPDF} class="pdf-button"> 📄 Download PDF </button>
+<button onclick={downloadPDF} class="cyan pdf-download-btn">Download PDF</button>
 
 <div class="faceplate">
+	<CrtOverlay />
+
 	<!-- RACK MOUNT SCREWS (Decorative) -->
 	<div class="screw tl">⊕</div>
 	<div class="screw tr">⊕</div>
 	<div class="screw bl">⊕</div>
 	<div class="screw br">⊕</div>
 
-	<!-- SECTION 1: THE IDENTIFIER (Top Module) -->
-	<header class="panel-header">
-		<h1 class="brand-name">{invoice.verzender.naam}</h1>
-		<div class="panel-meta">
-			<div class="meta-box">
-				<label>FACTUURNR</label>
-				<span>{invoice.factuurnr}</span>
+	<!-- HEADER ITEM (unbreakable) -->
+	<div class="item">
+		<!-- SECTION 1: THE IDENTIFIER (Top Module) -->
+		<header class="panel-header">
+			<h1 class="brand-name">{invoice.verzender.naam}</h1>
+			<div class="panel-meta">
+				<div class="meta-box">
+					<label>FACTUURNR</label>
+					<span>{invoice.factuurnr}</span>
+				</div>
+				<div class="meta-box">
+					<label>DATUM</label>
+					<span>{formatDate(invoice.datum)}</span>
+				</div>
 			</div>
-			<div class="meta-box">
-				<label>DATUM</label>
-				<span>{formatDate(invoice.datum)}</span>
-			</div>
-		</div>
-	</header>
+		</header>
 
-	<!-- SECTION 2: THE PATCH (I/O) -->
-	<section class="io-grid">
-		<div class="port out">
-			<div class="port-label">[ VERZENDER ]</div>
-			<div class="port-content">
+		<!-- SECTION 2: THE PATCH (I/O) -->
+		<section class="io-grid">
+			<Panel label="VERZENDER">
 				<strong>{invoice.verzender.naam}</strong>
 				{#each invoice.verzender.gegevens as line}<div>{line}</div>{/each}
 				<div class="reg-info">
 					<span>KVK {invoice.verzender.kvk}</span>
 					<span>BTW {invoice.verzender.btw}</span>
 				</div>
-			</div>
-		</div>
+			</Panel>
 
-		<div class="arrow-block">➔</div>
+			<div class="arrow-block">➔</div>
 
-		<div class="port in">
-			<div class="port-label">[ ONTVANGER ]</div>
-			<div class="port-content">
+			<Panel label="ONTVANGER">
 				<strong>{invoice.klant.naam}</strong>
 				{#each invoice.klant.adres as line}<div>{line}</div>{/each}
-			</div>
-		</div>
-	</section>
+			</Panel>
+		</section>
 
-	<!-- SECTION 3: THE PROCESS LOG (Line Items) -->
-	<div class="module-divider">WERKZAAMHEDEN</div>
+		<!-- SECTION 3: THE PROCESS LOG (Line Items) -->
+		<div class="module-divider">WERKZAAMHEDEN</div>
+	</div>
 
 	<div class="grid-table">
 		<div class="row header">
@@ -289,71 +118,74 @@
 		{/each}
 	</div>
 
-	<!-- SECTION 4: MASTER OUTPUT (Totals) -->
-	<div class="master-section">
-		<div class="payment-block">
-			<div class="port-label">BETALING</div>
-			<div class="payment-content">
-				<div class="payment-method">
-					<strong>IBAN</strong>
-					<div class="iban-display">{invoice.verzender.iban}</div>
-				</div>
-				<div class="payment-instructions">
-					Vermeld bij de betaling: <strong>{invoice.factuurnr}</strong>
-				</div>
-				<div class="payment-qr">
-					<strong>BETAAL VIA QR</strong>
-					<a href={paymentUrl} target="_blank" rel="noopener noreferrer" class="qr-link">
-						<canvas bind:this={qrCanvas} class="qr-canvas"></canvas>
-					</a>
-				</div>
-			</div>
-		</div>
-
-		<div class="total-block">
-			<div class="calc-row">
-				<span>SUBTOTAAL</span>
-				<span>{fmt(subtotaal)}</span>
-			</div>
-			<!-- BTW Display: Show breakdown if multiple rates, otherwise single line -->
-			{#if invoice.btw_verlegd}
-				<div class="calc-row">
-					<span>BTW (0% - verlegd)</span>
-					<span>{fmt(0)}</span>
-				</div>
-			{:else if hasMultipleRates}
-				<!-- Show breakdown when multiple rates are present -->
-				{#each btwBreakdown as [rate, amount]}
-					<div class="calc-row btw-breakdown">
-						<span>BTW ({rate}%)</span>
-						<span>{fmt(amount)}</span>
+	<!-- FOOTER ITEM (unbreakable) -->
+	<div class="item">
+		<!-- SECTION 4: MASTER OUTPUT (Totals) -->
+		<div class="master-section">
+			<div class="payment-block">
+				<div class="port-label">BETALING</div>
+				<div class="payment-content">
+					<div class="payment-method">
+						<strong>IBAN</strong>
+						<div class="iban-display">{invoice.verzender.iban}</div>
 					</div>
-				{/each}
-				<div class="calc-row btw-total">
-					<span>Totaal BTW</span>
-					<span>{fmt(btwBedrag)}</span>
+					<div class="payment-instructions">
+						Vermeld bij de betaling: <strong>{invoice.factuurnr}</strong>
+					</div>
+					<div class="payment-qr">
+						<strong>BETAAL VIA QR</strong>
+						<a href={paymentUrl} target="_blank" rel="noopener noreferrer" class="qr-link">
+							<canvas bind:this={qrCanvas} class="qr-canvas"></canvas>
+						</a>
+					</div>
 				</div>
-			{:else}
-				<!-- Single BTW rate -->
+			</div>
+
+			<div class="total-block">
 				<div class="calc-row">
-					<span>BTW ({btwBreakdown[0]?.[0] ?? 21}%)</span>
-					<span>{fmt(btwBedrag)}</span>
+					<span>SUBTOTAAL</span>
+					<span>{fmt(calculations.subtotal)}</span>
 				</div>
-			{/if}
-			<div class="final-output">
-				<label>TE BETALEN</label>
-				<span class="value">{fmt(totaal)}</span>
+				<!-- BTW Display: Show breakdown if multiple rates, otherwise single line -->
+				{#if invoice.btw_verlegd}
+					<div class="calc-row">
+						<span>BTW (0% - verlegd)</span>
+						<span>{fmt(0)}</span>
+					</div>
+				{:else if calculations.hasMultipleRates}
+					<!-- Show breakdown when multiple rates are present -->
+					{#each calculations.vatBreakdown as [rate, amount]}
+						<div class="calc-row btw-breakdown">
+							<span>BTW ({rate}%)</span>
+							<span>{fmt(amount)}</span>
+						</div>
+					{/each}
+					<div class="calc-row btw-total">
+						<span>Totaal BTW</span>
+						<span>{fmt(calculations.vatAmount)}</span>
+					</div>
+				{:else}
+					<!-- Single BTW rate -->
+					<div class="calc-row">
+						<span>BTW ({calculations.vatBreakdown[0]?.[0] ?? 21}%)</span>
+						<span>{fmt(calculations.vatAmount)}</span>
+					</div>
+				{/if}
+				<div class="final-output">
+					<label>TE BETALEN</label>
+					<span class="value">{fmt(calculations.total)}</span>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<!-- FOOTER -->
-	<footer class="panel-footer">
-		{#if invoice.btw_verlegd}
-			<p>** BTW VERLEGD VOLGENS ARTIKEL 12 WET OB **</p>
-		{/if}
-		<p>BETALING BINNEN 14 DAGEN. DEXTERLABS IS EEN GEREGISTREERD HANDELSMERK.</p>
-	</footer>
+		<!-- FOOTER -->
+		<footer class="panel-footer">
+			{#if invoice.btw_verlegd}
+				<p>** BTW VERLEGD VOLGENS ARTIKEL 12 WET OB **</p>
+			{/if}
+			<p>BETALING BINNEN 14 DAGEN.</p>
+		</footer>
+	</div>
 </div>
 
 <style>
@@ -460,7 +292,7 @@
 		font-family: var(--font-mono);
 		width: 210mm;
 		min-height: 297mm;
-		padding: 15mm;
+		padding: 10mm;
 		margin: 2rem auto;
 		position: relative;
 		box-sizing: border-box;
@@ -496,31 +328,34 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
-		border-bottom: 4px solid var(--ink); /* Heavy Divider */
-		padding-bottom: 1.5rem;
-		margin-bottom: 2rem;
+		border-bottom: 3px solid var(--ink); /* Heavy Divider */
+		padding-bottom: 1rem;
+		margin-bottom: 1.5rem;
 	}
 	.brand-name {
-		font-family: var(--font-head);
 		font-weight: 900;
-		font-size: 3rem;
+		font-size: clamp(2rem, 6vw, 3rem);
 		margin: 0;
-		letter-spacing: -2px;
-		line-height: 0.8;
+		color: var(--text-main);
+		text-shadow:
+			2px 0 var(--cyber-red),
+			-2px 0 var(--cyber-cyan);
 	}
 	.panel-meta {
 		display: flex;
-		gap: 2rem;
+		gap: 1.5rem;
 		text-align: right;
 	}
 	.meta-box label {
 		display: block;
-		font-size: 0.6rem;
-		color: var(--accent);
-		margin-bottom: 0.2rem;
+		font-size: 0.5rem;
+		color: var(--cyber-cyan);
+		margin-bottom: 0.15rem;
+		text-transform: uppercase;
+		letter-spacing: 1px;
 	}
 	.meta-box span {
-		font-size: 1.2rem;
+		font-size: 0.9rem;
 		font-weight: bold;
 	}
 
@@ -528,38 +363,43 @@
 	.io-grid {
 		display: flex;
 		align-items: flex-start;
-		margin-bottom: 3rem;
-		gap: 1rem;
+		margin-bottom: 2rem;
+		gap: 0.75rem;
 	}
+
+	.io-grid :global(.panel) {
+		flex: 1;
+	}
+
 	.port {
 		flex: 1;
 		border: 1px solid var(--line);
-		padding: 1rem;
+		padding: 0.75rem;
 		position: relative;
 	}
 	.port-label {
 		position: absolute;
-		top: -10px;
-		left: 10px;
+		top: -8px;
+		left: 8px;
 		background: var(--bg);
-		padding: 0 5px;
-		font-size: 0.7rem;
-		color: var(--accent);
+		padding: 0 4px;
+		font-size: 0.55rem;
+		color: var(--cyber-cyan);
 		font-weight: bold;
 	}
 	.port-content {
-		line-height: 1.4;
-		font-size: 0.9rem;
+		line-height: 1.3;
+		font-size: 0.7rem;
 	}
 	.port-content strong {
 		display: block;
-		font-size: 1.1rem;
-		margin-bottom: 0.5rem;
+		font-size: 0.85rem;
+		margin-bottom: 0.4rem;
 		font-family: var(--font-head);
 	}
 	.reg-info {
-		margin-top: 1rem;
-		font-size: 0.7rem;
+		margin-top: 0.75rem;
+		font-size: 0.55rem;
 		opacity: 0.7;
 	}
 	.reg-info span {
@@ -567,7 +407,7 @@
 	}
 
 	.arrow-block {
-		font-size: 2rem;
+		font-size: 1.5rem;
 		color: var(--line);
 	}
 
@@ -576,14 +416,14 @@
 		background: var(--line);
 		color: var(--bg);
 		font-weight: bold;
-		padding: 0.2rem 0.5rem;
-		font-size: 0.8rem;
-		margin-bottom: 1rem;
+		padding: 0.15rem 0.4rem;
+		font-size: 0.6rem;
+		margin-bottom: 0.75rem;
 		display: inline-block;
 	}
 
 	.grid-table {
-		margin-bottom: 3rem;
+		margin-bottom: 2rem;
 		border-top: 2px solid var(--ink);
 	}
 	.row {
@@ -593,16 +433,16 @@
 	}
 	.row.header {
 		font-weight: bold;
-		font-size: 0.7rem;
-		color: var(--accent);
-		padding: 0.5rem 0;
+		font-size: 0.55rem;
+		color: var(--cyber-cyan);
+		padding: 0.4rem 0;
 	}
 	.row.item {
-		padding: 1rem 0;
+		padding: 0.7rem 0;
 	}
 
 	.col {
-		padding: 0 0.5rem;
+		padding: 0 0.4rem;
 	}
 	.col.qty,
 	.col.rate,
@@ -613,12 +453,12 @@
 	.task-title {
 		display: block;
 		font-weight: bold;
-		font-size: 1rem;
-		margin-bottom: 0.2rem;
+		font-size: 0.75rem;
+		margin-bottom: 0.15rem;
 	}
 	.task-desc {
 		display: block;
-		font-size: 0.8rem;
+		font-size: 0.6rem;
 		opacity: 0.7;
 	}
 
@@ -627,12 +467,12 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
-		gap: 1rem;
+		gap: 0.75rem;
 	}
 
 	.payment-block {
 		border: 2px solid var(--line);
-		padding: 1.5rem;
+		padding: 1rem;
 		position: relative;
 		flex: 1;
 	}
@@ -642,42 +482,42 @@
 	}
 
 	.payment-method {
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.payment-method strong {
 		display: block;
-		font-size: 0.7rem;
-		color: var(--accent);
-		margin-bottom: 0.3rem;
+		font-size: 0.55rem;
+		color: var(--cyber-cyan);
+		margin-bottom: 0.25rem;
 	}
 
 	.iban-display {
-		font-size: 1.1rem;
+		font-size: 0.8rem;
 		font-weight: bold;
-		letter-spacing: 1px;
+		letter-spacing: 0.5px;
 	}
 
 	.payment-instructions {
-		font-size: 0.8rem;
+		font-size: 0.6rem;
 		opacity: 0.8;
-		line-height: 1.4;
-		margin-bottom: 1.5rem;
+		line-height: 1.3;
+		margin-bottom: 1rem;
 	}
 
 	.payment-instructions strong {
-		color: var(--accent);
+		color: var(--cyber-cyan);
 	}
 
 	.payment-qr {
-		margin-top: 1rem;
+		margin-top: 0.75rem;
 	}
 
 	.payment-qr strong {
 		display: block;
-		font-size: 0.7rem;
-		color: var(--accent);
-		margin-bottom: 0.5rem;
+		font-size: 0.55rem;
+		color: var(--cyber-cyan);
+		margin-bottom: 0.4rem;
 	}
 
 	.qr-link {
@@ -693,92 +533,71 @@
 	.qr-canvas {
 		display: block;
 		background: white;
-		padding: 0.5rem;
-		border-radius: 4px;
+		padding: 0.4rem;
+		border-radius: 3px;
 	}
 
 	.total-block {
-		width: 300px;
+		width: 220px;
 	}
 	.calc-row {
 		display: flex;
 		justify-content: space-between;
-		margin-bottom: 0.5rem;
-		font-size: 0.9rem;
+		margin-bottom: 0.4rem;
+		font-size: 0.7rem;
 	}
 
 	.final-output {
-		margin-top: 1rem;
+		margin-top: 0.75rem;
 		border: 2px solid var(--ink);
-		padding: 1rem;
+		padding: 0.75rem;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
 	.final-output label {
-		font-size: 0.8rem;
+		font-size: 0.6rem;
 		font-weight: bold;
 	}
 	.final-output .value {
-		font-size: 1.5rem;
+		font-size: 1.1rem;
 		font-weight: bold;
-		color: var(--accent);
+		color: var(--cyber-cyan);
 	}
 
 	/* FOOTER */
 	.panel-footer {
-		margin-top: 4rem;
+		margin-top: 2.5rem;
 		border-top: 1px dashed var(--line);
-		padding-top: 1rem;
-		font-size: 0.7rem;
+		padding-top: 0.75rem;
+		font-size: 0.55rem;
 		text-align: center;
 		opacity: 0.6;
 	}
 
 	.calc-row.btw-breakdown {
-		font-size: 0.85rem;
+		font-size: 0.65rem;
 		opacity: 0.9;
-		padding-left: 1rem;
+		padding-left: 0.75rem;
 	}
 
 	.calc-row.btw-total {
 		font-weight: bold;
 		border-top: 1px solid var(--line);
-		padding-top: 0.5rem;
-		margin-top: 0.25rem;
+		padding-top: 0.4rem;
+		margin-top: 0.2rem;
 	}
 
-	/* PDF Download Button */
-	.pdf-button {
+	/* PDF Download Button Positioning */
+	.pdf-download-btn {
 		position: fixed;
 		top: 20px;
 		right: 20px;
-		padding: 0.75rem 1.5rem;
-		background: var(--accent);
-		color: var(--bg);
-		border: none;
-		border-radius: 4px;
-		font-family: var(--font-mono);
-		font-weight: bold;
-		font-size: 0.9rem;
-		cursor: pointer;
 		z-index: 1000;
-		box-shadow: 0 2px 8px rgba(0, 240, 255, 0.3);
-		transition: all 0.2s ease;
-	}
-
-	.pdf-button:hover {
-		background: #00d4e0;
-		box-shadow: 0 4px 12px rgba(0, 240, 255, 0.5);
-		transform: translateY(-2px);
-	}
-
-	.pdf-button:active {
-		transform: translateY(0);
 	}
 
 	@media print {
-		.pdf-button {
+		.pdf-download-btn {
 			display: none;
 		}
 	}

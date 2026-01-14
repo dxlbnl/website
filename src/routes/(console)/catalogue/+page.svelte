@@ -2,6 +2,7 @@
 	import type { ProductFrontmatter } from '$lib/types';
 	import CrtOverlay from '$lib/ui/Overlay.svelte';
 	import HudHeader from '$lib/ui/HudHeader.svelte';
+	import PageHeader from '$lib/ui/PageHeader.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
 
 	type Props = {
@@ -24,21 +25,18 @@
 	);
 </script>
 
-<CrtOverlay />
-
 <main class="catalogue-layout">
+	<CrtOverlay />
+
 	<HudHeader systemId="CATALOGUE_MATRIX" />
 
-	<section class="catalogue-header">
-		<h1 class="catalogue-title">THE CATALOGUE</h1>
-		<p class="catalogue-desc">HARDWARE // SCHEMATICS // EURORACK MODULES</p>
-	</section>
+	<PageHeader title="THE CATALOGUE" description="HARDWARE // SCHEMATICS // EURORACK MODULES" />
 
 	<nav class="category-filter">
 		{#each categories as category}
 			<button
-				class="filter-btn"
 				class:active={selectedCategory === category}
+				class:red={selectedCategory === category}
 				onclick={() => (selectedCategory = category)}
 			>
 				{category.toUpperCase()}
@@ -62,31 +60,11 @@
 
 <style>
 	.catalogue-layout {
+		position: relative;
 		min-height: 100vh;
 		padding: 2rem;
 		max-width: 1400px;
 		margin: 0 auto;
-	}
-
-	.catalogue-header {
-		margin: 3rem 0;
-	}
-
-	.catalogue-title {
-		font-size: clamp(2.5rem, 8vw, 5rem);
-		font-weight: 900;
-		margin: 0;
-		color: var(--text-main);
-		text-shadow:
-			2px 0 var(--cyber-red),
-			-2px 0 var(--cyber-cyan);
-	}
-
-	.catalogue-desc {
-		color: var(--text-dim);
-		font-size: 0.85rem;
-		letter-spacing: 2px;
-		margin: 1rem 0 0 0;
 	}
 
 	.category-filter {
@@ -96,30 +74,6 @@
 		margin-bottom: 2rem;
 		padding-bottom: 1.5rem;
 		border-bottom: 1px solid var(--grid);
-	}
-
-	.filter-btn {
-		background: transparent;
-		border: 1px solid var(--grid);
-		color: var(--text-dim);
-		padding: 0.5rem 1rem;
-		font-size: 0.75rem;
-		letter-spacing: 1px;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		font-family: var(--font-mono);
-	}
-
-	.filter-btn:hover {
-		border-color: var(--cyber-red);
-		color: var(--cyber-red);
-	}
-
-	.filter-btn.active {
-		background: var(--cyber-red);
-		border-color: var(--cyber-red);
-		color: var(--void);
-		box-shadow: 0 0 15px rgba(255, 42, 109, 0.5);
 	}
 
 	.products-grid {

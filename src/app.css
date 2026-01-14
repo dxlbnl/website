@@ -107,3 +107,99 @@ body {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
 }
+
+/* --- BUTTON STYLES --- */
+button:not(.unstyled) {
+  /* Base styles */
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  /* Default: outlined */
+  background: transparent;
+  border: 1px solid var(--grid);
+  color: var(--text-dim);
+
+  &:hover {
+    border-color: var(--cyber-cyan);
+    color: var(--cyber-cyan);
+  }
+
+  /* Variant: Cyan */
+  &.cyan {
+    border-color: var(--cyber-cyan);
+    color: var(--cyber-cyan);
+
+    &:hover {
+      background: var(--cyber-cyan);
+      color: var(--void);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    }
+  }
+
+  /* Variant: Red */
+  &.red {
+    border-color: var(--cyber-red);
+    color: var(--cyber-red);
+
+    &:hover {
+      background: var(--cyber-red);
+      color: var(--void);
+      box-shadow: 0 0 15px rgba(255, 42, 109, 0.5);
+    }
+
+    &.active {
+      background: var(--cyber-red);
+      border-color: var(--cyber-red);
+      box-shadow: 0 0 15px rgba(255, 42, 109, 0.5);
+    }
+  }
+
+  /* Variant: Magenta */
+  &.magenta {
+    border-color: var(--cyber-magenta);
+    color: var(--cyber-magenta);
+
+    &:hover {
+      background: var(--cyber-magenta);
+      color: var(--void);
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+    }
+
+    &.active {
+      background: var(--cyber-magenta);
+      border-color: var(--cyber-magenta);
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+    }
+  }
+
+  /* Active state (for filters, toggles) */
+  &.active {
+    background: var(--cyber-cyan);
+    border-color: var(--cyber-cyan);
+    color: var(--void);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+  }
+
+  /* Disabled state */
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--grid);
+    color: var(--text-dim);
+    background: transparent;
+    box-shadow: none;
+
+    &:hover {
+      border-color: var(--grid);
+      color: var(--text-dim);
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+}

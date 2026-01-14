@@ -1,43 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { calculateInvoice, formatDate, formatCurrencyWithLocale } from '$lib/invoice';
 
 	let { data }: { data: PageData } = $props();
 	let invoices = $derived(data.invoices);
-
-	const formatDate = (dateStr: string) => {
-		return new Date(dateStr).toLocaleDateString('nl-NL', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit'
-		});
-	};
-
-	const formatCurrency = (amount: number) => {
-		return new Intl.NumberFormat('nl-NL', {
-			style: 'currency',
-			currency: 'EUR'
-		}).format(amount);
-	};
-
-	const calculateTotal = (invoice: (typeof invoices)[0]) => {
-		const subtotaal = invoice.regels.reduce(
-			(sum, regel) => sum + regel.aantal * regel.tarief,
-			0
-		);
-
-		if (invoice.btw_verlegd) {
-			return subtotaal; // No BTW when reversed
-		}
-
-		// Calculate BTW
-		const btwBedrag = invoice.regels.reduce((sum, regel) => {
-			const lijnTotaal = regel.aantal * regel.tarief;
-			const btwPercentage = regel.btw_tarief ?? 21;
-			return sum + lijnTotaal * (btwPercentage / 100);
-		}, 0);
-
-		return subtotaal + btwBedrag;
-	};
 
 	const getStatus = (vervaldatum: string) => {
 		return new Date(vervaldatum) < new Date() ? '⚠️ Verlopen' : '✓ Actief';
@@ -58,12 +24,15 @@
 					<th>Klant</th>
 					<th>Datum</th>
 					<th>Vervaldatum</th>
-					<th>Bedrag</th>
+					<th>Subtotaal</th>
+					<th>BTW</th>
+					<th>Totaal</th>
 					<th>Status</th>
 				</tr>
 			</thead>
 			<tbody>
 				{#each invoices as factuur}
+					{@const calc = calculateInvoice(factuur)}
 					<tr>
 						<td>
 							<a href="/invoices/{factuur.factuurnr}">{factuur.factuurnr}</a>
@@ -71,7 +40,21 @@
 						<td>{factuur.klant.naam}</td>
 						<td>{formatDate(factuur.datum)}</td>
 						<td>{formatDate(factuur.vervaldatum)}</td>
-						<td>{formatCurrency(calculateTotal(factuur))}</td>
+						<td>{formatCurrencyWithLocale(calc.subtotal)}</td>
+						<td>
+							{#if calc.hasMultipleRates}
+								<span
+									title={calc.vatBreakdown
+										.map(([r, a]) => `${r}%: €${a.toFixed(2)}`)
+										.join('\n')}
+								>
+									{formatCurrencyWithLocale(calc.vatAmount)} *
+								</span>
+							{:else}
+								{formatCurrencyWithLocale(calc.vatAmount)}
+							{/if}
+						</td>
+						<td>{formatCurrencyWithLocale(calc.total)}</td>
 						<td>
 							{getStatus(factuur.vervaldatum)}
 						</td>
