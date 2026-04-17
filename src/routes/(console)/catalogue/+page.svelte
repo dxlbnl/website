@@ -1,7 +1,5 @@
 <script lang="ts">
 	import type { ProductFrontmatter } from '$lib/types';
-	import CrtOverlay from '$lib/ui/Overlay.svelte';
-	import HudHeader from '$lib/ui/HudHeader.svelte';
 	import PageHeader from '$lib/ui/PageHeader.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
 
@@ -26,10 +24,6 @@
 </script>
 
 <main class="catalogue-layout">
-	<CrtOverlay />
-
-	<HudHeader systemId="CATALOGUE_MATRIX" />
-
 	<PageHeader title="THE CATALOGUE" description="HARDWARE // SCHEMATICS // EURORACK MODULES" />
 
 	<nav class="category-filter">

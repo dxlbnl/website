@@ -21,12 +21,11 @@
 
 	.page-title {
 		font-size: clamp(2.5rem, 8vw, 5rem);
-		font-weight: 900;
+		font-weight: 800;
 		margin: 0;
 		color: var(--text-main);
-		text-shadow:
-			2px 0 var(--cyber-red),
-			-2px 0 var(--cyber-cyan);
+		text-transform: uppercase;
+		line-height: 0.9;
 	}
 
 	.page-description {

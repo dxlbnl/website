@@ -127,6 +127,7 @@
 				<div class="payment-content">
 					<div class="payment-method">
 						<strong>IBAN</strong>
+						<div class="iban-display">{invoice.verzender.naam}</div>
 						<div class="iban-display">{invoice.verzender.iban}</div>
 					</div>
 					<div class="payment-instructions">

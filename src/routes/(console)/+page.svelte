@@ -1,9 +1,6 @@
 <script lang="ts">
-	import CrtOverlay from '$lib/ui/Overlay.svelte';
-	import GlitchText from '$lib/ui/GlitchText.svelte';
 	import NavCard from '$lib/ui/NavCard.svelte';
 	import SocialUplink from '$lib/ui/SocialUplink.svelte';
-	import HudHeader from '$lib/ui/HudHeader.svelte';
 	import type { Component } from 'svelte';
 	import type { ConsoleFrontmatter } from '$lib/types';
 
@@ -14,28 +11,23 @@
 	let { data }: Props = $props();
 </script>
 
-<CrtOverlay />
-
 <main class="console-layout">
-	<!-- 1. TOP BAR -->
-	<HudHeader systemId="DXTR_LABS_V3" />
-
 	<!-- 2. IDENTITY MATRIX -->
 	<section class="identity-section">
 		<div class="title-wrapper">
-			<GlitchText text={data.metadata?.title || 'DEXTER'} />
+			<h1 class="hero-title">{data.metadata?.title || 'DEXTER'}</h1>
 		</div>
 
 		<div class="roles">
 			<span>[ CODER ]</span>
 			<span>[ MAKER ]</span>
-			<span>[ ARTIST ]</span>
+			<span>[ HARDWARE ]</span>
 		</div>
 
 		<div class="mission-log">
 			<p>:: ARCHITECTING MODULAR SYSTEMS</p>
 			<p>:: DESIGNING EURORACK CIRCUITRY</p>
-			<p>:: EXECUTING GENERATIVE ART</p>
+			<p>:: EXECUTING SYSTEM INTEGRATION</p>
 		</div>
 	</section>
 
@@ -55,14 +47,6 @@
 			title="THE CATALOGUE"
 			desc="HARDWARE // SCHEMATICS // SALES"
 			variant="red"
-		/>
-
-		<NavCard
-			href="/art"
-			index="03"
-			title="ART GRID"
-			desc="VISUALS // GENERATIVE // CHAOS"
-			variant="magenta"
 		/>
 	</nav>
 
@@ -98,8 +82,16 @@
 	}
 
 	.title-wrapper {
-		font-size: clamp(3rem, 10vw, 8rem);
 		margin-bottom: 1rem;
+	}
+
+	.hero-title {
+		font-size: clamp(3rem, 10vw, 8rem);
+		font-weight: 800;
+		text-transform: uppercase;
+		line-height: 0.9;
+		margin: 0;
+		color: var(--text-main);
 	}
 
 	.roles {

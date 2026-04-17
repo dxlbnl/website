@@ -62,3 +62,10 @@ export type InvoiceFrontmatter = {
 	valuta?: string; // Default: 'EUR'
 	taal?: string; // Default: 'nl-NL'
 };
+
+export type RepositoryFrontmatter = {
+	pageType: 'repository';
+	title: string;
+	date: string;
+	tags: string[];
+};

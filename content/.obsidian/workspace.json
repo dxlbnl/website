@@ -196,11 +196,14 @@
       "bases:Create new base": false
     }
   },
-  "active": "c5a66484b166d621",
+  "active": "c0b9031a6650d392",
   "lastOpenFiles": [
+    "invoices/2026-0002.md",
+    "invoices/2026-0001.md",
+    "invoices/_template.md",
+    "invoices/@template.md",
     "invoices/2026-TEST.md",
     "invoices/2026-TEST.md.tmp.301845.1768337189981",
-    "invoices/2026-0002.md",
     "console.md",
     "Design.md",
     "blog",

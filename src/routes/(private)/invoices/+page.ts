@@ -16,7 +16,7 @@ const modules = import.meta.glob<MarkdownModule>('/content/invoices/*.md', { eag
 export const load: PageLoad = async () => {
 	const invoices = Object.values(modules)
 		.map((module) => module.metadata)
-		.sort((a, b) => b.datum.localeCompare(a.date));
+		.sort((a, b) => b.datum.localeCompare(a.datum));
 
 	return { invoices };
 };

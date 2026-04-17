@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
-	interface Props {
-		systemId?: string;
-	}
-
-	let { systemId = 'DXTR_CORE' }: Props = $props();
 	let timeString = $state('00:00:00');
 
 	onMount(() => {
@@ -14,38 +10,62 @@
 		const interval = setInterval(tick, 1000);
 		return () => clearInterval(interval);
 	});
+
+	// Derived path breadcrumb from URL
+	let breadcrumb = $derived($page.url.pathname);
 </script>
 
-<header class="hud-header">
-	<div>
-		<span class="label">SYS.ID</span>
-		<span class="value cyan">{systemId}</span>
+<header class="console-header">
+	<div class="left-section">
+		<span class="label">[ PATH ]</span>
+		<span class="value cyan">~{breadcrumb}</span>
 	</div>
-	<div>
+	<div class="right-section">
+		<span class="label">PWR</span>
+		<span class="value">3.3V OK</span>
+		<span class="divider"></span>
 		<span class="label">T.SYNC</span>
 		<span class="value">{timeString}</span>
 	</div>
 </header>
 
 <style>
-	.hud-header {
+	.console-header {
 		display: flex;
 		justify-content: space-between;
-		border-bottom: 1px solid var(--grid);
-		padding-bottom: 1rem;
-		font-size: 0.7rem;
-		letter-spacing: 2px;
+		align-items: center;
+		padding: 0.5rem 1rem;
+		background: var(--void);
+		border-bottom: var(--panel-border);
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		letter-spacing: 1px;
 		color: var(--text-dim);
-		margin-bottom: 4rem;
 	}
+
+	.left-section,
+	.right-section {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
 	.label {
-		margin-right: 0.5rem;
+		color: var(--text-dim);
 	}
+
 	.value {
 		color: var(--text-main);
 	}
+
 	.value.cyan {
 		color: var(--cyber-cyan);
-		text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+	}
+
+	.divider {
+		width: 1px;
+		height: 12px;
+		background: var(--grid);
+		margin: 0 0.5rem;
 	}
 </style>
