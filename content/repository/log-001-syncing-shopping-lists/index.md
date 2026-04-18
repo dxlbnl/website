@@ -29,4 +29,3 @@ As the functionality evolves, so does the visual language. I’m moving away fro
 
 The goal is to make the act of "checking off a grocery list" feel as precise and satisfying as calibrating an oscillator.
 
-The code is evolving here: [/home/dexter/Projects/Web/list/](/home/dexter/Projects/Web/list/)
