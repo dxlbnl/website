@@ -25,29 +25,30 @@
 	const activeColor = $derived(colorMap[variant]);
 </script>
 
-<a {href} class="nav-link" style="--active-color: {activeColor}">
+<a {href} class="nav-card" style="--active-color: {activeColor}">
 	<div class="nav-index">{index}</div>
 	<div class="nav-content">
 		<span class="link-title">{title}</span>
 		<span class="link-desc">{desc}</span>
 	</div>
-	<div class="nav-border"></div>
 </a>
 
 <style>
-	.nav-link {
-		position: relative;
+	.nav-card {
 		display: flex;
 		flex-direction: column;
 		text-decoration: none;
-		padding: 1.5rem 0;
-		transition: 0.3s ease;
+		padding: 1.5rem;
+		background: rgba(255, 255, 255, 0.02);
+		border: 1px solid var(--grid);
+		transition: all 0.2s ease;
 	}
 
 	.nav-index {
 		font-size: 0.7rem;
 		color: var(--text-dim);
 		margin-bottom: 0.5rem;
+		letter-spacing: 1px;
 	}
 
 	.link-title {
@@ -56,9 +57,7 @@
 		font-weight: 700;
 		color: var(--text-main);
 		margin-bottom: 0.25rem;
-		text-shadow:
-			1px 0 rgba(0, 240, 255, 0.4),
-			-1px 0 rgba(255, 0, 255, 0.4);
+		transition: color 0.2s;
 	}
 
 	.link-desc {
@@ -67,24 +66,14 @@
 		letter-spacing: 1px;
 	}
 
-	.nav-border {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		width: 100%;
-		height: 1px;
-		background: var(--grid);
-		transition: all 0.3s;
+	/* Hover State */
+	.nav-card:hover {
+		border-color: var(--active-color);
+		background: rgba(255, 255, 255, 0.05);
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 	}
 
-	.nav-link:hover .link-title {
+	.nav-card:hover .link-title {
 		color: var(--active-color);
-		text-shadow:
-			2px 0 var(--text-main),
-			-2px 0 var(--active-color);
-	}
-	.nav-link:hover .nav-border {
-		background: var(--active-color);
-		box-shadow: 0 0 10px var(--active-color);
 	}
 </style>

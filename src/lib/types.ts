@@ -68,4 +68,5 @@ export type RepositoryFrontmatter = {
 	title: string;
 	date: string;
 	tags: string[];
+	images?: string[];
 };

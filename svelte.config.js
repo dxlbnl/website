@@ -7,7 +7,9 @@ const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
 	preprocess: [vitePreprocess(), mdsvex({
-		extension: '.md'
+		extension: '.md',
+		smartypants: true,
+		// We'll handle component mapping in the page component for more control
 	})],
 	kit: {
 		adapter: adapter({

@@ -17,7 +17,7 @@
 		flex-direction: column;
 		height: 100vh;
 		background: var(--void);
-		border: 1px solid var(--grid);
+		overflow: hidden;
 	}
 
 	.console-viewport {
@@ -25,17 +25,7 @@
 		background: var(--grid);
 		display: flex;
 		flex-direction: column;
-		overflow: hidden;
-	}
-
-	@media (max-width: 768px) {
-		.console-shell {
-			height: auto;
-			min-height: 100vh;
-		}
-
-		.console-viewport {
-			overflow-y: visible;
-		}
+		position: relative;
+		overflow-y: auto;
 	}
 </style>

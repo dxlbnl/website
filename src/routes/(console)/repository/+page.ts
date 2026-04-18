@@ -7,12 +7,13 @@ type MarkdownModule = {
 	metadata: RepositoryFrontmatter;
 };
 
-const modules = import.meta.glob<MarkdownModule>('/content/repository/*.md', { eager: true });
+const modules = import.meta.glob<MarkdownModule>('/content/repository/*/index.md', { eager: true });
 
 export const load: PageLoad = async () => {
-    // Extract slug from file path to dynamically link them
+    // Extract slug from directory name
 	const entries = Object.entries(modules).map(([path, module]) => {
-        const slug = path.split('/').pop()?.replace('.md', '');
+        const parts = path.split('/');
+        const slug = parts[parts.length - 2];
         return {
             slug,
             ...module.metadata

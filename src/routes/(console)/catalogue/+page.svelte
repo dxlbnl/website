@@ -30,10 +30,13 @@
 		{#each categories as category}
 			<button
 				class:active={selectedCategory === category}
-				class:red={selectedCategory === category}
 				onclick={() => (selectedCategory = category)}
 			>
-				{category.toUpperCase()}
+				{#if selectedCategory === category}
+					[{category.toUpperCase()}]
+				{:else}
+					{category.toUpperCase()}
+				{/if}
 			</button>
 		{/each}
 	</nav>
@@ -54,8 +57,6 @@
 
 <style>
 	.catalogue-layout {
-		position: relative;
-		min-height: 100vh;
 		padding: 2rem;
 		max-width: 1400px;
 		margin: 0 auto;
@@ -65,15 +66,34 @@
 		display: flex;
 		gap: 1rem;
 		flex-wrap: wrap;
-		margin-bottom: 2rem;
-		padding-bottom: 1.5rem;
+		margin-bottom: 3rem;
+		padding-bottom: 2rem;
 		border-bottom: 1px solid var(--grid);
+	}
+
+	.category-filter button {
+		padding: 0.5rem 1rem;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--text-dim);
+		border: 1px solid transparent;
+		transition: all 0.1s ease;
+	}
+
+	.category-filter button:hover {
+		color: var(--text-main);
+	}
+
+	.category-filter button.active {
+		color: var(--cyber-cyan);
+		border-color: var(--grid);
+		background: rgba(0, 240, 255, 0.03);
 	}
 
 	.products-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-		gap: 2rem;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 1rem;
 		margin-bottom: 4rem;
 	}
 
@@ -81,19 +101,20 @@
 		text-align: center;
 		padding: 4rem 2rem;
 		border: 1px solid var(--grid);
-		background: rgba(0, 0, 0, 0.3);
+		background: var(--void);
+		font-family: var(--font-mono);
 	}
 
 	.empty-state p {
-		color: var(--cyber-red);
+		color: var(--text-main);
 		font-size: 0.9rem;
-		letter-spacing: 2px;
+		letter-spacing: 1px;
 		margin: 0.5rem 0;
 	}
 
 	.empty-state .dim {
 		color: var(--text-dim);
-		font-size: 0.7rem;
+		font-size: 0.75rem;
 	}
 
 	@media (max-width: 600px) {

@@ -16,18 +16,14 @@
 	let { data }: Props = $props();
 </script>
 
-<CrtOverlay />
-
-<main class="product-layout">
-	<HudHeader systemId="PRODUCT_DETAIL" />
-
-	<nav class="breadcrumb">
-		<a href="/catalogue">← BACK TO CATALOGUE</a>
+<main class="product-viewport">
+	<nav class="detail-nav">
+		<a href="/catalogue" class="back-link">← RETURN TO CATALOGUE DIRECTORY</a>
 	</nav>
 
-	<article class="product-detail">
+	<article class="product-content">
 		<header class="product-header">
-			<div class="header-content">
+			<div class="header-main">
 				<h1 class="product-title">{data.product.name}</h1>
 				<StatusBadge status={data.product.status} />
 			</div>
@@ -37,7 +33,7 @@
 				{#if data.product.tags.length > 0}
 					<div class="tags">
 						{#each data.product.tags as tag}
-							<span class="tag">{tag}</span>
+							<span class="tag">[{tag}]</span>
 						{/each}
 					</div>
 				{/if}
@@ -56,224 +52,209 @@
 			<ProductSpecs specs={data.product.specs} />
 		{/if}
 
-		<div class="product-content">
+		<div class="markdown-body">
 			<data.component />
 		</div>
 
 		<footer class="product-footer">
 			{#if data.product.price}
 				<div class="price-info">
-					<span class="price-label">PRICE</span>
+					<span class="price-label">EST. COST</span>
 					<span class="price-value">${data.product.price}</span>
 				</div>
 			{/if}
 
-			{#if data.product.status === 'available'}
-				<a href={data.product.tindieUrl} target="_blank" rel="noopener noreferrer" class="tindie-btn">
-					BUY ON TINDIE →
-				</a>
-			{:else if data.product.status === 'coming-soon'}
-				<button class="tindie-btn disabled" disabled>COMING SOON</button>
-			{:else}
-				<button class="tindie-btn disabled" disabled>SOLD OUT</button>
-			{/if}
+			<div class="actions">
+				{#if data.product.status === 'available'}
+					<a href={data.product.tindieUrl} target="_blank" rel="noopener noreferrer" class="action-btn cyan">
+						INITIATE_PURCHASE →
+					</a>
+				{:else}
+					<button class="action-btn disabled" disabled>[ OFFLINE ]</button>
+				{/if}
+			</div>
 		</footer>
 	</article>
 </main>
 
 <style>
-	.product-layout {
-		min-height: 100vh;
+	.product-viewport {
 		padding: 2rem;
-		max-width: 900px;
-		margin: 0 auto;
-	}
-
-	.breadcrumb {
-		margin: 2rem 0;
-	}
-
-	.breadcrumb a {
-		color: var(--text-dim);
-		text-decoration: none;
-		font-size: 0.8rem;
-		letter-spacing: 1px;
-		transition: color 0.2s;
-	}
-
-	.breadcrumb a:hover {
-		color: var(--cyber-red);
-	}
-
-	.product-detail {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
+		align-items: center;
+		overflow-y: auto;
+	}
+
+	.detail-nav {
+		max-width: 900px;
+		width: 100%;
+		margin-bottom: 2rem;
+	}
+
+	.back-link {
+		color: var(--text-dim);
+		text-decoration: none;
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		letter-spacing: 1px;
+		transition: color 0.1s;
+	}
+
+	.back-link:hover {
+		color: var(--cyber-cyan);
+	}
+
+	.product-content {
+		max-width: 900px;
+		width: 100%;
+		background: var(--void);
+		border: 1px solid var(--grid);
 	}
 
 	.product-header {
+		padding: 3rem;
 		border-bottom: 1px solid var(--grid);
-		padding-bottom: 2rem;
 	}
 
-	.header-content {
+	.header-main {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
-		gap: 1rem;
-		margin-bottom: 1rem;
+		gap: 1.5rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.product-title {
-		font-size: clamp(2rem, 5vw, 3.5rem);
-		font-weight: 900;
+		font-family: var(--font-mono);
+		font-size: clamp(1.5rem, 5vw, 2.5rem);
+		font-weight: 800;
 		margin: 0;
 		color: var(--text-main);
-		text-shadow:
-			2px 0 var(--cyber-red),
-			-2px 0 var(--cyber-cyan);
+		text-transform: uppercase;
+		line-height: 1;
 	}
 
 	.product-meta {
 		display: flex;
-		gap: 1rem;
+		gap: 1.5rem;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
+		font-family: var(--font-mono);
 	}
 
 	.category {
 		font-size: 0.75rem;
-		color: var(--cyber-red);
-		text-transform: uppercase;
-		letter-spacing: 2px;
+		color: var(--cyber-cyan);
+		letter-spacing: 1px;
 	}
 
 	.tags {
 		display: flex;
 		gap: 0.5rem;
-		flex-wrap: wrap;
 	}
 
 	.tag {
 		font-size: 0.7rem;
 		color: var(--text-dim);
-		border: 1px solid var(--grid);
-		padding: 0.25rem 0.5rem;
-		letter-spacing: 1px;
 	}
 
 	.product-description {
-		color: var(--text-main);
-		font-size: 1rem;
+		color: var(--text-dim);
+		font-size: 0.95rem;
 		line-height: 1.6;
 		margin: 0;
+		max-width: 600px;
 	}
 
 	.product-image {
 		width: 100%;
-		border: 1px solid var(--grid);
-		overflow: hidden;
-		background: var(--void);
+		background: var(--grid);
+		border-bottom: 1px solid var(--grid);
+		display: flex;
+		justify-content: center;
 	}
 
 	.product-image img {
-		width: 100%;
+		max-width: 100%;
 		height: auto;
 		display: block;
 	}
 
-	.product-content {
-		border: 1px solid var(--grid);
-		padding: 2rem;
-		background: rgba(0, 0, 0, 0.3);
-		line-height: 1.8;
-	}
-
-	.product-content :global(h2) {
-		color: var(--cyber-cyan);
-		font-size: 1.2rem;
-		margin: 2rem 0 1rem 0;
-		text-transform: uppercase;
-		letter-spacing: 2px;
-	}
-
-	.product-content :global(h3) {
+	.markdown-body {
+		padding: 3rem;
+		font-family: var(--font-mono);
 		color: var(--text-main);
-		font-size: 1rem;
-		margin: 1.5rem 0 0.75rem 0;
-	}
-
-	.product-content :global(p) {
-		color: var(--text-dim);
-		margin: 0 0 1rem 0;
-	}
-
-	.product-content :global(ul),
-	.product-content :global(ol) {
-		color: var(--text-dim);
-		margin: 1rem 0;
-		padding-left: 2rem;
+		line-height: 1.8;
+		font-size: 0.95rem;
 	}
 
 	.product-footer {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: flex-end;
 		gap: 2rem;
-		padding: 2rem;
-		border: 1px solid var(--cyber-red);
-		background: rgba(255, 42, 109, 0.05);
+		padding: 3rem;
+		border-top: 1px solid var(--grid);
+		background: rgba(255, 255, 255, 0.02);
 	}
 
 	.price-info {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.25rem;
+		font-family: var(--font-mono);
 	}
 
 	.price-label {
 		font-size: 0.7rem;
 		color: var(--text-dim);
-		letter-spacing: 2px;
 	}
 
 	.price-value {
 		font-size: 2rem;
-		font-weight: 900;
-		color: var(--cyber-cyan);
+		font-weight: 700;
+		color: var(--text-main);
 	}
 
-	.tindie-btn {
-		background: var(--cyber-red);
-		color: var(--void);
-		border: none;
+	.action-btn {
+		background: transparent;
+		color: var(--text-main);
+		border: 1px solid var(--grid);
 		padding: 1rem 2rem;
-		font-size: 1rem;
+		font-size: 0.85rem;
 		font-weight: 700;
-		letter-spacing: 2px;
+		letter-spacing: 1px;
 		cursor: pointer;
 		text-decoration: none;
 		display: inline-block;
-		transition: all 0.3s ease;
+		transition: all 0.1s ease;
 		font-family: var(--font-mono);
-		box-shadow: 0 0 20px rgba(255, 42, 109, 0.5);
 	}
 
-	.tindie-btn:hover:not(.disabled) {
+	.action-btn:hover:not(.disabled) {
 		background: var(--text-main);
-		box-shadow: 0 0 30px rgba(255, 42, 109, 0.8);
-		transform: translateY(-2px);
+		color: var(--void);
+		border-color: var(--text-main);
 	}
 
-	.tindie-btn.disabled {
-		background: var(--grid);
-		color: var(--text-dim);
+	.action-btn.cyan {
+		border-color: var(--cyber-cyan);
+		color: var(--cyber-cyan);
+	}
+
+	.action-btn.cyan:hover {
+		background: var(--cyber-cyan);
+		color: var(--void);
+	}
+
+	.action-btn.disabled {
+		opacity: 0.5;
 		cursor: not-allowed;
-		box-shadow: none;
 	}
 
 	@media (max-width: 600px) {
-		.header-content {
+		.header-main {
 			flex-direction: column;
 		}
 
@@ -282,7 +263,7 @@
 			align-items: stretch;
 		}
 
-		.tindie-btn {
+		.action-btn {
 			width: 100%;
 			text-align: center;
 		}

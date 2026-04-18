@@ -1,8 +1,9 @@
 ---
 pageType: repository
-title: "Log Entry #001: Building Distrans AR-1 with AI (0xFEFE)"
+title: "Building Distrans AR-1 with AI (0xFEFE)"
 date: 2026-04-17
 tags: [Hardware, Distrans AR-1, AI, Talk]
+images: [media/hero.png, media/circuit.png]
 ---
 
 I recently gave a talk at 0xFEFE about the Distrans AR-1 project. The core message was pretty simple: getting AI to help design hardware is both incredible and incredibly frustrating. 
