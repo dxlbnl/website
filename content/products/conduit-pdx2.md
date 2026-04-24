@@ -6,8 +6,8 @@ description: Power your entire Eurorack from a laptop charger - studio-grade sil
 status: coming-soon
 category: Power
 tags: [Power Supply, USB-C, PD, Utility]
-tindieUrl: https://www.tindie.com/stores/dexterlabs/
-image: /images/products/conduit-pdx2.jpg
+# tindieUrl: https://www.tindie.com/stores/dexterlabs/
+image: /images/products/conduit-2.webp
 price: 200
 specs:
   Width: 4 HP
@@ -30,6 +30,7 @@ At 35mm deep, it delivers massive clean power (3A on +12V, 1.5A on -12V) while s
 The "Reactor Core" display on the front panel shows exactly what your case is pulling. **Dual 5-segment bar graphs** visualize +12V and -12V current consumption in real-time.
 
 **What you can do with it:**
+
 - Spot which modules are power-hungry at a glance
 - Catch transient spikes when patching
 - Know when you're approaching your power limit
@@ -42,6 +43,7 @@ Instant analog feedback - no lag, no guessing. Industrial aesthetic with matte b
 Switching supplies can introduce audible whine and noise into sensitive analog circuits. The PDX-2 is designed to stay quiet.
 
 **How it achieves silence:**
+
 - 2.2 MHz switching frequency (far above audible range - no PSU whine)
 - Multi-stage filtering with low-ESR polymer capacitors
 - Inverting buck-boost topology for clean negative rail (not a noisy charge pump)
@@ -56,6 +58,7 @@ The PDX-2 includes a **hardware sequencing interlock** that prevents module dama
 The -12V rail won't turn on until +12V is stable. This prevents "latch-up" failures that can destroy op-amp based modules during startup.
 
 **Protection systems:**
+
 - **Short circuit shutdown** - saves your modules from wiring mistakes
 - **Thermal shutdown** - protects under extreme loads
 - **Reverse voltage clamps** - guards against power bus errors
@@ -75,6 +78,7 @@ Just plug in any USB-C PD charger that supports 20V at 45W or higher (65W recomm
 ## Flexible Connectivity
 
 **Output options:**
+
 - **Screw terminals (rear):** Direct wiring to bus boards with 18AWG wire
 - **16-pin IDC header:** Standard Eurorack connection
 
@@ -82,14 +86,15 @@ Use screw terminals for permanent installations with thick wire and low resistan
 
 ## Technical Specifications
 
-| Rail | Current Output           | Enough For...              |
-| ---- | ------------------------ | -------------------------- |
+| Rail | Current Output           | Enough For...               |
+| ---- | ------------------------ | --------------------------- |
 | +12V | 3.0A continuous, 5A peak | 15+ VCOs or complex modules |
-| -12V | 1.5A continuous          | Balanced analog stages     |
+| -12V | 1.5A continuous          | Balanced analog stages      |
 
 **Total system power:** 54W continuous
 
 **Physical:**
+
 - Width: 4 HP (20mm)
 - Depth: 35mm (fits skiff cases)
 - Switching frequency: 2.2 MHz (inaudible)
@@ -109,11 +114,13 @@ Currently in final hardware validation. Expected release: Q2 2025.
 ## Compatibility
 
 **Works with:**
+
 - Any USB-C PD charger supporting 20V (45W minimum, 65W recommended)
 - Standard Eurorack 16-pin bus (Doepfer/Intellijel format)
 - Skiff cases (35mm depth)
 
 **Tested with:**
+
 - Apple 61W/67W USB-C chargers (MacBook)
 - Anker PowerPort Atom PD 60W+
 - Dell/HP/Lenovo laptop chargers with USB-C PD

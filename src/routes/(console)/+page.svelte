@@ -1,195 +1,273 @@
 <script lang="ts">
-	import NavCard from '$lib/ui/NavCard.svelte';
-	import SocialUplink from '$lib/ui/SocialUplink.svelte';
-	import type { Component } from 'svelte';
-	import type { ConsoleFrontmatter } from '$lib/types';
+	import Led from '$lib/ui/Led.svelte';
+	import SectionH from '$lib/ui/SectionH.svelte';
+	import Signature from '$lib/ui/Signature.svelte';
+	import ProductCard from '$lib/ui/ProductCard.svelte';
+	import type {
+		ConsoleFrontmatter,
+		FeedFrontmatter,
+		NoteFrontmatter,
+		ProductFrontmatter
+	} from '$lib/types';
 
-	interface Props {
-		data: { component: Component; metadata: ConsoleFrontmatter };
-	}
-
+	type Props = {
+		data: {
+			metadata: ConsoleFrontmatter;
+			latestFeed: FeedFrontmatter | null;
+			notes: (NoteFrontmatter & { slug: string })[];
+			products: ProductFrontmatter[];
+		};
+	};
 	let { data }: Props = $props();
+
+	function hexIdx(i: number) {
+		return '0x' + (i + 1).toString(16).padStart(2, '0').toUpperCase();
+	}
 </script>
 
-<div class="console-page">
-	<!-- 2. IDENTITY MATRIX -->
-	<section class="identity-section">
-		<div class="title-wrapper">
-			<h1 class="hero-title">{data.metadata?.title || 'DEXTER'}</h1>
-		</div>
+<div class="wrap">
+	<section class="hero">
+		<div class="eyebrow">// DEXTERLABS · WORKBENCH · 2026</div>
+		<h1>Dexter.<br /><em>A bench of</em><br />side projects.</h1>
+		<p class="sub">
+			Full-time software engineer. Evenings on the bench — Eurorack hardware, small web experiments,
+			notes from in-between. Some of it's for sale. Most of it's just to see if it works.
+		</p>
 
-		<div class="roles">
-			<span>[ CODER ]</span>
-			<span>[ MAKER ]</span>
-			<span>[ HARDWARE ]</span>
-		</div>
-
-		<div class="mission-log">
-			<p>:: ARCHITECTING MODULAR SYSTEMS</p>
-			<p>:: DESIGNING EURORACK CIRCUITRY</p>
-			<p>:: EXECUTING SYSTEM INTEGRATION</p>
-		</div>
+		{#if data.latestFeed}
+			<a href="/feed" class="status">
+				<div class="status-head">
+					<span>// STATUS · LATEST FROM THE FEED</span>
+					<span>{data.latestFeed.date} →</span>
+				</div>
+				<div class="status-line">
+					<Led tone="amber" blink />
+					<span>{data.latestFeed.body}</span>
+				</div>
+			</a>
+		{/if}
 	</section>
 
-	<!-- 3. MAIN NAVIGATION -->
-	<nav class="nav-grid">
-		<NavCard
-			href="/repository"
-			index="01"
-			title="THE REPOSITORY"
-			desc="LOGS // PROCESS // DATA"
-			variant="cyan"
-		/>
-
-		<NavCard
-			href="/catalogue"
-			index="02"
-			title="THE CATALOGUE"
-			desc="HARDWARE // SCHEMATICS // SALES"
-			variant="red"
-		/>
-	</nav>
-
-	<!-- 4. BOTTOM COMMS -->
-	<footer class="footer-layout">
-		<div class="uplinks">
-			<SocialUplink
-				href="https://github.com/dxlbnl/"
-				protocol="NET.GH"
-				label="GITHUB"
-				variant="cyan"
-			/>
-			<SocialUplink
-				href="https://www.linkedin.com/in/alexander-esselink-414685a/"
-				protocol="NET.LI"
-				label="LINKEDIN"
-				variant="magenta"
-			/>
-			<SocialUplink
-				href="https://www.instagram.com/dexterotti/"
-				protocol="NET.IG"
-				label="INSTAGRAM"
-				variant="red"
-			/>
+	{#if data.notes.length > 0}
+		<SectionH num="// 0x01" title="Notes" sub="{data.notes.length} ENTRIES" />
+		<div class="note-grid">
+			{#each data.notes as note, i}
+				<a href="/notes/{note.slug}" class="note-card">
+					<div class="card-head">
+						<span class="card-idx">{hexIdx(i)}</span>
+						<span class="card-kind">{note.kind ?? 'LOG'}</span>
+					</div>
+					<h3 class="card-title">{note.title}</h3>
+					{#if note.lede}<p class="card-desc">{note.lede}</p>{/if}
+					<div class="card-foot">
+						<span>{note.date.split('T')[0]}</span>
+						<span class="card-read">READ →</span>
+					</div>
+				</a>
+			{/each}
 		</div>
+	{/if}
 
-		<div class="copyright">&copy; 2025 DEXTERLABS // ALL SYSTEMS OPERATIONAL</div>
-	</footer>
+	{#if data.products.length > 0}
+		<SectionH num="// 0x02" title="Catalogue" sub="EURORACK HARDWARE" />
+		<div class="cat-grid">
+			{#each data.products as product}
+				<ProductCard {product} />
+			{/each}
+		</div>
+		<div class="cat-foot">
+			<a href="/catalogue" class="all-link">BROWSE THE FULL CATALOGUE →</a>
+			<span class="faint">SHIPPED BY DEXTERLABS · DELFT, NL</span>
+		</div>
+	{/if}
+
+	<Signature />
 </div>
 
 <style>
-	/* Page-Specific Layout Logic Only */
-	.console-page {
-		padding: 1.5rem 1.5rem 2rem 1.5rem;
-		display: flex;
-		flex-direction: column;
-		max-width: 1200px;
+	.wrap {
+		max-width: 1440px;
 		margin: 0 auto;
-		flex: 1;
-		min-height: 0; /* Important for flex child sizing */
+		padding: 0 32px 80px;
+	}
+	@media (max-width: 720px) {
+		.wrap {
+			padding: 0 16px 56px;
+		}
 	}
 
-	.identity-section {
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		margin: 2rem 0;
+	/* Hero */
+	.hero {
+		padding: 80px 0 56px;
 	}
-
-	.title-wrapper {
-		margin-bottom: 0.5rem;
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.12em;
+		color: var(--ink-faint);
+		margin-bottom: 24px;
 	}
-
-	.hero-title {
-		font-size: clamp(2.5rem, 10vw, 7rem);
-		font-weight: 800;
-		text-transform: uppercase;
-		line-height: 0.9;
+	.hero h1 {
+		font-weight: 500;
+		font-size: clamp(48px, 9vw, 120px);
+		line-height: 1;
+		letter-spacing: -0.03em;
 		margin: 0;
-		color: var(--text-main);
+	}
+	.hero h1 em {
+		font-style: normal;
+		color: var(--ink-faint);
+	}
+	.sub {
+		margin-top: 24px;
+		max-width: 62ch;
+		font-size: var(--t-lede);
+		color: var(--ink-dim);
+		line-height: 1.55;
 	}
 
-	.roles {
-		display: flex;
-		gap: 1rem;
-		color: var(--cyber-cyan);
-		font-size: 0.8rem;
-		letter-spacing: 2px;
-		flex-wrap: nowrap;
-		white-space: nowrap;
+	/* Status — now a link inside the hero */
+	.status {
+		display: block;
+		margin-top: 32px;
+		padding: 16px 20px;
+		border: 1px solid var(--rule);
+		background: var(--bg-rail);
+		max-width: 62ch;
+		color: inherit;
+		transition: border-color 0.15s;
 	}
-
-	.mission-log {
-		margin-top: 2rem;
-		padding-left: 1rem;
-		border-left: 2px solid var(--grid);
-		color: var(--text-dim);
-		font-size: 0.75rem;
-		line-height: 1.6;
+	.status:hover {
+		border-color: var(--amber);
 	}
-
-	.nav-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 1.5rem;
-		margin-bottom: 2rem;
-	}
-
-	.footer-layout {
+	.status-head {
 		display: flex;
 		justify-content: space-between;
-		align-items: flex-end;
-		border-top: 1px solid var(--grid);
-		padding-top: 1rem;
-		margin-top: auto;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
 	}
-
-	.uplinks {
+	.status-line {
+		margin-top: 10px;
+		font-size: 17px;
+		line-height: 1.5;
 		display: flex;
-		gap: 1.5rem;
+		gap: 10px;
+		align-items: flex-start;
 	}
 
-	.copyright {
-		font-size: 0.6rem;
-		color: var(--text-dim);
-		letter-spacing: 1px;
+	/* Notes grid */
+	.note-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px;
+		margin-top: 24px;
 	}
-
-	@media (max-width: 768px) {
-		.console-page {
-			padding: 1rem 1rem 1.5rem 1rem;
-		}
-
-		.identity-section {
-			margin: 1rem 0;
-		}
-
-		.roles {
-			font-size: clamp(0.6rem, 3.5vw, 0.8rem);
-			gap: 0.5rem;
-			letter-spacing: 1px;
-		}
-
-		.mission-log {
-			margin-top: 2rem;
-		}
-
-		.footer-layout {
-			flex-direction: column;
-			gap: 2rem;
-			align-items: flex-start;
-		}
-
-		.uplinks {
-			flex-direction: column;
-			gap: 1rem;
+	@media (max-width: 900px) {
+		.note-grid {
+			grid-template-columns: 1fr 1fr;
 		}
 	}
-
-	@media (max-width: 480px) {
-		.nav-grid {
-			grid-template-columns: 1fr; /* Stack on very small screens */
+	@media (max-width: 600px) {
+		.note-grid {
+			grid-template-columns: 1fr;
 		}
+	}
+	.note-card {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 20px;
+		border: 1px solid var(--rule);
+		background: var(--bg-rail);
+		color: inherit;
+		transition: border-color 0.15s;
+	}
+	.note-card:hover {
+		border-color: var(--amber);
+	}
+	.card-head {
+		display: flex;
+		justify-content: space-between;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+	.card-idx {
+		color: var(--ink-faint);
+	}
+	.card-kind {
+		color: var(--cyan);
+	}
+	.card-title {
+		font-weight: 500;
+		font-size: var(--t-lede);
+		letter-spacing: -0.01em;
+		margin: 4px 0 0;
+	}
+	.card-desc {
+		font-size: 14px;
+		color: var(--ink-dim);
+		line-height: 1.5;
+		flex: 1;
+	}
+	.card-foot {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		color: var(--ink-faint);
+		margin-top: 8px;
+		padding-top: 12px;
+		border-top: 1px dashed var(--rule);
+	}
+	.card-read {
+		color: var(--amber);
+	}
+
+	/* Catalogue */
+	.cat-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px;
+		margin-top: 24px;
+	}
+	@media (max-width: 900px) {
+		.cat-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	@media (max-width: 600px) {
+		.cat-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+	.cat-foot {
+		margin-top: 20px;
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		letter-spacing: 0.06em;
+		padding-top: 16px;
+		border-top: 1px solid var(--rule);
+	}
+	.all-link {
+		color: var(--amber);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+	.all-link:hover {
+		color: var(--ink);
+	}
+	.faint {
+		color: var(--ink-faint);
+		text-transform: uppercase;
 	}
 </style>

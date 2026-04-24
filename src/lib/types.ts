@@ -1,15 +1,8 @@
-// You could place this in a global type file or utility file.
 export type ConsoleFrontmatter = {
 	pageType: 'console';
 	title: string;
 	seoDescription: string;
 	tagline: string;
-};
-
-export type CatalogueFrontmatter = {
-	pageType: 'catalogue';
-	title: string;
-	seoDescription: string;
 };
 
 export type ProductStatus = 'available' | 'sold-out' | 'coming-soon';
@@ -25,16 +18,31 @@ export type ProductFrontmatter = {
 	tindieUrl: string;
 	image?: string;
 	price?: number;
-	specs?: {
-		[key: string]: string;
-	};
+	specs?: Record<string, string>;
+};
+
+export type FeedFrontmatter = {
+	pageType: 'feed';
+	date: string;
+	tags: string[];
+	body: string;
+};
+
+export type NoteFrontmatter = {
+	pageType: 'note';
+	title: string;
+	date: string;
+	tags: string[];
+	kind?: string;
+	lede?: string;
+	images?: string[];
 };
 
 export type InvoiceFrontmatter = {
 	paginaType: 'factuur';
-	factuurnr: string; // e.g., "2026-0042"
-	datum: string; // ISO date
-	vervaldatum: string; // ISO date
+	factuurnr: string;
+	datum: string;
+	vervaldatum: string;
 
 	verzender: {
 		naam: string;
@@ -59,14 +67,6 @@ export type InvoiceFrontmatter = {
 	}>;
 
 	btw_verlegd: boolean;
-	valuta?: string; // Default: 'EUR'
-	taal?: string; // Default: 'nl-NL'
-};
-
-export type RepositoryFrontmatter = {
-	pageType: 'repository';
-	title: string;
-	date: string;
-	tags: string[];
-	images?: string[];
+	valuta?: string;
+	taal?: string;
 };

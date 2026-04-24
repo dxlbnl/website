@@ -1,133 +1,129 @@
 <script lang="ts">
 	import type { ProductFrontmatter } from '$lib/types';
-	import StatusBadge from './StatusBadge.svelte';
 
-	type Props = {
-		product: ProductFrontmatter;
-	};
-
+	type Props = { product: ProductFrontmatter };
 	let { product }: Props = $props();
+
+	const stockMap: Record<string, { label: string; cls: string }> = {
+		available: { label: 'IN STOCK', cls: 'ok' },
+		'sold-out': { label: 'LOW STOCK', cls: 'low' },
+		'coming-soon': { label: 'PREORDER', cls: 'out' }
+	};
+	const stock = $derived(stockMap[product.status] ?? { label: product.status, cls: '' });
+	const cta = $derived(product.status === 'coming-soon' ? 'PREORDER' : 'ADD TO RACK');
 </script>
 
-<a href="/catalogue/{product.id}" class="product-card">
-	{#if product.image}
-		<div class="product-image">
+<a href="/catalogue/{product.id}" class="card">
+	<div class="img">
+		{#if product.image}
 			<img src={product.image} alt={product.name} />
+		{:else}
+			{product.id.toUpperCase()} · PRODUCT SHOT
+		{/if}
+	</div>
+	<div class="body">
+		<div class="sku">{product.id.toUpperCase()}</div>
+		<h3 class="title">{product.name}</h3>
+		<p class="desc">{product.description}</p>
+		<div class="meta">
+			<span class="price">{product.price ? `€${product.price}` : '—'}</span>
+			<span class="stock {stock.cls}">{stock.label}</span>
 		</div>
-	{:else}
-		<div class="product-image placeholder">
-			<span>NO IMAGE</span>
-		</div>
-	{/if}
-
-	<div class="product-info">
-		<div class="product-header">
-			<h3 class="product-name">{product.name}</h3>
-			<StatusBadge status={product.status} />
-		</div>
-
-		<p class="product-description">{product.description}</p>
-
-		<div class="product-meta">
-			<span class="category">{product.category}</span>
-			{#if product.price}
-				<span class="price">${product.price}</span>
-			{/if}
-		</div>
+	</div>
+	<div class="cta">
+		<span>{cta}</span>
+		<span>→</span>
 	</div>
 </a>
 
 <style>
-	.product-card {
-		display: block;
-		text-decoration: none;
-		border: 1px solid var(--grid);
-		background: var(--void);
-		transition: all 0.1s ease;
+	.card {
+		border: 1px solid var(--rule);
+		background: var(--bg-rail);
+		display: flex;
+		flex-direction: column;
 		overflow: hidden;
 	}
-
-	.product-card:hover {
-		border-color: var(--cyber-cyan);
-		transform: translateY(-2px);
-	}
-
-	.product-image {
-		width: 100%;
-		aspect-ratio: 16 / 9;
-		background: var(--grid);
-		border-bottom: 1px solid var(--grid);
-		overflow: hidden;
+	.img {
+		aspect-ratio: 1;
+		background: repeating-linear-gradient(135deg, var(--bg-sunken) 0 10px, var(--bg-elev) 10px 20px);
+		border-bottom: 1px solid var(--rule);
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--ink-faint);
+		letter-spacing: 0.12em;
+		overflow: hidden;
 	}
-
-	.product-image img {
+	.img img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		opacity: 0.8;
-		transition: opacity 0.2s ease;
 	}
-
-	.product-card:hover .product-image img {
-		opacity: 1;
-	}
-
-	.product-image.placeholder {
-		color: var(--text-dim);
-		font-family: var(--font-mono);
-		font-size: 0.7rem;
-		letter-spacing: 2px;
-	}
-
-	.product-info {
-		padding: 1.5rem;
-	}
-
-	.product-header {
+	.body {
+		padding: 12px 14px 10px;
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		gap: 1rem;
-		margin-bottom: 1rem;
+		flex-direction: column;
+		gap: 6px;
+		flex: 1;
 	}
-
-	.product-name {
-		font-family: var(--font-mono);
-		font-size: 1.1rem;
-		font-weight: 700;
-		color: var(--text-main);
-		margin: 0;
+	.sku {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--ink-faint);
+		letter-spacing: 0.12em;
+	}
+	.title {
+		font-weight: 500;
+		font-size: 18px;
+		letter-spacing: -0.01em;
 		line-height: 1.2;
+	}
+	.desc {
+		font-size: 12px;
+		color: var(--ink-dim);
+		line-height: 1.4;
+	}
+	.meta {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-top: auto;
+		padding-top: 8px;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.04em;
 		text-transform: uppercase;
 	}
-
-	.product-description {
-		color: var(--text-dim);
-		font-size: 0.85rem;
-		line-height: 1.5;
-		margin: 0 0 1.5rem 0;
+	.price {
+		font-size: 15px;
+		color: var(--amber);
 	}
-
-	.product-meta {
+	.stock.ok {
+		color: var(--ok);
+	}
+	.stock.low {
+		color: var(--amber);
+	}
+	.stock.out {
+		color: var(--ink-faint);
+	}
+	.cta {
+		border-top: 1px solid var(--rule);
+		padding: 10px 14px;
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
-		color: var(--text-dim);
-		letter-spacing: 1px;
-	}
-
-	.category {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: var(--cyber-cyan);
+		color: var(--ink-dim);
+		transition: background 0.15s, color 0.15s;
 	}
-
-	.price {
-		color: var(--text-main);
-		font-weight: 600;
+	.card:hover .cta {
+		background: var(--amber);
+		color: var(--bg);
 	}
 </style>

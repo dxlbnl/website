@@ -1,47 +1,96 @@
-/* 1. Box Sizing: The most important rule in CSS */
+/* =========================================================
+   DEXTERLABS // DESIGN TOKENS + RESET
+   ========================================================= */
+
+:root {
+	/* Phosphor (dark default) */
+	--bg: #0b0d0c;
+	--bg-rail: #0f1211;
+	--bg-elev: #141817;
+	--bg-sunken: #070908;
+	--ink: #d6e2dc;
+	--ink-dim: #8a968f;
+	--ink-faint: #4a524e;
+	--rule: #1d2321;
+	--rule-strong: #2a3330;
+	--amber: #ffb347;
+	--cyan: #7cc7d1;
+	--danger: #ff7a6b;
+	--ok: #8fd48a;
+
+	--mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+	--sans: 'Inter Tight', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+	--t-micro: 10px;
+	--t-mono: 12px;
+	--t-body: 15px;
+	--t-lede: 19px;
+	--t-h3: 24px;
+	--t-h2: 36px;
+	--t-h1: 72px;
+	--t-display: 140px;
+
+	--u: 8px;
+	--radius: 2px;
+	--radius-card: 4px;
+}
+
+[data-palette='paper'] {
+	--bg: #efece4;
+	--bg-rail: #e6e2d6;
+	--bg-elev: #f5f2ea;
+	--bg-sunken: #dfdbce;
+	--ink: #14110b;
+	--ink-dim: #5a564a;
+	--ink-faint: #9a9486;
+	--rule: #cfcabc;
+	--rule-strong: #a8a192;
+	--amber: #b85c00;
+	--cyan: #2d6b75;
+	--danger: #a83224;
+	--ok: #356b31;
+}
+
+/* Reset */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
-
-/* 2. Remove default margins and padding */
-* {
-  margin: 0;
-  padding: 0;
-}
-
-/* 3. Set core body defaults */
 html,
 body {
-  height: 100%;
-  width: 100%;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased; /* Crisp text for the HUD look */
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	padding: 0;
 }
-
-/* 4. Media defaults */
+body {
+	background: var(--bg);
+	color: var(--ink);
+	font-family: var(--sans);
+	font-size: var(--t-body);
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
+}
 img,
 picture,
 video,
 canvas,
 svg {
-  display: block;
-  max-width: 100%;
+	display: block;
+	max-width: 100%;
 }
-
-/* 5. Inherit fonts for form controls (inputs often ignore global fonts) */
-input,
-button,
-textarea,
-select {
-  font: inherit;
-  background: none;
-  border: none;
+a {
+	color: inherit;
+	text-decoration: none;
 }
-
-/* 6. Text overflow safety */
+button {
+	font: inherit;
+	color: inherit;
+	background: none;
+	border: 0;
+	cursor: pointer;
+	padding: 0;
+}
 p,
 h1,
 h2,
@@ -49,145 +98,9 @@ h3,
 h4,
 h5,
 h6 {
-  overflow-wrap: break-word;
+	overflow-wrap: break-word;
+	margin: 0;
 }
-
-/* 7. Root stacking context */
-#root, /* React/standard IDs */
-#__next, /* Next.js */
-#svelte /* SvelteKit default target */ { 
-  isolation: isolate;
-  height: 100%;
-}
-
-/* After reset */
-
-:root {
-  /* --- PALETTE: THE VOID --- */
-  --void: #050505;
-  --grid: #1a1a1a;
-  --text-dim: #888;
-  --text-main: #e0e0e0;
-
-  /* --- PALETTE: THE SIGNAL --- */
-  --cyber-cyan: #00f0ff;    /* System / Logic */
-  --cyber-magenta: #ff00ff; /* Art / Chaos */
-  --cyber-red: #ff2a6d;     /* Hardware / Critical */
-
-  /* --- FONTS --- */
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  
-  /* --- STRUCTURAL & SHARED EFFECTS --- */
-  --panel-bg: rgba(5, 5, 5, 0.95);
-  --panel-border: 1px solid var(--grid);
-  --glow-cyan: 0 0 10px rgba(0, 240, 255, 0.1);
-  --glow-red: 0 0 10px rgba(255, 42, 109, 0.1);
-}
-
-body {
-  background-color: var(--void);
-  color: var(--text-main);
-  font-family: var(--font-mono);
-  overflow-x: hidden; /* Prevent glitch overflow */
-}
-
-/* --- REUSABLE UTILITIES --- */
-.text-dim { color: var(--text-dim); }
-.text-cyan { color: var(--cyber-cyan); }
-.text-red { color: var(--cyber-red); }
-
-/* --- GLOBAL ANIMATIONS --- */
-
-
-@keyframes pulse-opacity {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-/* --- BUTTON STYLES --- */
-button:not(.unstyled) {
-  /* Base styles */
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 0.75rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  /* Default: outlined */
-  background: transparent;
-  border: 1px solid var(--grid);
-  color: var(--text-dim);
-
-  &:hover {
-    border-color: var(--cyber-cyan);
-    color: var(--cyber-cyan);
-  }
-
-  /* Variant: Cyan */
-  &.cyan {
-    border-color: var(--cyber-cyan);
-    color: var(--cyber-cyan);
-
-    &:hover {
-      background: var(--cyber-cyan);
-      color: var(--void);
-    }
-  }
-
-  /* Variant: Red */
-  &.red {
-    border-color: var(--cyber-red);
-    color: var(--cyber-red);
-
-    &:hover {
-      background: var(--cyber-red);
-      color: var(--void);
-    }
-
-    &.active {
-      background: var(--cyber-red);
-      border-color: var(--cyber-red);
-    }
-  }
-
-  /* Variant: Magenta */
-  &.magenta {
-    border-color: var(--cyber-magenta);
-    color: var(--cyber-magenta);
-
-    &:hover {
-      background: var(--cyber-magenta);
-      color: var(--void);
-    }
-
-    &.active {
-      background: var(--cyber-magenta);
-      border-color: var(--cyber-magenta);
-    }
-  }
-
-  /* Active state (for filters, toggles) */
-  &.active {
-    background: var(--cyber-cyan);
-    border-color: var(--cyber-cyan);
-    color: var(--void);
-  }
-
-  /* Disabled state */
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    border-color: var(--grid);
-    color: var(--text-dim);
-    background: transparent;
-
-    &:hover {
-      border-color: var(--grid);
-      color: var(--text-dim);
-      background: transparent;
-    }
-  }
+#svelte {
+	isolation: isolate;
 }

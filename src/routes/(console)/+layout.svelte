@@ -1,31 +1,23 @@
 <script lang="ts">
-	import HudHeader from '$lib/ui/HudHeader.svelte';
+	import Nav from '$lib/ui/Nav.svelte';
+	import Footer from '$lib/ui/Footer.svelte';
 
 	let { children } = $props();
 </script>
 
-<div class="console-shell">
-	<HudHeader />
-	<main class="console-viewport">
-		{@render children()}
-	</main>
+<div class="page">
+	<Nav />
+	<main>{@render children()}</main>
+	<Footer />
 </div>
 
 <style>
-	.console-shell {
+	.page {
+		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
-		height: 100vh;
-		background: var(--void);
-		overflow: hidden;
 	}
-
-	.console-viewport {
+	main {
 		flex: 1;
-		background: var(--grid);
-		display: flex;
-		flex-direction: column;
-		position: relative;
-		overflow-y: auto;
 	}
 </style>

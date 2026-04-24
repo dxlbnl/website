@@ -4,8 +4,7 @@
 
 	let { src, alt, ...rest } = $props();
 
-	// Get the current repository slug from context
-	const slug = getContext<string>('repository-slug');
+	const slug = getContext<string>('note-slug');
 
 	// Resolve the source path
 	let resolvedSrc = $derived(resolveLogImage(src, slug || ''));

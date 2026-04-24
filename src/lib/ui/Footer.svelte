@@ -1,0 +1,82 @@
+<footer class="footer">
+	<div>
+		<h4>// DEXTERLABS</h4>
+		<div>Dexter / maker</div>
+		<div class="faint">Est. 2019 · Delft, NL</div>
+	</div>
+	<div>
+		<h4>// SECTIONS</h4>
+		<ul>
+			<li><a href="/feed">Feed</a></li>
+			<li><a href="/notes">Notes</a></li>
+			<li><a href="/catalogue">Catalogue</a></li>
+			<li><a href="/about">About</a></li>
+			<li><a href="/contact">Contact</a></li>
+		</ul>
+	</div>
+	<div>
+		<h4>// NET</h4>
+		<ul>
+			<li><a href="https://github.com/dxlbnl/" target="_blank" rel="noopener">[NET.GH] github</a></li>
+			<li>
+				<a
+					href="https://www.linkedin.com/in/alexander-esselink-414685a/"
+					target="_blank"
+					rel="noopener">[NET.LI] linkedin</a
+				>
+			</li>
+			<li>
+				<a href="https://www.instagram.com/dexterotti/" target="_blank" rel="noopener"
+					>[NET.IG] instagram</a
+				>
+			</li>
+		</ul>
+	</div>
+	<div>
+		<h4>// SYS</h4>
+		<div>© 2026 DEXTERLABS</div>
+		<div class="faint">ALL SYSTEMS OPERATIONAL</div>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		margin-top: 80px;
+		border-top: 1px solid var(--rule);
+		padding: 32px;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 24px;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		color: var(--ink-dim);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+	h4 {
+		font-size: var(--t-micro);
+		color: var(--ink-faint);
+		margin: 0 0 8px;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+	}
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+	a:hover {
+		color: var(--amber);
+	}
+	.faint {
+		color: var(--ink-faint);
+	}
+	@media (max-width: 720px) {
+		.footer {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

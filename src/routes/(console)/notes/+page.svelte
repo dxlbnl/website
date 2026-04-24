@@ -1,0 +1,156 @@
+<script lang="ts">
+	import SectionH from '$lib/ui/SectionH.svelte';
+	import Placeholder from '$lib/ui/Placeholder.svelte';
+	import { resolveLogImage } from '$lib/utils/image';
+	import type { NoteFrontmatter } from '$lib/types';
+
+	type Entry = NoteFrontmatter & { slug: string };
+	type Props = { data: { entries: Entry[] } };
+	let { data }: Props = $props();
+</script>
+
+<div class="wrap">
+	<section class="hero">
+		<div class="eyebrow">// NOTES · LONGER PIECES</div>
+		<h1>Notes.</h1>
+		<p class="sub">
+			Longer writing. Build logs, post-mortems, opinions. Written when something took long enough
+			to be worth explaining. Signed by <em>Dexter</em>.
+		</p>
+		<div class="meta">
+			<span><b>{data.entries.length}</b> PIECES</span>
+			{#if data.entries[0]}
+				<span><b>LATEST</b> {data.entries[0].date.split('T')[0]}</span>
+			{/if}
+		</div>
+	</section>
+
+	<SectionH num="// INDEX" title="All notes" sub="NEWEST FIRST" />
+
+	{#each data.entries as entry, i}
+		<a href="/notes/{entry.slug}" class="idx-row">
+			<div class="idx-n">{String(i + 1).padStart(2, '0')}</div>
+			<div class="idx-t">
+				{entry.title}
+				<small>{entry.date.split('T')[0]} · {entry.kind ?? 'LOG'}{entry.lede ? ' · ' + entry.lede.slice(0, 80) + (entry.lede.length > 80 ? '…' : '') : ''}</small>
+			</div>
+			<div class="idx-i">
+				{#if entry.images?.[0]}
+					<img src={resolveLogImage(entry.images[0], entry.slug)} alt="" />
+				{:else}
+					<Placeholder label={entry.kind ?? 'IMG'} />
+				{/if}
+			</div>
+		</a>
+	{/each}
+</div>
+
+<style>
+	.wrap {
+		max-width: 1440px;
+		margin: 0 auto;
+		padding: 0 32px 80px;
+	}
+	@media (max-width: 720px) {
+		.wrap {
+			padding: 0 16px 56px;
+		}
+	}
+	.hero {
+		padding: 48px 0 40px;
+		border-bottom: 1px solid var(--rule);
+	}
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.12em;
+		color: var(--ink-faint);
+		margin-bottom: 16px;
+	}
+	h1 {
+		font-weight: 500;
+		font-size: clamp(48px, 8vw, 112px);
+		line-height: 1;
+		letter-spacing: -0.03em;
+		margin: 0 0 16px;
+	}
+	.sub {
+		font-size: var(--t-lede);
+		color: var(--ink-dim);
+		line-height: 1.55;
+		max-width: 56ch;
+	}
+	.sub em {
+		font-style: italic;
+	}
+	.meta {
+		display: flex;
+		gap: 24px;
+		margin-top: 20px;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+	.meta b {
+		color: var(--ink);
+		font-weight: 500;
+		margin-right: 4px;
+	}
+	.idx-row {
+		display: grid;
+		grid-template-columns: 60px 1fr 240px;
+		gap: 32px;
+		align-items: end;
+		padding: 28px 0 24px;
+		border-bottom: 1px solid var(--rule);
+		color: inherit;
+		transition: background 0.15s;
+	}
+	.idx-row:hover {
+		background: var(--bg-elev);
+	}
+	.idx-n {
+		font-family: var(--mono);
+		font-size: var(--t-h3);
+		color: var(--ink-faint);
+		letter-spacing: -0.02em;
+	}
+	.idx-t {
+		font-size: clamp(22px, 3.5vw, 40px);
+		font-weight: 500;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+	}
+	.idx-t small {
+		display: block;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		font-weight: 400;
+		color: var(--ink-dim);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		margin-top: 8px;
+	}
+	.idx-i {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		border: 1px solid var(--rule);
+	}
+	.idx-i img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	@media (max-width: 720px) {
+		.idx-row {
+			grid-template-columns: 40px 1fr;
+		}
+		.idx-i {
+			display: none;
+		}
+	}
+</style>

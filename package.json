@@ -14,7 +14,7 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"optimize": "node scripts/optimize-repository-images.js"
+		"optimize": "node scripts/optimize-notes-images.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.5",

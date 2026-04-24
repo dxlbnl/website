@@ -1,271 +1,330 @@
 <script lang="ts">
-	import type { ProductFrontmatter } from '$lib/types';
+	import Signature from '$lib/ui/Signature.svelte';
+	import Led from '$lib/ui/Led.svelte';
 	import type { Component } from 'svelte';
-	import CrtOverlay from '$lib/ui/Overlay.svelte';
-	import HudHeader from '$lib/ui/HudHeader.svelte';
-	import StatusBadge from '$lib/ui/StatusBadge.svelte';
-	import ProductSpecs from '$lib/ui/ProductSpecs.svelte';
+	import type { ProductFrontmatter } from '$lib/types';
 
-	type Props = {
-		data: {
-			component: Component;
-			product: ProductFrontmatter;
-		};
-	};
-
+	type Props = { data: { component: Component; product: ProductFrontmatter } };
 	let { data }: Props = $props();
+
+	const stockMap: Record<string, { label: string; cls: string; led: 'ok' | 'amber' | 'off' }> = {
+		available: { label: 'IN STOCK', cls: 'ok', led: 'ok' },
+		'sold-out': { label: 'SOLD OUT', cls: 'out', led: 'off' },
+		'coming-soon': { label: 'PREORDER', cls: 'low', led: 'amber' }
+	};
+	const stock = $derived(stockMap[data.product.status] ?? { label: data.product.status, cls: '', led: 'off' });
+	const cta = $derived(data.product.status === 'coming-soon' ? 'PREORDER' : 'ADD TO RACK');
 </script>
 
-<main class="product-viewport">
-	<nav class="detail-nav">
-		<a href="/catalogue" class="back-link">← RETURN TO CATALOGUE DIRECTORY</a>
-	</nav>
+<div class="wrap">
+	<div class="back-row">
+		<a href="/catalogue" class="back">← RETURN TO CATALOGUE</a>
+	</div>
 
-	<article class="product-content">
-		<header class="product-header">
-			<div class="header-main">
-				<h1 class="product-title">{data.product.name}</h1>
-				<StatusBadge status={data.product.status} />
-			</div>
-
-			<div class="product-meta">
-				<span class="category">{data.product.category}</span>
-				{#if data.product.tags.length > 0}
-					<div class="tags">
-						{#each data.product.tags as tag}
-							<span class="tag">[{tag}]</span>
-						{/each}
-					</div>
-				{/if}
-			</div>
-
-			<p class="product-description">{data.product.description}</p>
-		</header>
-
+	<div class="grid" class:no-image={!data.product.image}>
 		{#if data.product.image}
-			<div class="product-image">
-				<img src={data.product.image} alt={data.product.name} />
+			<div class="img-col">
+				<div class="hero-img">
+					<img src={data.product.image} alt={data.product.name} />
+				</div>
 			</div>
 		{/if}
 
-		{#if data.product.specs}
-			<ProductSpecs specs={data.product.specs} />
-		{/if}
-
-		<div class="markdown-body">
-			<data.component />
-		</div>
-
-		<footer class="product-footer">
-			{#if data.product.price}
-				<div class="price-info">
-					<span class="price-label">EST. COST</span>
-					<span class="price-value">${data.product.price}</span>
+		<div class="side">
+			<div class="sub">{data.product.id.toUpperCase()} · {data.product.category.toUpperCase()}</div>
+			<h1>{data.product.name}</h1>
+			{#if data.product.tags?.length}
+				<div class="tags">
+					{#each data.product.tags as tag}
+						<span class="tag">{tag}</span>
+					{/each}
 				</div>
 			{/if}
+			<p class="lede">{data.product.description}</p>
 
-			<div class="actions">
-				{#if data.product.status === 'available'}
-					<a href={data.product.tindieUrl} target="_blank" rel="noopener noreferrer" class="action-btn cyan">
-						INITIATE_PURCHASE →
+			{#if data.product.specs}
+				<div class="specs-label">// QUICK SPECS</div>
+				<table class="specs">
+					<tbody>
+						{#each Object.entries(data.product.specs) as [key, val]}
+							<tr><td>{key}</td><td>{val}</td></tr>
+						{/each}
+					</tbody>
+				</table>
+			{/if}
+
+			<div class="pricebox">
+				<div class="price-col">
+					<span class="price">{data.product.price ? `€${data.product.price}` : 'TBD'}</span>
+					<span class="stock-info {stock.cls}">
+						<Led tone={stock.led} />
+						{stock.label} · SHIPS IN 3–5 DAYS
+					</span>
+				</div>
+				{#if data.product.status === 'available' || data.product.status === 'coming-soon'}
+					<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
+						{cta} →
 					</a>
 				{:else}
-					<button class="action-btn disabled" disabled>[ OFFLINE ]</button>
+					<span class="sold-out-label">SOLD OUT</span>
 				{/if}
 			</div>
-		</footer>
-	</article>
-</main>
+		</div>
+	</div>
+
+	<div class="content">
+		<data.component />
+	</div>
+
+	<Signature />
+</div>
 
 <style>
-	.product-viewport {
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		overflow-y: auto;
+	.wrap {
+		max-width: 1440px;
+		margin: 0 auto;
+		padding: 0 32px 80px;
 	}
-
-	.detail-nav {
-		max-width: 900px;
-		width: 100%;
-		margin-bottom: 2rem;
+	@media (max-width: 720px) {
+		.wrap {
+			padding: 0 16px 56px;
+		}
 	}
-
-	.back-link {
-		color: var(--text-dim);
-		text-decoration: none;
-		font-family: var(--font-mono);
-		font-size: 0.75rem;
-		letter-spacing: 1px;
-		transition: color 0.1s;
+	.back-row {
+		padding: 32px 0 0;
 	}
-
-	.back-link:hover {
-		color: var(--cyber-cyan);
-	}
-
-	.product-content {
-		max-width: 900px;
-		width: 100%;
-		background: var(--void);
-		border: 1px solid var(--grid);
-	}
-
-	.product-header {
-		padding: 3rem;
-		border-bottom: 1px solid var(--grid);
-	}
-
-	.header-main {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		gap: 1.5rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.product-title {
-		font-family: var(--font-mono);
-		font-size: clamp(1.5rem, 5vw, 2.5rem);
-		font-weight: 800;
-		margin: 0;
-		color: var(--text-main);
+	.back {
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+	.back:hover {
+		color: var(--amber);
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: 1.1fr 1fr;
+		gap: 48px;
+		padding: 24px 0 40px;
+	}
+	.grid.no-image {
+		grid-template-columns: 1fr;
+		max-width: 68ch;
+	}
+	@media (max-width: 900px) {
+		.grid {
+			grid-template-columns: 1fr;
+			gap: 24px;
+		}
+	}
+	.hero-img {
+		aspect-ratio: 3 / 2;
+		border: 1px solid var(--rule);
+		overflow: hidden;
+	}
+	.hero-img img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.sub {
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		color: var(--ink-dim);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	h1 {
+		font-weight: 500;
+		font-size: clamp(36px, 5vw, 56px);
+		letter-spacing: -0.02em;
+		margin: 8px 0 6px;
 		line-height: 1;
 	}
-
-	.product-meta {
-		display: flex;
-		gap: 1.5rem;
-		align-items: center;
-		margin-bottom: 2rem;
-		font-family: var(--font-mono);
-	}
-
-	.category {
-		font-size: 0.75rem;
-		color: var(--cyber-cyan);
-		letter-spacing: 1px;
-	}
-
 	.tags {
 		display: flex;
-		gap: 0.5rem;
+		gap: 6px;
+		flex-wrap: wrap;
+		margin-top: 12px;
 	}
-
 	.tag {
-		font-size: 0.7rem;
-		color: var(--text-dim);
+		display: inline-block;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-dim);
+		padding: 2px 6px;
+		border: 1px solid var(--rule);
 	}
-
-	.product-description {
-		color: var(--text-dim);
-		font-size: 0.95rem;
-		line-height: 1.6;
-		margin: 0;
-		max-width: 600px;
+	.lede {
+		font-size: 17px;
+		line-height: 1.55;
+		color: var(--ink-dim);
+		margin: 24px 0;
+		max-width: 48ch;
 	}
-
-	.product-image {
+	.specs-label {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.12em;
+		color: var(--ink-faint);
+		text-transform: uppercase;
+		margin-bottom: 4px;
+	}
+	.specs {
 		width: 100%;
-		background: var(--grid);
-		border-bottom: 1px solid var(--grid);
-		display: flex;
-		justify-content: center;
+		border-collapse: collapse;
+		margin-top: 4px;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
 	}
-
-	.product-image img {
-		max-width: 100%;
-		height: auto;
-		display: block;
+	.specs td {
+		padding: 8px 0;
+		border-bottom: 1px dashed var(--rule);
 	}
-
-	.markdown-body {
-		padding: 3rem;
-		font-family: var(--font-mono);
-		color: var(--text-main);
-		line-height: 1.8;
-		font-size: 0.95rem;
+	.specs td:first-child {
+		color: var(--ink-dim);
+		width: 40%;
 	}
-
-	.product-footer {
+	.specs td:last-child {
+		color: var(--ink);
+		text-align: right;
+	}
+	.pricebox {
+		margin-top: 24px;
+		padding: 20px;
+		border: 1px solid var(--rule);
+		background: var(--bg-rail);
 		display: flex;
 		justify-content: space-between;
-		align-items: flex-end;
-		gap: 2rem;
-		padding: 3rem;
-		border-top: 1px solid var(--grid);
-		background: rgba(255, 255, 255, 0.02);
+		align-items: center;
+		gap: 16px;
 	}
-
-	.price-info {
+	.price-col {
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
-		font-family: var(--font-mono);
+		gap: 6px;
 	}
-
-	.price-label {
-		font-size: 0.7rem;
-		color: var(--text-dim);
+	.price {
+		font-family: var(--mono);
+		font-size: 28px;
+		color: var(--amber);
+		letter-spacing: 0.02em;
 	}
-
-	.price-value {
-		font-size: 2rem;
-		font-weight: 700;
-		color: var(--text-main);
+	.stock-info {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
 	}
-
-	.action-btn {
-		background: transparent;
-		color: var(--text-main);
-		border: 1px solid var(--grid);
-		padding: 1rem 2rem;
-		font-size: 0.85rem;
-		font-weight: 700;
-		letter-spacing: 1px;
-		cursor: pointer;
-		text-decoration: none;
-		display: inline-block;
-		transition: all 0.1s ease;
-		font-family: var(--font-mono);
+	.stock-info.ok {
+		color: var(--ok);
 	}
-
-	.action-btn:hover:not(.disabled) {
-		background: var(--text-main);
-		color: var(--void);
-		border-color: var(--text-main);
+	.stock-info.low {
+		color: var(--amber);
 	}
-
-	.action-btn.cyan {
-		border-color: var(--cyber-cyan);
-		color: var(--cyber-cyan);
+	.buy {
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		letter-spacing: 0.1em;
+		padding: 10px 16px;
+		background: var(--amber);
+		color: var(--bg);
+		text-transform: uppercase;
+		transition: background 0.15s;
+		white-space: nowrap;
 	}
-
-	.action-btn.cyan:hover {
-		background: var(--cyber-cyan);
-		color: var(--void);
+	.buy:hover {
+		background: var(--ink);
 	}
-
-	.action-btn.disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
+	.sold-out-label {
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		color: var(--ink-faint);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
 	}
+	.content {
+		max-width: 68ch;
+		padding: 40px 0;
+		font-size: 17px;
+		line-height: 1.65;
+		border-top: 1px solid var(--rule);
 
-	@media (max-width: 600px) {
-		.header-main {
-			flex-direction: column;
-		}
-
-		.product-footer {
-			flex-direction: column;
-			align-items: stretch;
-		}
-
-		.action-btn {
-			width: 100%;
-			text-align: center;
+		:global {
+			h2 {
+				font-weight: 500;
+				font-size: 22px;
+				margin: 32px 0 8px;
+				letter-spacing: -0.01em;
+			}
+			p {
+				margin-bottom: 16px;
+				color: var(--ink-dim);
+			}
+			ul,
+			ol {
+				padding-left: 20px;
+				margin-bottom: 16px;
+				color: var(--ink-dim);
+			}
+			li {
+				margin-bottom: 4px;
+			}
+			ul li::marker {
+				color: var(--amber);
+			}
+			strong {
+				color: var(--ink);
+				font-weight: 500;
+			}
+			em {
+				color: var(--ink-dim);
+			}
+			code {
+				font-family: var(--mono);
+				font-size: 13px;
+				background: var(--bg-elev);
+				padding: 1px 5px;
+				border: 1px solid var(--rule);
+				border-radius: 2px;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				font-family: var(--mono);
+				font-size: var(--t-mono);
+				margin-bottom: 24px;
+			}
+			th {
+				text-align: left;
+				padding: 8px 0;
+				border-bottom: 1px solid var(--rule-strong);
+				color: var(--ink-faint);
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				font-weight: 500;
+			}
+			td {
+				padding: 8px 0;
+				border-bottom: 1px dashed var(--rule);
+				text-align: left;
+			}
+			td:last-child {
+				color: var(--ink);
+			}
+			hr {
+				border: none;
+				border-top: 1px solid var(--rule);
+				margin: 40px 0;
+			}
 		}
 	}
 </style>

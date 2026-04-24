@@ -6,8 +6,8 @@ description: Bridge Eurorack and studio - USB interface, standalone recorder, ze
 status: coming-soon
 category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
-tindieUrl: https://www.tindie.com/stores/dexterlabs/
-image: /images/products/distrans-ar1.jpg
+# tindieUrl: https://www.tindie.com/stores/dexterlabs/
+image: /images/products/distrans.webp
 price: 250
 specs:
   Width: 6 HP
@@ -43,19 +43,21 @@ The RGB meter handles the rest. White means it's on, amber is muted, pulsing red
 
 ## Stability
 
-Hardware fails, power gets bumped, and cards get pulled. The AR-1 handles this. If you pull the card mid-recording, it terminates the file safely. If the power cuts out, the data is still there because it writes a "dirty" header the second you hit record. 
+Hardware fails, power gets bumped, and cards get pulled. The AR-1 handles this. If you pull the card mid-recording, it terminates the file safely. If the power cuts out, the data is still there because it writes a "dirty" header the second you hit record.
 
 It's class-compliant, so you don't need drivers for anything. Just plug in the USB-C cable and it shows up as a 2-in/2-out interface on Windows, macOS, Linux, or iOS.
 
 ## Technical specifications
 
 **Audio**
+
 - Resolution: 48kHz / 24-bit PCM (all paths)
 - Format: Stereo WAV (RIFF)
 - Eurorack I/O: AC coupled, ±10V headroom
 - Balanced I/O: +4dBu nominal
 
 **Recording**
+
 - Media: MicroSD/SDHC (FAT32)
 - Capacity: Up to 32GB
 - File format: 24-bit WAV with BWF timestamps
@@ -63,12 +65,14 @@ It's class-compliant, so you don't need drivers for anything. Just plug in the U
 - Hot-swap: Supported
 
 **USB audio**
+
 - Class: UAC 1.0 (class compliant)
 - Streams: 2ch in + 2ch out, 24-bit, 48kHz
 - Compatibility: Windows/macOS/Linux/iOS
 - Power: USB-C bus powered
 
 **Physical**
+
 - Width: 6 HP
 - Power: USB-C (no Eurorack power needed)
 
