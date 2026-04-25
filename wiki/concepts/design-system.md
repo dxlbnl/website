@@ -24,7 +24,7 @@ Main routes are structured under `/(console)`:
 ## 3. Layout Strategies
 - **The "Console" Wrapper:** 
   - A fixed application shell that resembles a complex terminal or diagnostic dashboard.
-  - Persistent breadcrumbs showing current navigation state (e.g., `~/console/repository/log-001`).
+  - Persistent breadcrumbs showing current navigation state (e.g., `~/console/repository/001`).
 - **Split-Pane Architecture:** 
   - "Hacker-Split" layouts using robust CSS Grid to manage complex text/image relationships.
   - Eliminating overflow issues and enforcing strict boundaries.

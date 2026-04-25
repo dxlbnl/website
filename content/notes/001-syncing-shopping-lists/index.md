@@ -14,7 +14,7 @@ The core of the system uses [Server-Sent Events](https://en.wikipedia.org/wiki/S
 
 For now, the app utilizes unique links—all lists are public to whoever has the correct URL. It works, but it’s not ideal for privacy.
 
-### The Path Forward: Security & Sharing
+## The Path Forward: Security & Sharing
 
 While the current version solves the immediate problem, I’m already planning a more robust iteration. The goal is to move away from public URLs and toward a proper account system, but without the friction of passwords.
 
@@ -25,7 +25,7 @@ While the current version solves the immediate problem, I’m already planning a
 
 The goal is to keep the simplicity of the SSE sync while adding the security and organization needed for a daily tool.
 
-### Aesthetic Evolution: The Lab-Bench Protocol
+## Aesthetic Evolution: The Lab-Bench Protocol
 
 As the functionality evolves, so does the visual language. I’m moving away from the purely functional, colorful rows of the first prototype toward a more structured, "Lab-Bench" aesthetic. It’s about high-contrast clarity, technical typography, and a UI that feels like a piece of laboratory equipment. 
 
