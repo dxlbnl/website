@@ -28,7 +28,7 @@
 <div class="wrap">
 	<section class="hero">
 		<div class="eyebrow">// DEXTERLABS · WORKBENCH · 2026</div>
-		<h1>Dexter.<br /><em>A bench of</em><br />side projects.</h1>
+		<h1>Dexter.<br /><em>Things built</em><br />in the lab.</h1>
 		<p class="sub">
 			Full-time software engineer. Evenings on the bench — Eurorack hardware, small web experiments,
 			notes from in-between. Some of it's for sale. Most of it's just to see if it works.

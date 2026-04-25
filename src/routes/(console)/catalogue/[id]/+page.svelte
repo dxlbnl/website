@@ -22,13 +22,16 @@
 	</div>
 
 	<div class="grid" class:no-image={!data.product.image}>
-		{#if data.product.image}
-			<div class="img-col">
+		<div class="img-col">
+			{#if data.product.image}
 				<div class="hero-img">
 					<img src={data.product.image} alt={data.product.name} />
 				</div>
+			{/if}
+			<div class="content">
+				<data.component />
 			</div>
-		{/if}
+		</div>
 
 		<div class="side">
 			<div class="sub">{data.product.id.toUpperCase()} · {data.product.category.toUpperCase()}</div>
@@ -72,10 +75,6 @@
 		</div>
 	</div>
 
-	<div class="content">
-		<data.component />
-	</div>
-
 	<Signature />
 </div>
 
@@ -104,20 +103,34 @@
 		color: var(--amber);
 	}
 	.grid {
-		display: grid;
-		grid-template-columns: 1.1fr 1fr;
+		display: flex;
+		align-items: flex-start;
 		gap: 48px;
 		padding: 24px 0 40px;
 	}
 	.grid.no-image {
-		grid-template-columns: 1fr;
 		max-width: 68ch;
+	}
+	.img-col {
+		flex: 1.1;
+		display: flex;
+		flex-direction: column;
+	}
+	.side {
+		flex: 1;
 	}
 	@media (max-width: 900px) {
 		.grid {
-			grid-template-columns: 1fr;
+			flex-direction: column;
+			align-items: stretch;
 			gap: 24px;
 		}
+		.img-col {
+			display: contents;
+		}
+		.hero-img { order: 1; }
+		.side { order: 2; }
+		.content { order: 3; }
 	}
 	.hero-img {
 		aspect-ratio: 3 / 2;

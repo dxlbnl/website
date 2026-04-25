@@ -14,9 +14,9 @@
 			<a href="mailto:hello@dxlb.nl">hello@dxlb.nl</a>
 		</div>
 		<div class="meta">
-			<span><b>GH</b> github.com/dxlbnl</span>
-			<span><b>LI</b> linkedin/alexander-esselink</span>
-			<span><b>IG</b> @dexterotti</span>
+			<a href="https://github.com/dxlbnl" target="_blank" rel="noopener"><b>GH</b> github.com/dxlbnl</a>
+			<a href="https://linkedin.com/in/alexander-esselink" target="_blank" rel="noopener"><b>LI</b> linkedin/alexander-esselink</a>
+			<a href="https://instagram.com/dexterotti" target="_blank" rel="noopener"><b>IG</b> @dexterotti</a>
 		</div>
 	</section>
 
@@ -82,6 +82,13 @@
 		font-size: var(--t-mono);
 		letter-spacing: 0.06em;
 		color: var(--ink-faint);
+	}
+	.meta a {
+		color: var(--ink-faint);
+		transition: color 0.15s;
+	}
+	.meta a:hover {
+		color: var(--ink);
 	}
 	.meta b {
 		color: var(--ink-dim);

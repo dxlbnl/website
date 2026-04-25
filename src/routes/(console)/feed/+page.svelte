@@ -1,6 +1,6 @@
 <script lang="ts">
-	import SectionH from '$lib/ui/SectionH.svelte';
 	import TagPill from '$lib/ui/TagPill.svelte';
+	import Signature from '$lib/ui/Signature.svelte';
 	import type { FeedFrontmatter } from '$lib/types';
 
 	type Entry = FeedFrontmatter & { slug: string };
@@ -9,24 +9,27 @@
 
 	function fmt(d: string) {
 		return new Date(d)
-			.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })
+			.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
 			.toUpperCase();
 	}
 </script>
 
 <div class="wrap">
 	<section class="hero">
-		<h1>FEED</h1>
-		<p class="sub">Short updates from the bench.</p>
+		<div class="eyebrow">// FEED · THE LIVE BENCH</div>
+		<h1>Feed.</h1>
+		<p class="sub">
+			Short posts from the bench. What I'm building, breaking, or shipping right now — the kind of
+			thing I'd otherwise lose in a chat thread. Longer writeups live in <a href="/notes">notes</a>.
+		</p>
 		<div class="meta">
-			<span><b>{data.entries.length}</b> ENTRIES</span>
+			<span><b>{data.entries.length}</b> POSTS</span>
 			{#if data.entries[0]}
-				<span>LATEST <b>{fmt(data.entries[0].date)}</b></span>
+				<span><b>LATEST</b> {fmt(data.entries[0].date)}</span>
 			{/if}
+			<span><b>CADENCE</b> WHEN IT'S INTERESTING</span>
 		</div>
 	</section>
-
-	<SectionH title="ALL ENTRIES" sub="{data.entries.length} TOTAL" />
 
 	<div class="list">
 		{#each data.entries as entry}
@@ -41,6 +44,10 @@
 			</div>
 		{/each}
 	</div>
+
+	<div class="end">// end of feed. newest on top.</div>
+
+	<Signature />
 </div>
 
 <style>
@@ -55,20 +62,36 @@
 		}
 	}
 	.hero {
-		padding: 80px 0 56px;
+		padding: 32px 0;
 		border-bottom: 1px solid var(--rule);
+	}
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.12em;
+		color: var(--ink-faint);
+		margin-bottom: 16px;
 	}
 	.hero h1 {
 		font-weight: 500;
-		font-size: clamp(56px, 10vw, 140px);
-		line-height: 0.92;
-		letter-spacing: -0.04em;
+		font-size: clamp(48px, 8vw, 112px);
+		line-height: 1;
+		letter-spacing: -0.03em;
 		margin: 0;
 	}
 	.sub {
 		margin-top: 20px;
 		font-size: var(--t-lede);
 		color: var(--ink-dim);
+		max-width: 52ch;
+		line-height: 1.55;
+	}
+	.sub a {
+		color: var(--ink);
+		border-bottom: 1px solid var(--rule);
+	}
+	.sub a:hover {
+		border-color: var(--ink);
 	}
 	.meta {
 		margin-top: 24px;
@@ -86,6 +109,12 @@
 	}
 	.list {
 		margin-top: 8px;
+	}
+	.end {
+		margin-top: 24px;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		color: var(--ink-dim);
 	}
 	.row {
 		display: grid;

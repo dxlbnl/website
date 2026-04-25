@@ -6,7 +6,7 @@
 <div class="wrap">
 	<section class="hero">
 		<div class="eyebrow">// ABOUT · DEXTER / DEXTERLABS</div>
-		<h1>Two names,<br /><em>one bench.</em></h1>
+		<h1>Two names,<br /><em>one lab.</em></h1>
 	</section>
 
 	<div class="split">
@@ -23,8 +23,8 @@
 			<div class="col-label">// 0x02 · THE LAB</div>
 			<h2>Dexterlabs.</h2>
 			<p>
-				The name on the box. A one-person lab that ships small batches of Eurorack modules,
-				hand-assembled in Delft, with warranties you can actually use.
+				One-person lab in Delft. No fixed brief — hardware, software, whatever's worth building.
+				Some of it ships. The rest ends up here.
 			</p>
 			<p class="dim">Est. 2019. Still small on purpose.</p>
 		</div>
