@@ -44,9 +44,9 @@
 		max-width: 1440px;
 		margin: 0 auto;
 		padding: 0 32px 80px;
-	}
-	@media (max-width: 720px) {
-		.wrap {
+		container-type: inline-size;
+
+		@media (max-width: 720px) {
 			padding: 0 16px 56px;
 		}
 	}

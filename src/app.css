@@ -35,6 +35,8 @@
 	--radius-card: 4px;
 }
 
+/* Breakpoints: 720pxurl(../static/images/notes/003-conduit-pdx1/conduit.webp) mobile (hamburger, stacking), 900px tablet (3→2 col grids) */
+
 [data-palette='paper'] {
 	--bg: #efece4;
 	--bg-rail: #e6e2d6;

@@ -52,6 +52,11 @@
 		color: var(--ink-dim);
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
+		container-type: inline-size;
+
+		@container (max-width: 720px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 	h4 {
 		font-size: var(--t-micro);
@@ -73,10 +78,5 @@
 	}
 	.faint {
 		color: var(--ink-faint);
-	}
-	@media (max-width: 720px) {
-		.footer {
-			grid-template-columns: repeat(2, 1fr);
-		}
 	}
 </style>

@@ -54,9 +54,9 @@
 		max-width: 1440px;
 		margin: 0 auto;
 		padding: 0 32px 80px;
-	}
-	@media (max-width: 720px) {
-		.wrap {
+		container-type: inline-size;
+
+		@media (max-width: 720px) {
 			padding: 0 16px 56px;
 		}
 	}
@@ -139,14 +139,11 @@
 		grid-template-columns: repeat(3, 1fr);
 		gap: 16px;
 		margin-top: 24px;
-	}
-	@media (max-width: 900px) {
-		.grid {
+
+		@container (max-width: 900px) {
 			grid-template-columns: 1fr 1fr;
 		}
-	}
-	@media (max-width: 600px) {
-		.grid {
+		@container (max-width: 720px) {
 			grid-template-columns: 1fr;
 		}
 	}
