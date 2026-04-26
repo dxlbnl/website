@@ -7,12 +7,14 @@
 	type Props = { data: { component: Component; product: ProductFrontmatter } };
 	let { data }: Props = $props();
 
-	const stockMap: Record<string, { label: string; cls: string; led: 'ok' | 'amber' | 'off' }> = {
-		available: { label: 'IN STOCK', cls: 'ok', led: 'ok' },
+	const stockMap: Record<string, { label: string; cls: string; led: 'ok' | 'amber' | 'off'; ship?: string }> = {
+		available: { label: 'IN STOCK', cls: 'ok', led: 'ok', ship: 'SHIPS IN 3–5 DAYS' },
 		'sold-out': { label: 'SOLD OUT', cls: 'out', led: 'off' },
 		'coming-soon': { label: 'PREORDER', cls: 'low', led: 'amber' }
 	};
-	const stock = $derived(stockMap[data.product.status] ?? { label: data.product.status, cls: '', led: 'off' });
+	const stock = $derived(
+		stockMap[data.product.status] ?? { label: data.product.status, cls: '', led: 'off' }
+	);
 	const cta = $derived(data.product.status === 'coming-soon' ? 'PREORDER' : 'ADD TO RACK');
 
 	let buying = $state(false);
@@ -33,7 +35,7 @@
 			const res = await fetch('/api/checkout', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ priceId: data.product.stripePriceId, productId: data.product.id }),
+				body: JSON.stringify({ priceId: data.product.stripePriceId, productId: data.product.id })
 			});
 			const { url } = await res.json();
 			window.location.href = url;
@@ -101,7 +103,7 @@
 					<span class="price">{data.product.price ? `€${data.product.price}` : 'TBD'}</span>
 					<span class="stock-info {stock.cls}">
 						<Led tone={stock.led} />
-						{stock.label} · SHIPS IN 3–5 DAYS
+						{stock.label}{#if stock.ship} · {stock.ship}{/if}
 					</span>
 				</div>
 				{#if data.product.status === 'available' || data.product.status === 'coming-soon'}
@@ -112,6 +114,13 @@
 					{:else if data.product.tindieUrl}
 						<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
 							{cta} →
+						</a>
+					{:else}
+						<a
+							href="mailto:a.esselink@gmail.com?subject=Interest: {data.product.name}"
+							class="notify"
+						>
+							NOTIFY ME →
 						</a>
 					{/if}
 				{:else}
@@ -176,13 +185,19 @@
 		flex: 1;
 	}
 	.hero-img {
-		@container (max-width: 900px) { order: 1; }
+		@container (max-width: 900px) {
+			order: 1;
+		}
 	}
 	.side {
-		@container (max-width: 900px) { order: 2; }
+		@container (max-width: 900px) {
+			order: 2;
+		}
 	}
 	.content {
-		@container (max-width: 900px) { order: 3; }
+		@container (max-width: 900px) {
+			order: 3;
+		}
 	}
 	.hero-img {
 		aspect-ratio: 3 / 2;
@@ -336,6 +351,21 @@
 	.buy:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
+	}
+	.notify {
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		letter-spacing: 0.1em;
+		padding: 10px 16px;
+		border: 1px solid var(--rule);
+		color: var(--ink-dim);
+		text-transform: uppercase;
+		white-space: nowrap;
+		transition: border-color 0.15s, color 0.15s;
+	}
+	.notify:hover {
+		border-color: var(--amber);
+		color: var(--amber);
 	}
 	.sold-out-label {
 		font-family: var(--mono);

@@ -7,6 +7,7 @@ status: coming-soon
 category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
 # tindieUrl: https://www.tindie.com/stores/dexterlabs/
+stripePriceId: price_1TQYAiJyqPItsUADWgfXKghu
 image: /images/products/distrans-dune.webp
 images:
   - media/conduit.png
@@ -21,7 +22,6 @@ specs:
   Recording: WAV (RIFF), Stereo
   Storage: MicroSD/SDHC (FAT32)
   USB: Class Compliant UAC 1.0
-  Power: USB-C Bus Powered
 ---
 
 ## Overview

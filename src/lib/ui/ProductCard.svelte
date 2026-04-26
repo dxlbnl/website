@@ -4,13 +4,23 @@
 	type Props = { product: ProductFrontmatter };
 	let { product }: Props = $props();
 
+	const orderable = $derived(!!(product.stripePriceId || product.tindieUrl));
+
 	const stockMap: Record<string, { label: string; cls: string }> = {
 		available: { label: 'IN STOCK', cls: 'ok' },
-		'sold-out': { label: 'LOW STOCK', cls: 'low' },
-		'coming-soon': { label: 'PREORDER', cls: 'out' }
+		'sold-out': { label: 'SOLD OUT', cls: 'out' },
+		'coming-soon': { label: 'PREORDER', cls: 'low' }
 	};
-	const stock = $derived(stockMap[product.status] ?? { label: product.status, cls: '' });
-	const cta = $derived(product.status === 'coming-soon' ? 'PREORDER' : 'ADD TO RACK');
+	const stock = $derived(
+		product.status === 'coming-soon' && !orderable
+			? { label: 'COMING SOON', cls: 'out' }
+			: (stockMap[product.status] ?? { label: product.status, cls: '' })
+	);
+	const cta = $derived(
+		product.status === 'coming-soon'
+			? orderable ? 'PREORDER' : 'COMING SOON'
+			: 'ADD TO RACK'
+	);
 </script>
 
 <a href="/catalogue/{product.id}" class="card">
