@@ -1,5 +1,11 @@
 <script>
+	import { onMount } from 'svelte';
 	import Signature from '$lib/ui/Signature.svelte';
+
+	let email = $state('');
+	onMount(() => {
+		email = ['hello', 'dxlb.nl'].join('@');
+	});
 </script>
 
 <div class="wrap">
@@ -11,7 +17,7 @@
 			timeline. For everything else, just write.
 		</p>
 		<div class="email">
-			<a href="mailto:hello@dxlb.nl">hello@dxlb.nl</a>
+			{#if email}<a href="mailto:{email}">{email}</a>{/if}
 		</div>
 		<div class="meta">
 			<a href="https://github.com/dxlbnl" target="_blank" rel="noopener"><b>GH</b> github.com/dxlbnl</a>

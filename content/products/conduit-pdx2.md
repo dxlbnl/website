@@ -7,7 +7,7 @@ status: coming-soon
 category: Power
 tags: [Power Supply, USB-C, PD, Utility]
 # tindieUrl: https://www.tindie.com/stores/dexterlabs/
-image: /images/products/conduit-2.webp
+image: /images/products/conduit.webp
 price: 200
 specs:
   Width: 4 HP

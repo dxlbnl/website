@@ -1,10 +1,9 @@
 <script lang="ts">
 	import TagPill from '$lib/ui/TagPill.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
-	import type { FeedFrontmatter } from '$lib/types';
+	import type { PageData } from './$types';
 
-	type Entry = FeedFrontmatter & { slug: string };
-	type Props = { data: { entries: Entry[] } };
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 
 	function fmt(d: string) {

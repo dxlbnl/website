@@ -24,7 +24,20 @@
 				href: '/' + arr.slice(0, i + 1).join('/')
 			}))
 	);
+
+	let menuEl: HTMLDetailsElement | undefined = $state();
+
+	$effect(() => {
+		page.url.pathname;
+		menuEl?.removeAttribute('open');
+	});
 </script>
+
+{#snippet paletteBtn()}
+	<button class="toggle" onclick={togglePalette} title="Toggle palette">
+		{getPalette() === 'paper' ? '◑' : '◐'}
+	</button>
+{/snippet}
 
 <nav class="nav">
 	<div class="brand">
@@ -43,16 +56,26 @@
 		{#each items as { label, href }}
 			<li><a {href} class:active={isActive(href)}>{label}</a></li>
 		{/each}
-		<li>
-			<button class="toggle" onclick={togglePalette} title="Toggle palette">
-				{getPalette() === 'paper' ? '◑' : '◐'}
-			</button>
-		</li>
+		<li>{@render paletteBtn()}</li>
 	</ul>
+
+	<details bind:this={menuEl}>
+		<summary>
+			<span class="icon-open">≡</span>
+			<span class="icon-close">×</span>
+		</summary>
+		<div class="dropdown">
+			{#each items as { label, href }}
+				<a {href} class:active={isActive(href)}>{label}</a>
+			{/each}
+			{@render paletteBtn()}
+		</div>
+	</details>
 </nav>
 
 <style>
 	.nav {
+		position: relative;
 		display: flex;
 		align-items: center;
 		gap: 32px;
@@ -105,16 +128,6 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	ul {
-		list-style: none;
-		margin: 0 0 0 auto;
-		padding: 0;
-		display: flex;
-		gap: 24px;
-		align-items: center;
-		flex-shrink: 0;
-		text-transform: uppercase;
-	}
 	a {
 		color: var(--ink-dim);
 		padding-bottom: 2px;
@@ -134,7 +147,22 @@
 	}
 	.toggle:hover {
 		color: var(--ink);
-		border-color: var(--amber);
+		border-bottom-color: var(--amber);
+	}
+
+	/* desktop nav */
+	ul {
+		list-style: none;
+		margin: 0 0 0 auto;
+		padding: 0;
+		display: flex;
+		gap: 24px;
+		align-items: center;
+		flex-shrink: 0;
+		text-transform: uppercase;
+	}
+	details {
+		display: none;
 	}
 	@media (max-width: 900px) {
 		ul {
@@ -142,6 +170,67 @@
 		}
 		.path {
 			display: none;
+		}
+	}
+
+	/* mobile hamburger */
+	@media (max-width: 640px) {
+		ul {
+			display: none;
+		}
+		details {
+			display: block;
+			margin-left: auto;
+			flex-shrink: 0;
+		}
+		summary {
+			list-style: none;
+			cursor: pointer;
+			font-size: 20px;
+			line-height: 1;
+			color: var(--ink-dim);
+			user-select: none;
+		}
+		summary::-webkit-details-marker {
+			display: none;
+		}
+		summary:hover {
+			color: var(--ink);
+		}
+		.icon-close {
+			display: none;
+		}
+		details[open] .icon-open {
+			display: none;
+		}
+		details[open] .icon-close {
+			display: inline;
+		}
+		.dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			z-index: 100;
+			background: var(--bg);
+			border-bottom: 1px solid var(--rule);
+			display: flex;
+			flex-direction: column;
+			padding: 4px 16px 8px;
+			text-transform: uppercase;
+		}
+		.dropdown a,
+		.dropdown .toggle {
+			padding: 10px 0;
+			border-bottom: 1px solid var(--rule);
+			text-align: left;
+			display: block;
+		}
+		.dropdown > :last-child {
+			border-bottom: none;
+		}
+		.dropdown a.active {
+			color: var(--amber);
 		}
 	}
 </style>

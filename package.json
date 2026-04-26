@@ -14,7 +14,10 @@
 		"lint": "prettier --check . && eslint .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"optimize": "node scripts/optimize-notes-images.js"
+		"optimize": "node scripts/optimize-notes-images.js",
+		"db:push": "drizzle-kit push",
+		"db:studio": "drizzle-kit studio",
+		"db:generate": "drizzle-kit generate"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.5",
@@ -25,6 +28,7 @@
 		"@types/node": "^25.6.0",
 		"@types/qrcode": "^1.5.6",
 		"@vitest/browser-playwright": "^4.1.4",
+		"drizzle-kit": "^0.31.10",
 		"eslint": "^10.2.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.17.0",
@@ -44,7 +48,9 @@
 		"vitest-browser-svelte": "^2.1.1"
 	},
 	"dependencies": {
+		"@neondatabase/serverless": "^1.1.0",
 		"@sveltejs/adapter-vercel": "^6.3.3",
+		"drizzle-orm": "^0.45.2",
 		"html2canvas": "^1.4.1",
 		"jspdf": "^4.2.1",
 		"qrcode": "^1.5.4"

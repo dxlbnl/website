@@ -3,21 +3,9 @@
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
-	import type {
-		ConsoleFrontmatter,
-		FeedFrontmatter,
-		NoteFrontmatter,
-		ProductFrontmatter
-	} from '$lib/types';
+	import type { PageData } from './$types';
 
-	type Props = {
-		data: {
-			metadata: ConsoleFrontmatter;
-			latestFeed: FeedFrontmatter | null;
-			notes: (NoteFrontmatter & { slug: string })[];
-			products: ProductFrontmatter[];
-		};
-	};
+	type Props = { data: PageData };
 	let { data }: Props = $props();
 
 	function hexIdx(i: number) {
@@ -93,6 +81,10 @@
 	@media (max-width: 720px) {
 		.wrap {
 			padding: 0 16px 56px;
+		}
+
+		.hero {
+			padding: 20px 0 56px;
 		}
 	}
 

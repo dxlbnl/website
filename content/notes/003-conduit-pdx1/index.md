@@ -4,7 +4,7 @@ title: 'Conduit PDX-1 — Quiet USB-C Power for Eurorack'
 date: 2025-10-30
 kind: HARDWARE
 tags: [Hardware, Eurorack, USB-C, Power Supply, PCB]
-images: [media/conduit-2.jpg]
+images: [media/conduit.jpg]
 lede: "Building a USB-C powered Eurorack supply that doesn't sound like a swarm of bees — and iterating toward something actually shippable."
 ---
 
