@@ -1,22 +1,26 @@
-# Entity: Invoice System
+# Invoice System
 
-The Dexterlabs invoice system is a markdown-based utility that generates professional PDF invoices directly from the browser.
+> Sources: Internal, 2026-04-17
+> Updated: 2026-04-26
 
-## Data Source
-- **Location**: `content/invoices/*.md`
-- **Format**: YAML Frontmatter containing invoice metadata (date, client, items, etc.).
+## Overview
 
-## Generation Stack
-- **jspdf**: Core library for PDF generation.
-- **html2canvas**: Used to capture the HTML representation of the invoice for high-fidelity conversion.
-- **qrcode**: Generates payment QR codes (EPC/SEPA) embedded in the invoice.
+A private, client-side PDF invoice generator for Dexterlabs freelance work. No server, no SaaS — invoice data is markdown files, the browser renders and exports the PDF. Dutch BTW (VAT) context throughout.
 
-## Workflow
-1. User navigates to `/invoices/[invoicenr]`.
-2. Svelte route loads the markdown content via `mdsvex`.
-3. The page renders a clean "Lab Bench" styled invoice layout.
-4. Client-side script handles the "Download PDF" action using the generation stack.
+## Why it exists
 
-## Implementation Details
-- Located in `src/routes/(private)/invoices/[invoicenr]/`.
-- Uses Svelte 5 runes for state management (e.g., controlling the PDF generation status).
+Dexter does freelance / project work alongside product sales. The invoice system handles that billing. It's a private route (`/(private)/invoices/`) — not linked from the public site.
+
+## Key details
+
+- Frontmatter fields are Dutch (`factuurnr`, `datum`, `regels`, `btw_verlegd`) — the whole system is NL-first
+- QR code is a SEPA EPC payment link — lets clients pay directly from their banking app by scanning
+- `btw_verlegd` flag handles reverse-charge VAT for B2B transactions
+
+## What the code doesn't make obvious
+
+Pagination uses binary search to fit content per page — it measures DOM height, not line counts. This was necessary because invoice line items vary wildly in height (multi-line descriptions, toelichting). Read `src/lib/invoice/pdf-generator.ts` for the implementation.
+
+## See Also
+
+- [Dexterlabs](dexterlabs.md)

@@ -1,13 +1,9 @@
-# Project Log
+# Wiki Log
 
-Append-only record of wiki updates and project milestones.
-
-## [2026-04-17]
-- **Initialized Wiki**: Created `wiki/` directory and core structure.
-- **SSG Migration**: Switched from `@sveltejs/adapter-auto` to `@sveltejs/adapter-static`.
-- **Global Prerendering**: Enabled `prerender = true` in root layout.
-- **Skills Implemented**: Created `ingest-source.skill.md` and `lint-wiki.skill.md` as Antigravity special commands.
-- **Expertise Excised**: Moved 100% of Eurorack expertise to a separate extraction package for migration to the `distrans` repo.
-- **Wiki Management Skill**: Created `.antigravity/skills/wiki-management.skill.md` to enforce strict ingest workflows and bookkeeping.
-- **Cleanup**: Removed hardware-specific directories and files to focus on website development.
-- **Svelte 5 Update**: Ingested Svelte 5 documentation, created `.antigravity/skills/svelte-engineering.skill.md`, and documented core concepts in `wiki/expertise/svelte-5.md`.
+## [2026-04-26] ingest | rebuilt wiki from scratch
+- Written: `entities/dexterlabs.md` — grounded in real context (who Dexter is, what Dexterlabs sells)
+- Written: `entities/invoices.md` — Dutch BTW context, SEPA QR, binary search pagination rationale
+- Written: `concepts/brand-voice.md` — Lab Bench aesthetic do/don't, writing tone
+- Written: `concepts/content-architecture.md` — editorial intent for feed vs notes vs catalogue
+- Written: `expertise/project-conventions.md` — always/never rules for the codebase
+- Rebuilt: `wiki/index.md` — karpathy table format

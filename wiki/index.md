@@ -1,19 +1,27 @@
-# LLM Wiki: Dexterlabs
+# Knowledge Base Index
 
-Welcome to the internal knowledge base for Dexterlabs. This wiki is maintained by the Antigravity agent and serves as the source of truth for design decisions, technical architecture, and project documentation.
+## entities
 
-## Sections
+People, systems, and projects.
 
-- [Project Log](log.md) - Chronological record of developments.
-- [Workflows (Antigravity Skills)](../.antigravity/workflows/) - Executable commands (`ingest-source`, `lint-wiki`).
-- [Wiki Management Skill](../.antigravity/skills/wiki-management.skill.md) - Rules for maintainting this KB.
-- [Svelte Engineering Skill](../.antigravity/skills/svelte-engineering.skill.md) - Rules for Svelte 5 development.
-- [Content Strategy](concepts/content-strategy.md) - The 3 pillar content architecture.
-- [LLM Wiki Pattern](concepts/llm-wiki-pattern.md) - The core philosophy.
-- [Expertise](expertise/) - Technical domain knowledge (`svelte-5.md`).
-- [Entities](entities/) - Key project components (Invoices, Dexterlabs).
+| Article | Summary | Updated |
+|---------|---------|---------|
+| [Dexterlabs](entities/dexterlabs.md) | What Dexterlabs is, who Dexter is, what the site does | 2026-04-26 |
+| [Invoice System](entities/invoices.md) | Private client-side PDF invoicing, Dutch BTW, SEPA QR codes | 2026-04-26 |
 
-## Current Focus
-- Transitioning to "Lab Bench" minimal aesthetic.
-- Implementing SvelteKit static site generation.
-- Establishing the LLM Wiki pattern.
+## concepts
+
+Editorial and design decisions.
+
+| Article | Summary | Updated |
+|---------|---------|---------|
+| [Brand Voice & Aesthetic](concepts/brand-voice.md) | Phosphor palette, instrument-panel motifs, writing tone | 2026-04-26 |
+| [Content Architecture](concepts/content-architecture.md) | What feed, notes, and catalogue are for; editorial intent | 2026-04-26 |
+
+## expertise
+
+Project-specific conventions and rules.
+
+| Article | Summary | Updated |
+|---------|---------|---------|
+| [Project Conventions](expertise/project-conventions.md) | Always/never rules: runes, pnpm, static-only, CSS conventions | 2026-04-26 |
