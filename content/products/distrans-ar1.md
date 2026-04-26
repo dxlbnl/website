@@ -7,7 +7,7 @@ status: coming-soon
 category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
 # tindieUrl: https://www.tindie.com/stores/dexterlabs/
-image: /images/products/distrans.webp
+image: /images/products/distrans-dune.webp
 price: 250
 specs:
   Width: 6 HP
