@@ -9,6 +9,21 @@ export function resolveLogImage(path: string, slug: string): string {
 		const filename = path.split('/').pop()?.split('.')[0];
 		return `/images/notes/${slug}/${filename}.webp`;
 	}
-	
+
+	return path;
+}
+
+/**
+ * Resolves a relative media path for a product to its optimized static path.
+ * Example: 'media/photo.png' -> '/images/products/product-id/photo.webp'
+ */
+export function resolveProductImage(path: string, id: string): string {
+	if (!path || !id) return path;
+
+	if (path.startsWith('media/') || path.startsWith('./media/')) {
+		const filename = path.split('/').pop()?.split('.')[0];
+		return `/images/products/${id}/${filename}.webp`;
+	}
+
 	return path;
 }

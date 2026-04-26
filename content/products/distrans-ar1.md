@@ -8,6 +8,11 @@ category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
 # tindieUrl: https://www.tindie.com/stores/dexterlabs/
 image: /images/products/distrans-dune.webp
+images:
+  - media/conduit.png
+  - media/conduit-galaxy.png
+  - media/conduit-motherboard.png
+  - media/conduit-starglitch.png
 price: 250
 specs:
   Width: 6 HP
@@ -69,16 +74,16 @@ It's class-compliant, so you don't need drivers for anything. Just plug in the U
 - Class: UAC 1.0 (class compliant)
 - Streams: 2ch in + 2ch out, 24-bit, 48kHz
 - Compatibility: Windows/macOS/Linux/iOS
-- Power: USB-C bus powered
+- Power: Eurorack or USB-C bus powered
 
 **Physical**
 
 - Width: 6 HP
-- Power: USB-C (no Eurorack power needed)
+- Power: Eurorack or USB-C
 
 ## Status
 
-Currently in firmware development. Expected release: TBD 2025.
+Currently in firmware development. Expected release: TBD 2026.
 
 ## What's included
 

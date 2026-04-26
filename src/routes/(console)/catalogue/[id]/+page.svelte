@@ -14,6 +14,33 @@
 	};
 	const stock = $derived(stockMap[data.product.status] ?? { label: data.product.status, cls: '', led: 'off' });
 	const cta = $derived(data.product.status === 'coming-soon' ? 'PREORDER' : 'ADD TO RACK');
+
+	let buying = $state(false);
+	let activeIndex = $state(0);
+
+	const galleryImages = $derived(
+		data.product.images?.length
+			? data.product.images
+			: data.product.image
+				? [data.product.image]
+				: []
+	);
+
+	async function startCheckout() {
+		if (!data.product.stripePriceId) return;
+		buying = true;
+		try {
+			const res = await fetch('/api/checkout', {
+				method: 'POST',
+				headers: { 'content-type': 'application/json' },
+				body: JSON.stringify({ priceId: data.product.stripePriceId, productId: data.product.id }),
+			});
+			const { url } = await res.json();
+			window.location.href = url;
+		} finally {
+			buying = false;
+		}
+	}
 </script>
 
 <div class="wrap">
@@ -21,12 +48,25 @@
 		<a href="/catalogue" class="back">← RETURN TO CATALOGUE</a>
 	</div>
 
-	<div class="grid" class:no-image={!data.product.image}>
+	<div class="grid" class:no-image={!galleryImages.length}>
 		<div class="img-col">
-			{#if data.product.image}
+			{#if galleryImages.length}
 				<div class="hero-img">
-					<img src={data.product.image} alt={data.product.name} />
+					<img src={galleryImages[activeIndex]} alt={data.product.name} />
 				</div>
+				{#if galleryImages.length > 1}
+					<div class="thumbs">
+						{#each galleryImages as src, i}
+							<button
+								class="thumb"
+								class:active={i === activeIndex}
+								onclick={() => (activeIndex = i)}
+							>
+								<img {src} alt="" />
+							</button>
+						{/each}
+					</div>
+				{/if}
 			{/if}
 			<div class="content">
 				<data.component />
@@ -65,9 +105,15 @@
 					</span>
 				</div>
 				{#if data.product.status === 'available' || data.product.status === 'coming-soon'}
-					<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
-						{cta} →
-					</a>
+					{#if data.product.stripePriceId}
+						<button class="buy" onclick={startCheckout} disabled={buying}>
+							{buying ? 'LOADING…' : `${cta} →`}
+						</button>
+					{:else if data.product.tindieUrl}
+						<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
+							{cta} →
+						</a>
+					{/if}
 				{:else}
 					<span class="sold-out-label">SOLD OUT</span>
 				{/if}
@@ -144,6 +190,30 @@
 		overflow: hidden;
 	}
 	.hero-img img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.thumbs {
+		display: flex;
+		gap: 6px;
+		margin-top: 6px;
+		overflow-x: auto;
+	}
+	.thumb {
+		flex-shrink: 0;
+		width: 72px;
+		height: 72px;
+		border: 1px solid var(--rule);
+		overflow: hidden;
+		padding: 0;
+		cursor: pointer;
+		transition: border-color 0.1s;
+	}
+	.thumb.active {
+		border-color: var(--amber);
+	}
+	.thumb img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
@@ -262,6 +332,10 @@
 	}
 	.buy:hover {
 		background: var(--ink);
+	}
+	.buy:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
 	}
 	.sold-out-label {
 		font-family: var(--mono);

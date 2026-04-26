@@ -15,8 +15,10 @@ export type ProductFrontmatter = {
 	status: ProductStatus;
 	category: string;
 	tags: string[];
-	tindieUrl: string;
+	tindieUrl?: string;
+	stripePriceId?: string;
 	image?: string;
+	images?: string[];
 	price?: number;
 	specs?: Record<string, string>;
 };
