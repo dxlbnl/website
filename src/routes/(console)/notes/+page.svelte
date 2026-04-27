@@ -14,8 +14,8 @@
 		<div class="eyebrow">// NOTES · LONGER PIECES</div>
 		<h1>Notes.</h1>
 		<p class="sub">
-			Longer writing. Build logs, post-mortems, opinions. Written when something took long enough
-			to be worth explaining. Signed by <em>Dexter</em>.
+			Longer writing. Build logs, post-mortems, opinions. Written when something took long enough to
+			be worth explaining. Signed by <em>Dexter</em>.
 		</p>
 		<div class="meta">
 			<span><b>{data.entries.length}</b> PIECES</span>
@@ -32,7 +32,11 @@
 			<div class="idx-n">{String(i + 1).padStart(2, '0')}</div>
 			<div class="idx-t">
 				{entry.title}
-				<small>{entry.date.split('T')[0]} · {entry.kind ?? 'LOG'}{entry.lede ? ' · ' + entry.lede.slice(0, 80) + (entry.lede.length > 80 ? '…' : '') : ''}</small>
+				<small
+					>{entry.date.split('T')[0]} · {entry.kind ?? 'LOG'}{entry.lede
+						? ' · ' + entry.lede.slice(0, 80) + (entry.lede.length > 80 ? '…' : '')
+						: ''}</small
+				>
 			</div>
 			<div class="idx-i">
 				{#if entry.images?.[0]}

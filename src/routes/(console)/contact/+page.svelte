@@ -1,6 +1,7 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import Signature from '$lib/ui/Signature.svelte';
+	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
 
 	let email = $state('');
 	onMount(() => {
@@ -20,10 +21,22 @@
 			{#if email}<a href="mailto:{email}">{email}</a>{/if}
 		</div>
 		<div class="meta">
-			<a href="https://github.com/dxlbnl" target="_blank" rel="noopener"><b>GH</b> github.com/dxlbnl</a>
-			<a href="https://linkedin.com/in/alexander-esselink" target="_blank" rel="noopener"><b>LI</b> linkedin/alexander-esselink</a>
-			<a href="https://instagram.com/dexterotti" target="_blank" rel="noopener"><b>IG</b> @dexterotti</a>
+			<a href="https://github.com/dxlbnl" target="_blank" rel="noopener"
+				><b>GH</b> github.com/dxlbnl</a
+			>
+			<a href="https://linkedin.com/in/alexander-esselink" target="_blank" rel="noopener"
+				><b>LI</b> linkedin/alexander-esselink</a
+			>
+			<a href="https://instagram.com/dexterotti" target="_blank" rel="noopener"
+				><b>IG</b> @dexterotti</a
+			>
 		</div>
+	</section>
+
+	<section class="mail">
+		<div class="eyebrow">// MAILING LIST</div>
+		<p class="sub">Occasional updates from the lab — new builds, availability, notes.</p>
+		<SubscribeForm />
 	</section>
 
 	<Signature />
@@ -100,5 +113,15 @@
 		color: var(--ink-dim);
 		font-weight: 500;
 		margin-right: 6px;
+	}
+	.mail {
+		padding: 48px 0 56px;
+	}
+	.mail .sub {
+		font-size: var(--t-lede);
+		color: var(--ink-dim);
+		line-height: 1.55;
+		max-width: 44ch;
+		margin: 0 0 20px;
 	}
 </style>

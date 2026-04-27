@@ -17,14 +17,47 @@ export const POST: RequestHandler = async ({ request, url }) => {
 		shipping_address_collection: {
 			// EU + UK, US, CA, AU, CH, NO, NZ, JP, SG
 			allowed_countries: [
-				'AT','BE','BG','CY','CZ','DE','DK','EE','ES','FI','FR','GR','HR',
-				'HU','IE','IT','LT','LU','LV','MT','NL','PL','PT','RO','SE','SI','SK',
-				'GB','US','CA','AU','CH','NO','NZ','JP','SG',
-			],
+				'AT',
+				'BE',
+				'BG',
+				'CY',
+				'CZ',
+				'DE',
+				'DK',
+				'EE',
+				'ES',
+				'FI',
+				'FR',
+				'GR',
+				'HR',
+				'HU',
+				'IE',
+				'IT',
+				'LT',
+				'LU',
+				'LV',
+				'MT',
+				'NL',
+				'PL',
+				'PT',
+				'RO',
+				'SE',
+				'SI',
+				'SK',
+				'GB',
+				'US',
+				'CA',
+				'AU',
+				'CH',
+				'NO',
+				'NZ',
+				'JP',
+				'SG'
+			]
 		},
 		success_url: `${url.origin}/order/success`,
 		cancel_url: `${url.origin}/catalogue/${productId}`,
-		metadata: { productId, priceId },
+		metadata: { productId, priceId }
 	});
 
 	return json({ url: session.url });

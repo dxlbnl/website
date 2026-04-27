@@ -5,6 +5,7 @@
 	const adminItems = [
 		{ label: 'FEED', href: '/admin' },
 		{ label: 'ORDERS', href: '/admin/orders' },
+		{ label: 'MAILINGS', href: '/admin/mailings' }
 	];
 </script>
 

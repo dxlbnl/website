@@ -10,10 +10,12 @@ The site looks like instrument firmware, not a portfolio. The aesthetic referenc
 ## Visual language
 
 **Two themes:**
+
 - **Phosphor** (default dark): near-black with a green tint (`#0b0d0c`), cool green-tinted ink, amber accent, cyan secondary. Named after phosphor screens.
 - **Paper** (light): warm beige/cream, like a datasheet or thermal paper printout.
 
 **Motifs in the current design:**
+
 - LED dot indicators with glow — used for genuine status (PWR, NET OK). Glow is earned by meaning.
 - Live oscilloscope waveform in the status bar — animated sine, renders in cyan.
 - All-caps monospace for nav items, labels, status text.

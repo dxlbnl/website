@@ -6,11 +6,14 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
 	// for more information about preprocessors
-	preprocess: [vitePreprocess(), mdsvex({
-		extension: '.md',
-		smartypants: true,
-		// We'll handle component mapping in the page component for more control
-	})],
+	preprocess: [
+		vitePreprocess(),
+		mdsvex({
+			extension: '.md',
+			smartypants: true
+			// We'll handle component mapping in the page component for more control
+		})
+	],
 	kit: {
 		adapter: adapter({
 			// default options are shown. On some platforms
@@ -22,7 +25,7 @@ const config = {
 			strict: true
 		})
 	},
-	extensions: ['.svelte', '.svx', '.md'],
+	extensions: ['.svelte', '.svx', '.md']
 };
 
 export default config;

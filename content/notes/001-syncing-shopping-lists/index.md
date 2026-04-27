@@ -1,14 +1,14 @@
 ---
 pageType: note
-title: "Syncing Shopping Lists"
+title: 'Syncing Shopping Lists'
 date: 2023-03-01
 kind: BUILD
 tags: [SvelteKit, SSE, Real-time, Security]
 images: [media/hero.png]
-lede: "A real-time shared grocery list using Server-Sent Events — no polling, no WebSockets, no list left behind."
+lede: 'A real-time shared grocery list using Server-Sent Events — no polling, no WebSockets, no list left behind.'
 ---
 
-In order to keep track of the groceries to get, without resorting to an analog list which is always out of sight, I created a syncing list app. 
+In order to keep track of the groceries to get, without resorting to an analog list which is always out of sight, I created a syncing list app.
 
 The core of the system uses [Server-Sent Events](https://en.wikipedia.org/wiki/Server-sent_events) (SSE). It’s a really elegant way to sync multiple clients in real-time. Instead of polling the server or setting up complex WebSockets, the browser just listens for updates on a single stream. It’s simple, lightweight, and perfect for something like a shared grocery list where you want to see items being checked off as someone else walks through the store.
 
@@ -27,7 +27,6 @@ The goal is to keep the simplicity of the SSE sync while adding the security and
 
 ## Aesthetic Evolution: The Lab-Bench Protocol
 
-As the functionality evolves, so does the visual language. I’m moving away from the purely functional, colorful rows of the first prototype toward a more structured, "Lab-Bench" aesthetic. It’s about high-contrast clarity, technical typography, and a UI that feels like a piece of laboratory equipment. 
+As the functionality evolves, so does the visual language. I’m moving away from the purely functional, colorful rows of the first prototype toward a more structured, "Lab-Bench" aesthetic. It’s about high-contrast clarity, technical typography, and a UI that feels like a piece of laboratory equipment.
 
 The goal is to make the act of "checking off a grocery list" feel as precise and satisfying as calibrating an oscillator.
-

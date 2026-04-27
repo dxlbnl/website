@@ -1,6 +1,6 @@
 ---
 pageType: console
-title: "DEXTER: Coder, Maker, Artist"
+title: 'DEXTER: Coder, Maker, Artist'
 roles: Coder, Maker, Artist
 seoDescription: The official console of DexterLabs. Expert TypeScript architecture, Eurorack hardware engineering, and generative art protocols.
 tagline: Forging signals into synthesis, data into vision, and logic into art.

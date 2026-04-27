@@ -3,11 +3,15 @@
 	import Led from '$lib/ui/Led.svelte';
 	import type { Component } from 'svelte';
 	import type { ProductFrontmatter } from '$lib/types';
+	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
 
 	type Props = { data: { component: Component; product: ProductFrontmatter } };
 	let { data }: Props = $props();
 
-	const stockMap: Record<string, { label: string; cls: string; led: 'ok' | 'amber' | 'off'; ship?: string }> = {
+	const stockMap: Record<
+		string,
+		{ label: string; cls: string; led: 'ok' | 'amber' | 'off'; ship?: string }
+	> = {
 		available: { label: 'IN STOCK', cls: 'ok', led: 'ok', ship: 'SHIPS IN 3–5 DAYS' },
 		'sold-out': { label: 'SOLD OUT', cls: 'out', led: 'off' },
 		'coming-soon': { label: 'PREORDER', cls: 'low', led: 'amber' }
@@ -19,6 +23,7 @@
 
 	let buying = $state(false);
 	let activeIndex = $state(0);
+	let notifyOpen = $state(false);
 
 	const galleryImages = $derived(
 		data.product.images?.length
@@ -103,7 +108,8 @@
 					<span class="price">{data.product.price ? `€${data.product.price}` : 'TBD'}</span>
 					<span class="stock-info {stock.cls}">
 						<Led tone={stock.led} />
-						{stock.label}{#if stock.ship} · {stock.ship}{/if}
+						{stock.label}{#if stock.ship}
+							· {stock.ship}{/if}
 					</span>
 				</div>
 				{#if data.product.status === 'available' || data.product.status === 'coming-soon'}
@@ -116,17 +122,19 @@
 							{cta} →
 						</a>
 					{:else}
-						<a
-							href="mailto:a.esselink@gmail.com?subject=Interest: {data.product.name}"
-							class="notify"
-						>
-							NOTIFY ME →
-						</a>
+						<button class="notify" onclick={() => (notifyOpen = true)}> NOTIFY ME → </button>
 					{/if}
 				{:else}
 					<span class="sold-out-label">SOLD OUT</span>
 				{/if}
 			</div>
+
+			{#if notifyOpen}
+				<div class="notify-form">
+					<div class="notify-label">// GET NOTIFIED</div>
+					<SubscribeForm />
+				</div>
+			{/if}
 		</div>
 	</div>
 
@@ -361,7 +369,11 @@
 		color: var(--ink-dim);
 		text-transform: uppercase;
 		white-space: nowrap;
-		transition: border-color 0.15s, color 0.15s;
+		background: none;
+		cursor: pointer;
+		transition:
+			border-color 0.15s,
+			color 0.15s;
 	}
 	.notify:hover {
 		border-color: var(--amber);
@@ -373,6 +385,17 @@
 		color: var(--ink-faint);
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
+	}
+	.notify-form {
+		margin-top: 12px;
+	}
+	.notify-label {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.12em;
+		color: var(--ink-faint);
+		text-transform: uppercase;
+		margin-bottom: 8px;
 	}
 	.content {
 		max-width: 68ch;

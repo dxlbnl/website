@@ -7,8 +7,12 @@
 	type Props = { data: PageData; form: ActionData };
 	let { data, form }: Props = $props();
 
-	function fmt(d: string) {
-		return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
+	function fmtDate(d: string) {
+		return new Date(d).toLocaleDateString('en-GB', {
+			day: '2-digit',
+			month: 'short',
+			year: '2-digit'
+		});
 	}
 </script>
 
@@ -19,7 +23,12 @@
 		<form method="POST" action="?/login" use:enhance class="login-form">
 			<div class="prompt">
 				<span class="caret">&gt;</span>
-				<input type="password" name="token" placeholder="paste token" autocomplete="current-password" />
+				<input
+					type="password"
+					name="token"
+					placeholder="paste token"
+					autocomplete="current-password"
+				/>
 			</div>
 			{#if form?.error}
 				<p class="error"><Led tone="danger" />{form.error}</p>
@@ -31,7 +40,9 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · FEED CONTROL</div>
 		<h1>Feed.</h1>
-		<p class="sub">Post directly to the feed — no commit, no redeploy. Wipe anything that ages badly.</p>
+		<p class="sub">
+			Post directly to the feed — no commit, no redeploy. Wipe anything that ages badly.
+		</p>
 		<div class="meta">
 			<span><b>{data.posts.length}</b> RECORDS</span>
 			<form method="POST" action="?/logout" use:enhance>
@@ -56,7 +67,7 @@
 		<div class="section-label">// LOG</div>
 		{#each data.posts as post}
 			<div class="entry">
-				<span class="date">{fmt(post.date)}</span>
+				<span class="date">{fmtDate(post.date)}</span>
 				<div class="entry-body">
 					<p class="body">{post.body}</p>
 					{#if post.tags.length}
@@ -107,7 +118,10 @@
 		text-transform: uppercase;
 		color: var(--ink-faint);
 	}
-	.meta b { color: var(--ink); font-weight: 500; }
+	.meta b {
+		color: var(--ink);
+		font-weight: 500;
+	}
 	.sub {
 		margin-top: 20px;
 		font-size: var(--t-lede);
@@ -133,7 +147,9 @@
 		border-radius: var(--radius);
 		padding: 0 12px;
 	}
-	.prompt:focus-within { border-color: var(--amber); }
+	.prompt:focus-within {
+		border-color: var(--amber);
+	}
 	.caret {
 		font-family: var(--mono);
 		color: var(--amber);
@@ -161,9 +177,18 @@
 		color: var(--ink-faint);
 		padding: 28px 0 12px;
 	}
-	.compose form { display: flex; flex-direction: column; gap: 8px; }
-	.compose-footer { display: flex; gap: 8px; }
-	.compose-footer input { flex: 1; }
+	.compose form {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.compose-footer {
+		display: flex;
+		gap: 8px;
+	}
+	.compose-footer input {
+		flex: 1;
+	}
 
 	/* log */
 	.entry {
@@ -181,9 +206,21 @@
 		letter-spacing: 0.06em;
 		padding-top: 2px;
 	}
-	.entry-body { display: flex; flex-direction: column; gap: 8px; }
-	.body { margin: 0; font-size: var(--t-body); line-height: 1.55; }
-	.tags { display: flex; gap: 4px; flex-wrap: wrap; }
+	.entry-body {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.body {
+		margin: 0;
+		font-size: var(--t-body);
+		line-height: 1.55;
+	}
+	.tags {
+		display: flex;
+		gap: 4px;
+		flex-wrap: wrap;
+	}
 	.empty {
 		font-family: var(--mono);
 		font-size: var(--t-mono);
@@ -193,7 +230,9 @@
 	}
 
 	/* shared inputs */
-	textarea, input[type='text'], input[type='password'] {
+	textarea,
+	input[type='text'],
+	input[type='password'] {
 		width: 100%;
 		background: var(--bg-sunken);
 		border: 1px solid var(--rule-strong);
@@ -205,7 +244,10 @@
 		outline: none;
 		resize: vertical;
 	}
-	textarea:focus, input[type='text']:focus { border-color: var(--amber); }
+	textarea:focus,
+	input[type='text']:focus {
+		border-color: var(--amber);
+	}
 
 	/* buttons */
 	button[type='submit']:not(.del):not(.logout) {
@@ -237,7 +279,10 @@
 		border-radius: var(--radius);
 		margin-top: 2px;
 	}
-	.del:hover { color: var(--danger); border-color: var(--danger); }
+	.del:hover {
+		color: var(--danger);
+		border-color: var(--danger);
+	}
 	.logout {
 		font-family: var(--mono);
 		font-size: var(--t-mono);
@@ -249,7 +294,9 @@
 		color: var(--ink-faint);
 		padding: 0;
 	}
-	.logout:hover { color: var(--danger); }
+	.logout:hover {
+		color: var(--danger);
+	}
 	.error {
 		display: flex;
 		align-items: center;

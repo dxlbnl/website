@@ -4,7 +4,7 @@ export const feedPosts = pgTable('feed_posts', {
 	id: serial('id').primaryKey(),
 	body: text('body').notNull(),
 	date: timestamp('date', { withTimezone: true }).notNull().defaultNow(),
-	tags: text('tags').array().notNull().default([]),
+	tags: text('tags').array().notNull().default([])
 });
 
 export const orders = pgTable('orders', {
@@ -25,5 +25,5 @@ export const orders = pgTable('orders', {
 		postal_code: string;
 		country: string;
 	}>(),
-	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });

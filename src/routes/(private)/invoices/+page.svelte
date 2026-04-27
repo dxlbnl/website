@@ -44,9 +44,7 @@
 						<td>
 							{#if calc.hasMultipleRates}
 								<span
-									title={calc.vatBreakdown
-										.map(([r, a]) => `${r}%: €${a.toFixed(2)}`)
-										.join('\n')}
+									title={calc.vatBreakdown.map(([r, a]) => `${r}%: €${a.toFixed(2)}`).join('\n')}
 								>
 									{formatCurrencyWithLocale(calc.vatAmount)} *
 								</span>

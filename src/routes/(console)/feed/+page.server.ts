@@ -13,7 +13,7 @@ export const load: PageServerLoad = async () => {
 			id: r.id,
 			body: r.body,
 			date: r.date.toISOString(),
-			tags: r.tags,
-		})),
+			tags: r.tags
+		}))
 	};
 };

@@ -112,7 +112,12 @@
 				</div>
 				<div class="qr-wrap">
 					<div class="block-label">// BETAAL VIA QR</div>
-					<a href={paymentUrl} target="_blank" rel="noopener noreferrer" aria-label="Betaal via QR-code">
+					<a
+						href={paymentUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label="Betaal via QR-code"
+					>
 						<canvas bind:this={qrCanvas} class="qr-canvas"></canvas>
 					</a>
 				</div>

@@ -12,7 +12,9 @@
 
 	onMount(() => {
 		const saved = localStorage.getItem('dxlb-palette');
-		setPalette(saved ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'phosphor' : 'paper'));
+		setPalette(
+			saved ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'phosphor' : 'paper')
+		);
 	});
 </script>
 

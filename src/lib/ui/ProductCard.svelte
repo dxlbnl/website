@@ -17,9 +17,7 @@
 			: (stockMap[product.status] ?? { label: product.status, cls: '' })
 	);
 	const cta = $derived(
-		product.status === 'coming-soon'
-			? orderable ? 'PREORDER' : 'COMING SOON'
-			: 'ADD TO RACK'
+		product.status === 'coming-soon' ? (orderable ? 'PREORDER' : 'COMING SOON') : 'ADD TO RACK'
 	);
 </script>
 
@@ -56,7 +54,11 @@
 	}
 	.img {
 		aspect-ratio: 1;
-		background: repeating-linear-gradient(135deg, var(--bg-sunken) 0 10px, var(--bg-elev) 10px 20px);
+		background: repeating-linear-gradient(
+			135deg,
+			var(--bg-sunken) 0 10px,
+			var(--bg-elev) 10px 20px
+		);
 		border-bottom: 1px solid var(--rule);
 		display: flex;
 		align-items: center;
@@ -130,7 +132,9 @@
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--ink-dim);
-		transition: background 0.15s, color 0.15s;
+		transition:
+			background 0.15s,
+			color 0.15s;
 	}
 	.card:hover .cta {
 		background: var(--amber);

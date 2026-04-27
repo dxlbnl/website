@@ -14,7 +14,7 @@ export const load: PageServerLoad = async ({ cookies }) => {
 	const rows = await db.select().from(feedPosts).orderBy(desc(feedPosts.date));
 	return {
 		authed: true as const,
-		posts: rows.map((r) => ({ ...r, date: r.date.toISOString() })),
+		posts: rows.map((r) => ({ ...r, date: r.date.toISOString() }))
 	};
 };
 
@@ -28,7 +28,7 @@ export const actions: Actions = {
 			path: '/',
 			httpOnly: true,
 			sameSite: 'strict',
-			maxAge: 60 * 60 * 24 * 365,
+			maxAge: 60 * 60 * 24 * 365
 		});
 	},
 
@@ -41,8 +41,11 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const body = (data.get('body') as string)?.trim();
 		if (!body) return fail(400, { error: 'Body required' });
-		const tags = (data.get('tags') as string)
-			?.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean) ?? [];
+		const tags =
+			(data.get('tags') as string)
+				?.split(',')
+				.map((t) => t.trim().toLowerCase())
+				.filter(Boolean) ?? [];
 		await db.insert(feedPosts).values({ body, tags });
 	},
 
@@ -51,5 +54,5 @@ export const actions: Actions = {
 		const id = Number((await request.formData()).get('id'));
 		if (!id) return fail(400);
 		await db.delete(feedPosts).where(eq(feedPosts.id, id));
-	},
+	}
 };

@@ -7,7 +7,10 @@
 	<div class="box">
 		<div class="label"><Led tone="amber" /> ORDER CANCELLED</div>
 		<h1>No charge made.</h1>
-		<p>You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to try again.</p>
+		<p>
+			You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to
+			try again.
+		</p>
 		<a href="/catalogue" class="back">← RETURN TO CATALOGUE</a>
 	</div>
 	<Signature />

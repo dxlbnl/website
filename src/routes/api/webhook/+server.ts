@@ -1,9 +1,11 @@
 import Stripe from 'stripe';
+import { Resend } from 'resend';
 import { env } from '$env/dynamic/private';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { orders } from '$lib/server/db/schema';
+import { renderOrderEmail } from '$lib/email/render';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -44,18 +46,35 @@ export const POST: RequestHandler = async ({ request }) => {
 								city: addr.city ?? '',
 								state: addr.state ?? null,
 								postal_code: addr.postal_code ?? '',
-								country: addr.country ?? '',
+								country: addr.country ?? ''
 							}
-						: null,
+						: null
 				})
 				.onConflictDoNothing();
+
+			if (session.customer_details?.email) {
+				try {
+					const resend = new Resend(env.RESEND_API_KEY);
+					const html = renderOrderEmail({
+						productId: session.metadata?.productId ?? '',
+						amountTotal: session.amount_total ?? 0,
+						currency: session.currency ?? 'eur',
+						customerName: session.customer_details.name ?? undefined
+					});
+					await resend.emails.send({
+						from: env.RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
+						to: session.customer_details.email,
+						subject: 'Order received — DEXTERLABS',
+						html
+					});
+				} catch (err) {
+					console.error('[webhook] order email failed', err);
+				}
+			}
 			break;
 		}
 		case 'checkout.session.async_payment_succeeded':
-			await db
-				.update(orders)
-				.set({ status: 'paid' })
-				.where(eq(orders.stripeSessionId, session.id));
+			await db.update(orders).set({ status: 'paid' }).where(eq(orders.stripeSessionId, session.id));
 			break;
 		case 'checkout.session.async_payment_failed':
 			await db

@@ -10,8 +10,8 @@
 			{ label: 'NOTES', href: '/notes' },
 			{ label: 'CATALOGUE', href: '/catalogue' },
 			{ label: 'ABOUT', href: '/about' },
-			{ label: 'CONTACT', href: '/contact' },
-		],
+			{ label: 'CONTACT', href: '/contact' }
+		]
 	}: { items?: NavItem[] } = $props();
 
 	function isActive(href: string) {

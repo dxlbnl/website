@@ -1,3 +1,7 @@
+<script lang="ts">
+	import SubscribeForm from './SubscribeForm.svelte';
+</script>
+
 <footer class="footer">
 	<div>
 		<h4>// DEXTERLABS</h4>
@@ -17,7 +21,9 @@
 	<div>
 		<h4>// NET</h4>
 		<ul>
-			<li><a href="https://github.com/dxlbnl/" target="_blank" rel="noopener">[NET.GH] github</a></li>
+			<li>
+				<a href="https://github.com/dxlbnl/" target="_blank" rel="noopener">[NET.GH] github</a>
+			</li>
 			<li>
 				<a
 					href="https://www.linkedin.com/in/alexander-esselink-414685a/"
@@ -37,6 +43,11 @@
 		<div>© 2026 DEXTERLABS</div>
 		<div class="faint">ALL SYSTEMS OPERATIONAL</div>
 	</div>
+	<div>
+		<h4>// MAIL</h4>
+		<div class="faint tagline">Updates from the lab.</div>
+		<SubscribeForm />
+	</div>
 </footer>
 
 <style>
@@ -45,7 +56,7 @@
 		border-top: 1px solid var(--rule);
 		padding: 32px;
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(5, 1fr);
 		gap: 24px;
 		font-family: var(--mono);
 		font-size: var(--t-mono);
@@ -78,5 +89,9 @@
 	}
 	.faint {
 		color: var(--ink-faint);
+	}
+	.tagline {
+		margin-bottom: 8px;
+		text-transform: none;
 	}
 </style>

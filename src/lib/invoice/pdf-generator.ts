@@ -85,10 +85,7 @@ function findOverflowingItem(container: HTMLElement, pdfHeight: number): number 
 /**
  * Build test page with items from startIndex onwards
  */
-function buildTestPage(
-	originalContainer: HTMLElement,
-	startIndex: number
-): HTMLElement {
+function buildTestPage(originalContainer: HTMLElement, startIndex: number): HTMLElement {
 	// Clone container structure
 	const clone = originalContainer.cloneNode(true) as HTMLElement;
 	clone.style.position = 'absolute';
@@ -181,10 +178,7 @@ function copyCanvasContents(original: HTMLElement, clone: HTMLElement): void {
 /**
  * Build page element for rendering
  */
-function buildPageForRendering(
-	originalContainer: HTMLElement,
-	page: PageDefinition
-): HTMLElement {
+function buildPageForRendering(originalContainer: HTMLElement, page: PageDefinition): HTMLElement {
 	// Clone container structure
 	const clone = originalContainer.cloneNode(true) as HTMLElement;
 

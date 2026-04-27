@@ -13,6 +13,6 @@ export const load: PageServerLoad = async ({ cookies }) => {
 	const rows = await db.select().from(orders).orderBy(desc(orders.createdAt));
 	return {
 		authed: true as const,
-		orders: rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() })),
+		orders: rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() }))
 	};
 };

@@ -4,13 +4,20 @@
 
 	let { data }: { data: PageData } = $props();
 
-	function fmt(iso: string) {
-		return new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
+	function fmtDate(iso: string) {
+		return new Date(iso).toLocaleDateString('en-GB', {
+			day: '2-digit',
+			month: 'short',
+			year: '2-digit'
+		});
 	}
 
 	function fmtAmount(cents: number | null, currency: string | null) {
 		if (cents == null) return '—';
-		return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: currency ?? 'EUR' }).format(cents / 100);
+		return new Intl.NumberFormat('nl-NL', {
+			style: 'currency',
+			currency: currency ?? 'EUR'
+		}).format(cents / 100);
 	}
 
 	function statusTone(status: string): 'ok' | 'amber' | 'danger' {
@@ -21,10 +28,23 @@
 
 	function fmtAddress(
 		name: string | null,
-		addr: { line1: string; line2?: string | null; city: string; state?: string | null; postal_code: string; country: string } | null
+		addr: {
+			line1: string;
+			line2?: string | null;
+			city: string;
+			state?: string | null;
+			postal_code: string;
+			country: string;
+		} | null
 	) {
 		if (!addr) return null;
-		const lines = [name, addr.line1, addr.line2, [addr.postal_code, addr.city].filter(Boolean).join(' '), addr.country];
+		const lines = [
+			name,
+			addr.line1,
+			addr.line2,
+			[addr.postal_code, addr.city].filter(Boolean).join(' '),
+			addr.country
+		];
 		return lines.filter(Boolean).join(', ');
 	}
 </script>
@@ -48,7 +68,7 @@
 		<div class="section-label">// LOG</div>
 		{#each data.orders as order}
 			<div class="entry">
-				<span class="date">{fmt(order.createdAt)}</span>
+				<span class="date">{fmtDate(order.createdAt)}</span>
 				<div class="entry-body">
 					<span class="product">{order.productId}</span>
 					{#if order.customerEmail}
@@ -100,7 +120,10 @@
 		text-transform: uppercase;
 		color: var(--ink-faint);
 	}
-	.meta b { color: var(--ink); font-weight: 500; }
+	.meta b {
+		color: var(--ink);
+		font-weight: 500;
+	}
 	.sub {
 		margin-top: 20px;
 		font-size: var(--t-lede);
@@ -183,7 +206,8 @@
 			grid-template-columns: 72px 1fr;
 			grid-template-rows: auto auto;
 		}
-		.amount, .status {
+		.amount,
+		.status {
 			grid-column: 2;
 		}
 	}
