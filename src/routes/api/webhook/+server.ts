@@ -61,12 +61,18 @@ export const POST: RequestHandler = async ({ request }) => {
 						currency: session.currency ?? 'eur',
 						customerName: session.customer_details.name ?? undefined
 					});
-					await resend.emails.send({
+					const { data: emailData } = await resend.emails.send({
 						from: env.RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
 						to: session.customer_details.email,
 						subject: 'Order received — DEXTERLABS',
 						html
 					});
+					if (emailData?.id) {
+						await db
+							.update(orders)
+							.set({ resendEmailId: emailData.id })
+							.where(eq(orders.stripeSessionId, session.id));
+					}
 				} catch (err) {
 					console.error('[webhook] order email failed', err);
 				}

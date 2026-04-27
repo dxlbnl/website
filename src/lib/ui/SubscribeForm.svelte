@@ -62,6 +62,7 @@
 		gap: 8px;
 		align-items: center;
 		flex-wrap: wrap;
+		max-width: 420px;
 	}
 	input {
 		background: var(--bg-sunken);

@@ -5,7 +5,7 @@
 <footer class="footer">
 	<div class="mail-col">
 		<h4>// MAIL</h4>
-		<div class="faint tagline">Updates from the lab.</div>
+		<div class="faint tagline">Receive updates from the lab.</div>
 		<SubscribeForm />
 	</div>
 	<div>

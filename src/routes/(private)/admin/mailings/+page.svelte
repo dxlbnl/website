@@ -43,12 +43,16 @@
 	<section class="list">
 		<div class="section-label">// ALL MAILINGS</div>
 		{#each data.mailings as m}
+			{@const stats = data.opensMap[m.slug]}
 			<div class="row">
 				<div class="row-meta">
 					<span class="date">{fmt(m.date)}</span>
 					<span class="published" class:live={m.published}
 						>{m.published ? 'PUBLISHED' : 'DRAFT'}</span
 					>
+					{#if stats}
+						<span class="opens">{stats.opens} / {stats.total} OPENED</span>
+					{/if}
 				</div>
 				<div class="row-title">
 					<a href="/mailings/{m.slug}" target="_blank">{m.title}</a>
@@ -144,6 +148,12 @@
 	}
 	.published.live {
 		color: var(--ok);
+	}
+	.opens {
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--amber);
 	}
 	.row-title {
 		font-size: 17px;
