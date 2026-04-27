@@ -1,0 +1,2 @@
+- [ ] Email tracking + Page tracking
+- [ ] Interest on modules should be logged (subscribing on a module) preorder form.

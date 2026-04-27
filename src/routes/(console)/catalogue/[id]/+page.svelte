@@ -23,7 +23,6 @@
 
 	let buying = $state(false);
 	let activeIndex = $state(0);
-	let notifyOpen = $state(false);
 
 	const galleryImages = $derived(
 		data.product.images?.length
@@ -103,7 +102,13 @@
 				</table>
 			{/if}
 
-			<div class="pricebox">
+			<div
+				class="pricebox"
+				class:notify={(data.product.status === 'available' ||
+					data.product.status === 'coming-soon') &&
+					!data.product.stripePriceId &&
+					!data.product.tindieUrl}
+			>
 				<div class="price-col">
 					<span class="price">{data.product.price ? `€${data.product.price}` : 'TBD'}</span>
 					<span class="stock-info {stock.cls}">
@@ -122,19 +127,14 @@
 							{cta} →
 						</a>
 					{:else}
-						<button class="notify" onclick={() => (notifyOpen = true)}> NOTIFY ME → </button>
+						<div class="notify-form">
+							<SubscribeForm label="Want to be in the loop?" buttonText="NOTIFY ME →" />
+						</div>
 					{/if}
 				{:else}
 					<span class="sold-out-label">SOLD OUT</span>
 				{/if}
 			</div>
-
-			{#if notifyOpen}
-				<div class="notify-form">
-					<div class="notify-label">// GET NOTIFIED</div>
-					<SubscribeForm />
-				</div>
-			{/if}
 		</div>
 	</div>
 
@@ -315,6 +315,10 @@
 		align-items: center;
 		gap: 16px;
 	}
+	.pricebox.notify {
+		flex-direction: column;
+		align-items: flex-start;
+	}
 	.price-col {
 		display: flex;
 		flex-direction: column;
@@ -360,25 +364,6 @@
 		opacity: 0.5;
 		cursor: not-allowed;
 	}
-	.notify {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.1em;
-		padding: 10px 16px;
-		border: 1px solid var(--rule);
-		color: var(--ink-dim);
-		text-transform: uppercase;
-		white-space: nowrap;
-		background: none;
-		cursor: pointer;
-		transition:
-			border-color 0.15s,
-			color 0.15s;
-	}
-	.notify:hover {
-		border-color: var(--amber);
-		color: var(--amber);
-	}
 	.sold-out-label {
 		font-family: var(--mono);
 		font-size: var(--t-mono);
@@ -387,15 +372,7 @@
 		text-transform: uppercase;
 	}
 	.notify-form {
-		margin-top: 12px;
-	}
-	.notify-label {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		text-transform: uppercase;
-		margin-bottom: 8px;
+		width: 100%;
 	}
 	.content {
 		max-width: 68ch;

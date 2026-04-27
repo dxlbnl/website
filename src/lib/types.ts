@@ -40,6 +40,15 @@ export type NoteFrontmatter = {
 	images?: string[];
 };
 
+export type MailingFrontmatter = {
+	pageType: 'mailing';
+	slug: string;
+	title: string;
+	subject: string;
+	date: string;
+	published: boolean;
+};
+
 export type InvoiceFrontmatter = {
 	paginaType: 'factuur';
 	factuurnr: string;

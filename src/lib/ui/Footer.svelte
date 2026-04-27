@@ -3,6 +3,11 @@
 </script>
 
 <footer class="footer">
+	<div class="mail-col">
+		<h4>// MAIL</h4>
+		<div class="faint tagline">Updates from the lab.</div>
+		<SubscribeForm />
+	</div>
 	<div>
 		<h4>// DEXTERLABS</h4>
 		<div>Dexter / maker</div>
@@ -43,11 +48,6 @@
 		<div>© 2026 DEXTERLABS</div>
 		<div class="faint">ALL SYSTEMS OPERATIONAL</div>
 	</div>
-	<div>
-		<h4>// MAIL</h4>
-		<div class="faint tagline">Updates from the lab.</div>
-		<SubscribeForm />
-	</div>
 </footer>
 
 <style>
@@ -64,9 +64,13 @@
 		letter-spacing: 0.04em;
 		text-transform: uppercase;
 		container-type: inline-size;
-
-		@container (max-width: 720px) {
+	}
+	@media (max-width: 720px) {
+		.footer {
 			grid-template-columns: repeat(2, 1fr);
+		}
+		.mail-col {
+			grid-column: 1 / -1;
 		}
 	}
 	h4 {
@@ -88,7 +92,7 @@
 		color: var(--amber);
 	}
 	.faint {
-		color: var(--ink-faint);
+		color: var(--ink-dim);
 	}
 	.tagline {
 		margin-bottom: 8px;
