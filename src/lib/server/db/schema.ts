@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { integer, json, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const feedPosts = pgTable('feed_posts', {
 	id: serial('id').primaryKey(),
@@ -16,5 +16,14 @@ export const orders = pgTable('orders', {
 	amountTotal: integer('amount_total'),
 	currency: text('currency'),
 	status: text('status').notNull().default('pending'),
+	shippingName: text('shipping_name'),
+	shippingAddress: json('shipping_address').$type<{
+		line1: string;
+		line2?: string | null;
+		city: string;
+		state?: string | null;
+		postal_code: string;
+		country: string;
+	}>(),
 	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });

@@ -1,10 +1,15 @@
 <script lang="ts">
 	import Nav from '$lib/ui/Nav.svelte';
 	let { children } = $props();
+
+	const adminItems = [
+		{ label: 'FEED', href: '/admin' },
+		{ label: 'ORDERS', href: '/admin/orders' },
+	];
 </script>
 
 <div class="page">
-	<Nav />
+	<Nav items={adminItems} />
 	<main>{@render children()}</main>
 </div>
 

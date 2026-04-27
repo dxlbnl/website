@@ -24,6 +24,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		case 'checkout.session.completed': {
 			// For async payment methods (SEPA, iDEAL, etc.) payment_status may still be 'unpaid'
 			const status = session.payment_status === 'paid' ? 'paid' : 'pending';
+			const shipping = session.collected_information?.shipping_details;
+			const addr = shipping?.address;
 			await db
 				.insert(orders)
 				.values({
@@ -34,6 +36,17 @@ export const POST: RequestHandler = async ({ request }) => {
 					amountTotal: session.amount_total,
 					currency: session.currency,
 					status,
+					shippingName: shipping?.name ?? null,
+					shippingAddress: addr
+						? {
+								line1: addr.line1 ?? '',
+								line2: addr.line2 ?? null,
+								city: addr.city ?? '',
+								state: addr.state ?? null,
+								postal_code: addr.postal_code ?? '',
+								country: addr.country ?? '',
+							}
+						: null,
 				})
 				.onConflictDoNothing();
 			break;

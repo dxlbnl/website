@@ -3,13 +3,16 @@
 	import { getPalette, togglePalette } from '$lib/theme.svelte';
 	import Led from '$lib/ui/Led.svelte';
 
-	const items = [
-		{ label: 'FEED', href: '/feed' },
-		{ label: 'NOTES', href: '/notes' },
-		{ label: 'CATALOGUE', href: '/catalogue' },
-		{ label: 'ABOUT', href: '/about' },
-		{ label: 'CONTACT', href: '/contact' }
-	];
+	type NavItem = { label: string; href: string };
+	const {
+		items = [
+			{ label: 'FEED', href: '/feed' },
+			{ label: 'NOTES', href: '/notes' },
+			{ label: 'CATALOGUE', href: '/catalogue' },
+			{ label: 'ABOUT', href: '/about' },
+			{ label: 'CONTACT', href: '/contact' },
+		],
+	}: { items?: NavItem[] } = $props();
 
 	function isActive(href: string) {
 		return page.url.pathname === href || (href !== '/' && page.url.pathname.startsWith(href));
