@@ -8,12 +8,12 @@ category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
 # tindieUrl: https://www.tindie.com/stores/dexterlabs/
 stripePriceId: price_1TQYAiJyqPItsUADWgfXKghu
-image: /images/products/distrans-dune.webp
+image: media/distrans-dune.png
 images:
-  - media/conduit.png
-  - media/conduit-galaxy.png
-  - media/conduit-motherboard.png
-  - media/conduit-starglitch.png
+  - media/distrans-glitch.png
+  - media/distrans-space-1.png
+  - media/distrans-space.png
+  - media/distrans-tv-glitch.png
 price: 250
 specs:
   Width: 6 HP
