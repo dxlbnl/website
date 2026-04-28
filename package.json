@@ -52,6 +52,7 @@
 		"@resvg/resvg-js": "^2.6.2",
 		"@sveltejs/adapter-vercel": "^6.3.3",
 		"@vercel/analytics": "^2.0.1",
+		"@vercel/speed-insights": "^2.0.0",
 		"drizzle-orm": "^0.45.2",
 		"html2canvas": "^1.4.1",
 		"jspdf": "^4.2.1",
