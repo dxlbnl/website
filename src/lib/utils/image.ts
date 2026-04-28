@@ -22,7 +22,7 @@ export function resolveProductImage(path: string, id: string): string {
 
 	if (path.startsWith('media/') || path.startsWith('./media/')) {
 		const filename = path.split('/').pop()?.split('.')[0];
-		return `/images/products/${id}/${filename}.webp`;
+		return `/images/products/${filename}.webp`;
 	}
 
 	return path;

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ProductFrontmatter } from '$lib/types';
+	import { resolveProductImage } from '$lib/utils/image';
 
 	type Props = { product: ProductFrontmatter };
 	let { product }: Props = $props();
@@ -24,7 +25,7 @@
 <a href="/catalogue/{product.id}" class="card">
 	<div class="img">
 		{#if product.image}
-			<img src={product.image} alt={product.name} />
+			<img src={resolveProductImage(product.image, product.id)} alt={product.name} />
 		{:else}
 			{product.id.toUpperCase()} · PRODUCT SHOT
 		{/if}
