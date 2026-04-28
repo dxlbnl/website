@@ -4,20 +4,30 @@ import path from 'path';
 
 const validExts = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif'];
 
-async function optimizeFile(inputPath, outputPath, logInfo) {
-	try {
-		await fs.access(outputPath);
+async function optimizeFile(inputPath, outDir, baseName, logInfo) {
+	const webpPath = path.join(outDir, `${baseName}.webp`);
+	const jpgPath = path.join(outDir, `${baseName}.jpg`);
+
+	let doWebp = true;
+	let doJpg = true;
+
+	try { await fs.access(webpPath); doWebp = false; } catch {}
+	try { await fs.access(jpgPath); doJpg = false; } catch {}
+
+	if (!doWebp && !doJpg) {
 		console.log(`[SKIP] ${logInfo} (already exists)`);
 		return;
-	} catch {
-		// File does not exist, proceed
 	}
 
-	console.log(`[OPTIMIZE] ${logInfo} >> ${outputPath}`);
-	await sharp(inputPath)
-		.resize({ width: 1600, withoutEnlargement: true })
-		.webp({ quality: 80, effort: 6 })
-		.toFile(outputPath);
+	console.log(`[OPTIMIZE] ${logInfo} >> ${outDir}/${baseName}.{webp,jpg}`);
+	const pipeline = sharp(inputPath).resize({ width: 1600, withoutEnlargement: true });
+
+	if (doWebp) {
+		await pipeline.clone().webp({ quality: 80, effort: 6 }).toFile(webpPath);
+	}
+	if (doJpg) {
+		await pipeline.clone().jpeg({ quality: 70 }).toFile(jpgPath);
+	}
 }
 
 async function optimizeDir(contentDir, staticDir) {
@@ -32,8 +42,8 @@ async function optimizeDir(contentDir, staticDir) {
 			const ext = path.extname(entry.name).toLowerCase();
 			if (!validExts.includes(ext)) continue;
 
-			const outputPath = path.join(staticDir, `${path.parse(entry.name).name}.webp`);
-			await optimizeFile(fullPath, outputPath, entry.name);
+			const baseName = path.parse(entry.name).name;
+			await optimizeFile(fullPath, staticDir, baseName, entry.name);
 		} else if (entry.isDirectory()) {
 			if (entry.name === 'media') {
 				// Shared media folder (flat structure)
@@ -42,8 +52,8 @@ async function optimizeDir(contentDir, staticDir) {
 					const ext = path.extname(image).toLowerCase();
 					if (!validExts.includes(ext)) continue;
 
-					const outputPath = path.join(staticDir, `${path.parse(image).name}.webp`);
-					await optimizeFile(path.join(fullPath, image), outputPath, `media/${image}`);
+					const baseName = path.parse(image).name;
+					await optimizeFile(path.join(fullPath, image), staticDir, baseName, `media/${image}`);
 				}
 			} else {
 				// Nested structure (slug/media)
@@ -63,8 +73,8 @@ async function optimizeDir(contentDir, staticDir) {
 					const ext = path.extname(image).toLowerCase();
 					if (!validExts.includes(ext)) continue;
 
-					const outputPath = path.join(targetDir, `${path.parse(image).name}.webp`);
-					await optimizeFile(path.join(mediaDir, image), outputPath, `${slug}/media/${image}`);
+					const baseName = path.parse(image).name;
+					await optimizeFile(path.join(mediaDir, image), targetDir, baseName, `${slug}/media/${image}`);
 				}
 			}
 		}

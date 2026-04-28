@@ -4,6 +4,8 @@
 	import { onMount } from 'svelte';
 	import { getPalette, setPalette } from '$lib/theme.svelte';
 
+	import SEO from '$lib/ui/SEO.svelte';
+
 	let { children } = $props();
 
 	$effect(() => {
@@ -18,8 +20,9 @@
 	});
 </script>
 
+<SEO />
+
 <svelte:head>
-	<link rel="icon" href={favicon} />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 	<link

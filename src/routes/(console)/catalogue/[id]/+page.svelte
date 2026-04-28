@@ -4,6 +4,8 @@
 	import type { Component } from 'svelte';
 	import type { ProductFrontmatter } from '$lib/types';
 	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
+	import { resolveProductImage } from '$lib/utils/image';
+	import SEO from '$lib/ui/SEO.svelte';
 
 	type Props = { data: { component: Component; product: ProductFrontmatter } };
 	let { data }: Props = $props();
@@ -26,9 +28,9 @@
 
 	const galleryImages = $derived(
 		data.product.images?.length
-			? data.product.images
+			? data.product.images.map(img => resolveProductImage(img, data.product.id))
 			: data.product.image
-				? [data.product.image]
+				? [resolveProductImage(data.product.image, data.product.id)]
 				: []
 	);
 
@@ -48,6 +50,13 @@
 		}
 	}
 </script>
+
+<SEO
+	title={data.product.name}
+	description={data.product.description}
+	image={galleryImages[0]}
+	type="product"
+/>
 
 <div class="wrap">
 	<div class="back-row">

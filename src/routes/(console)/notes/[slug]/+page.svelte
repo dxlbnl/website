@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 	import type { Component } from 'svelte';
 	import type { NoteFrontmatter } from '$lib/types';
+	import SEO from '$lib/ui/SEO.svelte';
 
 	type Props = { data: { component: Component; metadata: NoteFrontmatter } };
 	let { data }: Props = $props();
@@ -13,6 +14,14 @@
 		(data.metadata.images ?? []).map((img: string) => resolveLogImage(img, page.params.slug ?? ''))
 	);
 </script>
+
+<SEO
+	title={data.metadata.title}
+	description={data.metadata.lede}
+	image={images[0]}
+	type="article"
+	articleDate={data.metadata.date}
+/>
 
 <div class="wrap">
 	<article>
