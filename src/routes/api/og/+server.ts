@@ -1,19 +1,23 @@
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
 
 const height = 630;
 const width = 1200;
 
-// Bundled font — no CDN fetch, no cold-start latency
-const fontData = readFileSync(resolve('static/fonts/JetBrainsMono-Bold.ttf'));
+// Cached per serverless instance — cold start pays one self-hosted fetch, warm requests are free
+let fontCache: ArrayBuffer | null = null;
 
 export const GET = async ({ url, fetch }) => {
 	const title = url.searchParams.get('title') ?? 'DEXTERLABS';
 	const subtitle = url.searchParams.get('subtitle') ?? 'HARDWARE // SOFTWARE // EXPERIMENTS';
 	const rawImageUrl = url.searchParams.get('image');
 	const imageUrl = rawImageUrl ? rawImageUrl.replace(/\.webp$/, '.jpg') : null;
+
+	if (!fontCache) {
+		const res = await fetch('/fonts/JetBrainsMono-Bold.ttf');
+		if (!res.ok) throw new Error('Failed to load font');
+		fontCache = await res.arrayBuffer();
+	}
 
 	// Fetch logo and bg image in parallel
 	const [bgImageBase64, logoBase64] = await Promise.all([
@@ -149,7 +153,7 @@ export const GET = async ({ url, fetch }) => {
 	};
 
 	const svg = await satori(node, {
-		fonts: [{ name: 'JetBrains Mono', data: fontData, style: 'normal', weight: 700 }],
+		fonts: [{ name: 'JetBrains Mono', data: fontCache, style: 'normal', weight: 700 }],
 		height,
 		width
 	});
