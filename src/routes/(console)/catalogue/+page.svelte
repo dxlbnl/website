@@ -3,10 +3,16 @@
 	import ProductCard from '$lib/ui/ProductCard.svelte';
 	import Led from '$lib/ui/Led.svelte';
 	import type { ProductFrontmatter } from '$lib/types';
+	import SEO from '$lib/ui/SEO.svelte';
 
 	type Props = { data: { products: ProductFrontmatter[] } };
 	let { data }: Props = $props();
 </script>
+
+<SEO
+	title="Catalogue"
+	description="Eurorack modules hand-built in Delft. Small batches, studio-grade quality."
+/>
 
 <div class="wrap">
 	<section class="hero">

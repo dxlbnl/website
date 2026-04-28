@@ -3,11 +3,17 @@
 	import Placeholder from '$lib/ui/Placeholder.svelte';
 	import { resolveLogImage } from '$lib/utils/image';
 	import type { NoteFrontmatter } from '$lib/types';
+	import SEO from '$lib/ui/SEO.svelte';
 
 	type Entry = NoteFrontmatter & { slug: string };
 	type Props = { data: { entries: Entry[] } };
 	let { data }: Props = $props();
 </script>
+
+<SEO
+	title="Notes"
+	description="Build logs, post-mortems, and longer writing from the lab. Signed by Dexter."
+/>
 
 <div class="wrap">
 	<section class="hero">

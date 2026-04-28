@@ -5,6 +5,13 @@ import { html as toReactNode } from 'satori-html';
 const height = 630;
 const width = 1200;
 
+const fontDataPromise = fetch(
+	'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono@2.242/fonts/ttf/JetBrainsMono-Bold.ttf'
+).then((r) => {
+	if (!r.ok) throw new Error(`Font fetch failed: ${r.statusText}`);
+	return r.arrayBuffer();
+});
+
 export const GET = async ({ url, fetch }) => {
 	const title = url.searchParams.get('title') ?? 'DEXTERLABS';
 	const subtitle = url.searchParams.get('subtitle') ?? 'HARDWARE // SOFTWARE // EXPERIMENTS';
@@ -39,12 +46,7 @@ export const GET = async ({ url, fetch }) => {
 		console.error('Failed to process OG logo:', e);
 	}
 
-	// Fetch JetBrains Mono (TTF format is required by satori)
-	const fontData = await fetch('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono@2.242/fonts/ttf/JetBrainsMono-Bold.ttf')
-		.then((res) => {
-			if (!res.ok) throw new Error(`Failed to fetch font: ${res.statusText}`);
-			return res.arrayBuffer();
-		});
+	const fontData = await fontDataPromise;
 
 	const backgroundStyle = bgImageBase64
 		? `background-image: linear-gradient(to top, rgba(11, 13, 12, 1) 0%, rgba(11, 13, 12, 0.3) 100%), url(${bgImageBase64}); background-size: cover; background-position: center;`

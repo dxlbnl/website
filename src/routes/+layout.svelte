@@ -1,8 +1,9 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { getPalette, setPalette } from '$lib/theme.svelte';
+	import { dev } from '$app/environment';
+	import { injectAnalytics } from '@vercel/analytics/sveltekit';
 
 	import SEO from '$lib/ui/SEO.svelte';
 
@@ -18,6 +19,8 @@
 			saved ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'phosphor' : 'paper')
 		);
 	});
+
+	injectAnalytics({ mode: dev ? 'development' : 'production' });
 </script>
 
 <SEO />
