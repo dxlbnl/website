@@ -28,10 +28,15 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 	const broadcasts = await db.select().from(mailingBroadcasts);
+	const broadcastsMap: Record<string, { broadcastId: string; sentAt: string; recipientCount: number }> =
+		Object.fromEntries(
+			broadcasts.map((b) => [
+				b.slug,
+				{ broadcastId: b.broadcastId, sentAt: b.sentAt.toISOString(), recipientCount: b.recipientCount }
+			])
+		);
+
 	const broadcastIdToSlug = Object.fromEntries(broadcasts.map((b) => [b.broadcastId, b.slug]));
-	const slugToRecipientCount = Object.fromEntries(
-		broadcasts.map((b) => [b.slug, b.recipientCount])
-	);
 
 	const openRows = await db
 		.select({ broadcastId: emailOpens.broadcastId, opens: count() })
@@ -45,23 +50,25 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		if (slug) {
 			opensMap[slug] = {
 				opens: row.opens,
-				total: slugToRecipientCount[slug] ?? 0
+				total: broadcastsMap[slug]?.recipientCount ?? 0
 			};
 		}
 	}
 
-	return { authed: true as const, mailings, opensMap };
+	return { authed: true as const, mailings, opensMap, broadcastsMap };
 };
 
 export const actions: Actions = {
 	send: async ({ request, cookies }) => {
-		if (cookies.get('admin_session') !== env.ADMIN_TOKEN) return fail(401);
+		const formData = await request.formData();
+		const slug = (formData.get('slug') as string) || '';
 
-		const slug = (await request.formData()).get('slug') as string;
-		if (!slug) return fail(400, { error: 'Missing slug' });
+		if (cookies.get('admin_session') !== env.ADMIN_TOKEN)
+			return fail(401, { error: 'Not authenticated', slug });
+		if (!slug) return fail(400, { error: 'Missing slug', slug });
 
 		const entry = Object.entries(modules).find(([, mod]) => mod.metadata.slug === slug);
-		if (!entry) return fail(404, { error: `Mailing not found: ${slug}` });
+		if (!entry) return fail(404, { error: `Mailing not found: ${slug}`, slug });
 
 		const [, mod] = entry;
 		const { body: bodyHtml } = render(mod.default, {});
@@ -85,13 +92,13 @@ export const actions: Actions = {
 
 		if (resendError || !data) {
 			console.error('[admin/mailings] broadcast create error', resendError);
-			return fail(500, { error: 'Failed to create broadcast' });
+			return fail(500, { error: 'Failed to create broadcast', slug });
 		}
 
 		const { error: sendError } = await resend.broadcasts.send(data.id);
 		if (sendError) {
 			console.error('[admin/mailings] broadcast send error', sendError);
-			return fail(500, { error: 'Broadcast created but failed to send' });
+			return fail(500, { error: 'Broadcast created but failed to send', slug });
 		}
 
 		await db

@@ -14,6 +14,12 @@ export const POST: RequestHandler = async ({ request, url }) => {
 	const session = await stripe.checkout.sessions.create({
 		mode: 'payment',
 		line_items: [{ price: priceId, quantity: 1 }],
+		automatic_tax: {
+			enabled: true // Turns on Stripe Tax for this transaction
+		},
+		tax_id_collection: {
+			enabled: true // Allows B2B users to input their VAT number
+		},
 		shipping_address_collection: {
 			// EU + UK, US, CA, AU, CH, NO, NZ, JP, SG
 			allowed_countries: [
