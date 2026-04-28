@@ -2,18 +2,12 @@
 	import { enhance } from '$app/forms';
 	import TagPill from '$lib/ui/TagPill.svelte';
 	import Led from '$lib/ui/Led.svelte';
+	import { fmtDate } from '$lib/utils/fmt';
 	import type { PageData, ActionData } from './$types';
 
 	type Props = { data: PageData; form: ActionData };
 	let { data, form }: Props = $props();
 
-	function fmtDate(d: string) {
-		return new Date(d).toLocaleDateString('en-GB', {
-			day: '2-digit',
-			month: 'short',
-			year: '2-digit'
-		});
-	}
 </script>
 
 {#if !data.authed}

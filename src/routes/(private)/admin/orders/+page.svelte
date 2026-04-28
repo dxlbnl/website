@@ -1,24 +1,10 @@
 <script lang="ts">
 	import Led from '$lib/ui/Led.svelte';
+	import { fmtDate, fmtCents } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	function fmtDate(iso: string) {
-		return new Date(iso).toLocaleDateString('en-GB', {
-			day: '2-digit',
-			month: 'short',
-			year: '2-digit'
-		});
-	}
-
-	function fmtAmount(cents: number | null, currency: string | null) {
-		if (cents == null) return '—';
-		return new Intl.NumberFormat('nl-NL', {
-			style: 'currency',
-			currency: currency ?? 'EUR'
-		}).format(cents / 100);
-	}
 
 	function statusTone(status: string): 'ok' | 'amber' | 'danger' {
 		if (status === 'paid') return 'ok';
@@ -78,7 +64,7 @@
 						<span class="address">{fmtAddress(order.shippingName, order.shippingAddress)}</span>
 					{/if}
 				</div>
-				<span class="amount">{fmtAmount(order.amountTotal, order.currency)}</span>
+				<span class="amount">{fmtCents(order.amountTotal, order.currency)}</span>
 				<span class="status">
 					<Led tone={statusTone(order.status)} />
 					{order.status.toUpperCase()}

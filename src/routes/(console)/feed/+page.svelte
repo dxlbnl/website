@@ -2,16 +2,13 @@
 	import TagPill from '$lib/ui/TagPill.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import { fmtDateShort } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
 	let { data }: Props = $props();
 
-	function fmt(d: string) {
-		return new Date(d)
-			.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
-			.toUpperCase();
-	}
+	const fmt = fmtDateShort;
 </script>
 
 <SEO title="Feed" description="Live updates from the lab — builds in progress, links, and notes from the bench." />

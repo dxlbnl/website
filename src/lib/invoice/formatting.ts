@@ -1,45 +1,23 @@
 import type { InvoiceFrontmatter } from '$lib/types';
+import { fmtCurrency, fmtDate } from '$lib/utils/fmt';
 
-/**
- * Format a number as currency based on invoice locale
- */
 export function formatCurrency(amount: number, invoice: InvoiceFrontmatter): string {
-	return new Intl.NumberFormat(invoice.taal || 'nl-NL', {
-		style: 'currency',
-		currency: invoice.valuta || 'EUR'
-	}).format(amount);
+	return fmtCurrency(amount, invoice.valuta || 'EUR', invoice.taal || 'nl-NL');
 }
 
-/**
- * Format a number as currency with specific locale/currency
- * (For use in list page where invoice object might not be available)
- */
+/** @deprecated Use fmtCurrency from $lib/utils/fmt */
 export function formatCurrencyWithLocale(
 	amount: number,
 	locale: string = 'nl-NL',
 	currency: string = 'EUR'
 ): string {
-	return new Intl.NumberFormat(locale, {
-		style: 'currency',
-		currency
-	}).format(amount);
+	return fmtCurrency(amount, currency, locale);
 }
 
-/**
- * Format ISO date string to localized format
- * Uses nl-NL format: DD-MM-YYYY
- */
-export function formatDate(dateStr: string, locale: string = 'nl-NL'): string {
-	return new Date(dateStr).toLocaleDateString(locale, {
-		year: 'numeric',
-		month: '2-digit',
-		day: '2-digit'
-	});
+export function formatDate(dateStr: string): string {
+	return fmtDate(dateStr);
 }
 
-/**
- * Generate bunq.me payment URL
- */
 export function generatePaymentUrl(
 	amount: number,
 	invoiceNumber: string,

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Led from '$lib/ui/Led.svelte';
+	import { fmtDate } from '$lib/utils/fmt';
 	import type { PageData, ActionData } from './$types';
 
 	type Props = { data: PageData; form: ActionData };
@@ -8,13 +9,6 @@
 
 	let sending = $state<string | null>(null);
 
-	function fmt(d: string) {
-		return new Date(d).toLocaleDateString('en-GB', {
-			day: '2-digit',
-			month: 'short',
-			year: '2-digit'
-		});
-	}
 </script>
 
 {#if !data.authed}
@@ -42,7 +36,7 @@
 			{@const broadcast = data.broadcastsMap[m.slug]}
 			<div class="row">
 				<div class="row-meta">
-					<span class="date">{fmt(m.date)}</span>
+					<span class="date">{fmtDate(m.date)}</span>
 					<span class="published" class:live={!!broadcast}
 						>{broadcast ? 'SENT' : 'DRAFT'}</span
 					>
