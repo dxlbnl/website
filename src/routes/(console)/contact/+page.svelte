@@ -2,12 +2,15 @@
 	import { onMount } from 'svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
+	import SEO from '$lib/ui/SEO.svelte';
 
 	let email = $state('');
 	onMount(() => {
 		email = ['hello', 'dxlb.nl'].join('@');
 	});
 </script>
+
+<SEO title="Contact" description="Get in touch — hardware commissions, prototype work, or just to say hello." />
 
 <div class="wrap">
 	<section class="hero">

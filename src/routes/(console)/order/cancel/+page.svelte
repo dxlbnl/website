@@ -1,7 +1,10 @@
 <script lang="ts">
 	import Signature from '$lib/ui/Signature.svelte';
 	import Led from '$lib/ui/Led.svelte';
+	import SEO from '$lib/ui/SEO.svelte';
 </script>
+
+<SEO title="Order Cancelled" description="Your order was not completed. No charge was made." />
 
 <div class="wrap">
 	<div class="box">

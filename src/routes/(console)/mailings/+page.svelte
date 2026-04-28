@@ -1,9 +1,12 @@
 <script lang="ts">
 	import type { MailingFrontmatter } from '$lib/types';
+	import SEO from '$lib/ui/SEO.svelte';
 
 	type Props = { data: { entries: MailingFrontmatter[] } };
 	let { data }: Props = $props();
 </script>
+
+<SEO title="Mailings" description="Occasional updates from the lab — new builds, availability, notes from the bench." />
 
 <div class="wrap">
 	<section class="hero">

@@ -1,7 +1,10 @@
 <script lang="ts">
 	import Signature from '$lib/ui/Signature.svelte';
 	import Led from '$lib/ui/Led.svelte';
+	import SEO from '$lib/ui/SEO.svelte';
 </script>
+
+<SEO title="Order Confirmed" description="Your order is in. We'll be in touch when your batch ships." />
 
 <div class="wrap">
 	<div class="box">

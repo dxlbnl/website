@@ -1,12 +1,20 @@
 <script lang="ts">
 	import Signature from '$lib/ui/Signature.svelte';
 	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
+	import SEO from '$lib/ui/SEO.svelte';
 	import type { Component } from 'svelte';
 	import type { MailingFrontmatter } from '$lib/types';
 
 	type Props = { data: { component: Component; mailing: MailingFrontmatter } };
 	let { data }: Props = $props();
 </script>
+
+<SEO
+	title={data.mailing.title}
+	description={data.mailing.subject}
+	type="article"
+	articleDate={data.mailing.date}
+/>
 
 <div class="wrap">
 	<article>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import TagPill from '$lib/ui/TagPill.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
+	import SEO from '$lib/ui/SEO.svelte';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
@@ -12,6 +13,8 @@
 			.toUpperCase();
 	}
 </script>
+
+<SEO title="Feed" description="Live updates from the lab — builds in progress, links, and notes from the bench." />
 
 <div class="wrap">
 	<section class="hero">

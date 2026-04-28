@@ -3,6 +3,7 @@
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
+	import SEO from '$lib/ui/SEO.svelte';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
@@ -12,6 +13,8 @@
 		return '0x' + (i + 1).toString(16).padStart(2, '0').toUpperCase();
 	}
 </script>
+
+<SEO />
 
 <div class="wrap">
 	<section class="hero">

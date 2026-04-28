@@ -89,60 +89,64 @@
 		</div>
 
 		<div class="side">
-			<div class="sub">{data.product.id.toUpperCase()} · {data.product.category.toUpperCase()}</div>
-			<h1>{data.product.name}</h1>
-			{#if data.product.tags?.length}
-				<div class="tags">
-					{#each data.product.tags as tag}
-						<span class="tag">{tag}</span>
-					{/each}
-				</div>
-			{/if}
-			<p class="lede">{data.product.description}</p>
-
-			{#if data.product.specs}
-				<div class="specs-label">// QUICK SPECS</div>
-				<table class="specs">
-					<tbody>
-						{#each Object.entries(data.product.specs) as [key, val]}
-							<tr><td>{key}</td><td>{val}</td></tr>
+			<div class="side-top">
+				<div class="sub">{data.product.id.toUpperCase()} · {data.product.category.toUpperCase()}</div>
+				<h1>{data.product.name}</h1>
+				{#if data.product.tags?.length}
+					<div class="tags">
+						{#each data.product.tags as tag}
+							<span class="tag">{tag}</span>
 						{/each}
-					</tbody>
-				</table>
-			{/if}
-
-			<div
-				class="pricebox"
-				class:notify={(data.product.status === 'available' ||
-					data.product.status === 'coming-soon') &&
-					!data.product.stripePriceId &&
-					!data.product.tindieUrl}
-			>
-				<div class="price-col">
-					<span class="price">{data.product.price ? `€${data.product.price}` : 'TBD'}</span>
-					<span class="stock-info {stock.cls}">
-						<Led tone={stock.led} />
-						{stock.label}{#if stock.ship}
-							· {stock.ship}{/if}
-					</span>
-				</div>
-				{#if data.product.status === 'available' || data.product.status === 'coming-soon'}
-					{#if data.product.stripePriceId}
-						<button class="buy" onclick={startCheckout} disabled={buying}>
-							{buying ? 'LOADING…' : `${cta} →`}
-						</button>
-					{:else if data.product.tindieUrl}
-						<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
-							{cta} →
-						</a>
-					{:else}
-						<div class="notify-form">
-							<SubscribeForm label="Want to be in the loop?" buttonText="NOTIFY ME →" />
-						</div>
-					{/if}
-				{:else}
-					<span class="sold-out-label">SOLD OUT</span>
+					</div>
 				{/if}
+				<p class="lede">{data.product.description}</p>
+			</div>
+
+			<div class="side-bottom">
+				{#if data.product.specs}
+					<div class="specs-label">// QUICK SPECS</div>
+					<table class="specs">
+						<tbody>
+							{#each Object.entries(data.product.specs) as [key, val]}
+								<tr><td>{key}</td><td>{val}</td></tr>
+							{/each}
+						</tbody>
+					</table>
+				{/if}
+
+				<div
+					class="pricebox"
+					class:notify={(data.product.status === 'available' ||
+						data.product.status === 'coming-soon') &&
+						!data.product.stripePriceId &&
+						!data.product.tindieUrl}
+				>
+					<div class="price-col">
+						<span class="price">{data.product.price ? `€${data.product.price}` : 'TBD'}</span>
+						<span class="stock-info {stock.cls}">
+							<Led tone={stock.led} />
+							{stock.label}{#if stock.ship}
+								· {stock.ship}{/if}
+						</span>
+					</div>
+					{#if data.product.status === 'available' || data.product.status === 'coming-soon'}
+						{#if data.product.stripePriceId}
+							<button class="buy" onclick={startCheckout} disabled={buying}>
+								{buying ? 'LOADING…' : `${cta} →`}
+							</button>
+						{:else if data.product.tindieUrl}
+							<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
+								{cta} →
+							</a>
+						{:else}
+							<div class="notify-form">
+								<SubscribeForm label="Want to be in the loop?" buttonText="NOTIFY ME →" />
+							</div>
+						{/if}
+					{:else}
+						<span class="sold-out-label">SOLD OUT</span>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -200,20 +204,30 @@
 	}
 	.side {
 		flex: 1;
-	}
-	.hero-img {
+
 		@container (max-width: 900px) {
-			order: 1;
+			display: contents;
 		}
 	}
-	.side {
+	.hero-img,
+	.thumbs {
 		@container (max-width: 900px) {
 			order: 2;
 		}
 	}
-	.content {
+	.side-top {
+		@container (max-width: 900px) {
+			order: 1;
+		}
+	}
+	.side-bottom {
 		@container (max-width: 900px) {
 			order: 3;
+		}
+	}
+	.content {
+		@container (max-width: 900px) {
+			order: 4;
 		}
 	}
 	.hero-img {

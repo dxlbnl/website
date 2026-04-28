@@ -6,8 +6,6 @@
 	import { injectAnalytics } from '@vercel/analytics/sveltekit';
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 
-	import SEO from '$lib/ui/SEO.svelte';
-
 	let { children } = $props();
 
 	$effect(() => {
@@ -24,8 +22,6 @@
 	injectAnalytics({ mode: dev ? 'development' : 'production' });
 	injectSpeedInsights();
 </script>
-
-<SEO />
 
 <svelte:head>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
