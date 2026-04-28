@@ -1,115 +1,166 @@
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
-import { html as toReactNode } from 'satori-html';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
 const height = 630;
 const width = 1200;
 
-const fontDataPromise = fetch(
-	'https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono@2.242/fonts/ttf/JetBrainsMono-Bold.ttf'
-).then((r) => {
-	if (!r.ok) throw new Error(`Font fetch failed: ${r.statusText}`);
-	return r.arrayBuffer();
-});
+// Bundled font — no CDN fetch, no cold-start latency
+const fontData = readFileSync(resolve('static/fonts/JetBrainsMono-Bold.ttf'));
 
 export const GET = async ({ url, fetch }) => {
 	const title = url.searchParams.get('title') ?? 'DEXTERLABS';
 	const subtitle = url.searchParams.get('subtitle') ?? 'HARDWARE // SOFTWARE // EXPERIMENTS';
 	const rawImageUrl = url.searchParams.get('image');
-	// Support falling back to a jpg for Satori compatibility
 	const imageUrl = rawImageUrl ? rawImageUrl.replace(/\.webp$/, '.jpg') : null;
 
-	let bgImageBase64 = '';
-	if (imageUrl) {
-		try {
-			// Strip origin for internal SvelteKit fetch
-			const fetchUrl = imageUrl.startsWith(url.origin) ? imageUrl.replace(url.origin, '') : imageUrl;
-			const res = await fetch(fetchUrl);
-			if (res.ok) {
+	// Fetch logo and bg image in parallel
+	const [bgImageBase64, logoBase64] = await Promise.all([
+		imageUrl
+			? (async () => {
+					try {
+						const fetchUrl = imageUrl.startsWith(url.origin)
+							? imageUrl.replace(url.origin, '')
+							: imageUrl;
+						const res = await fetch(fetchUrl);
+						if (!res.ok) return '';
+						const buffer = await res.arrayBuffer();
+						const contentType = res.headers.get('content-type') || 'image/jpeg';
+						return `data:${contentType};base64,${Buffer.from(buffer).toString('base64')}`;
+					} catch {
+						return '';
+					}
+				})()
+			: Promise.resolve(''),
+		(async () => {
+			try {
+				const res = await fetch('/logo.png');
+				if (!res.ok) return '';
 				const buffer = await res.arrayBuffer();
-				const contentType = res.headers.get('content-type') || 'image/jpeg';
-				bgImageBase64 = `data:${contentType};base64,${Buffer.from(buffer).toString('base64')}`;
+				return `data:image/png;base64,${Buffer.from(buffer).toString('base64')}`;
+			} catch {
+				return '';
 			}
-		} catch (e) {
-			console.error('Failed to process OG background image:', e);
-		}
-	}
-
-	let logoBase64 = '';
-	try {
-		const res = await fetch('/logo.png');
-		if (res.ok) {
-			const buffer = await res.arrayBuffer();
-			logoBase64 = `data:image/png;base64,${Buffer.from(buffer).toString('base64')}`;
-		}
-	} catch (e) {
-		console.error('Failed to process OG logo:', e);
-	}
-
-	const fontData = await fontDataPromise;
+		})()
+	]);
 
 	const backgroundStyle = bgImageBase64
-		? `background-image: linear-gradient(to top, rgba(11, 13, 12, 1) 0%, rgba(11, 13, 12, 0.3) 100%), url(${bgImageBase64}); background-size: cover; background-position: center;`
-		: 'background-color: #0b0d0c;';
-
-	const html = toReactNode(`
-		<div style="
-			height: 100%;
-			width: 100%;
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
-			justify-content: center;
-			${backgroundStyle}
-			color: #d6e2dc;
-			font-family: 'JetBrains Mono', monospace;
-			padding: 80px;
-			position: relative;
-		">
-			${logoBase64 ? `<img src="${logoBase64}" style="position: absolute; top: 40px; left: 40px; width: 80px; height: 80px; object-fit: contain; display: flex;" />` : ''}
-
-			<div style="display: flex; flex-direction: column; width: 100%; margin-top: 80px;">
-				<div style="font-size: 20px; letter-spacing: 3px; color: #4a524e; text-transform: uppercase; margin-bottom: 32px; display: flex;">
-					// DEXTERLABS · WORKBENCH · 2026
-				</div>
-				
-				<div style="font-size: 90px; font-weight: 700; line-height: 1; letter-spacing: -3px; margin-bottom: 24px; color: #d6e2dc; display: flex;">
-					${title.toUpperCase()}
-				</div>
-				
-				<div style="font-size: 32px; color: #8a968f; line-height: 1.4; max-width: 800px; display: flex;">
-					${subtitle}
-				</div>
-			</div>
-		</div>
-	`);
-
-	const svg = await satori(html, {
-		fonts: [
-			{
-				name: 'JetBrains Mono',
-				data: fontData,
-				style: 'normal',
-				weight: 700
+		? {
+				backgroundImage: `linear-gradient(to top, rgba(11, 13, 12, 1) 0%, rgba(11, 13, 12, 0.3) 100%), url(${bgImageBase64})`,
+				backgroundSize: 'cover',
+				backgroundPosition: 'center'
 			}
-		],
+		: { backgroundColor: '#0b0d0c' };
+
+	// Native satori object tree — no satori-html, no React
+	const node = {
+		type: 'div',
+		props: {
+			style: {
+				height: '100%',
+				width: '100%',
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'flex-start',
+				justifyContent: 'center',
+				...backgroundStyle,
+				color: '#d6e2dc',
+				fontFamily: "'JetBrains Mono', monospace",
+				padding: '80px',
+				position: 'relative'
+			},
+			children: [
+				...(logoBase64
+					? [
+							{
+								type: 'img',
+								props: {
+									src: logoBase64,
+									style: {
+										position: 'absolute',
+										top: '40px',
+										left: '40px',
+										width: '80px',
+										height: '80px',
+										objectFit: 'contain'
+									}
+								}
+							}
+						]
+					: []),
+				{
+					type: 'div',
+					props: {
+						style: {
+							display: 'flex',
+							flexDirection: 'column',
+							width: '100%',
+							marginTop: '80px'
+						},
+						children: [
+							{
+								type: 'div',
+								props: {
+									style: {
+										fontSize: '20px',
+										letterSpacing: '3px',
+										color: '#4a524e',
+										textTransform: 'uppercase',
+										marginBottom: '32px',
+										display: 'flex'
+									},
+									children: '// DEXTERLABS · WORKBENCH · 2026'
+								}
+							},
+							{
+								type: 'div',
+								props: {
+									style: {
+										fontSize: '90px',
+										fontWeight: 700,
+										lineHeight: 1,
+										letterSpacing: '-3px',
+										marginBottom: '24px',
+										color: '#d6e2dc',
+										display: 'flex'
+									},
+									children: title.toUpperCase()
+								}
+							},
+							{
+								type: 'div',
+								props: {
+									style: {
+										fontSize: '32px',
+										color: '#8a968f',
+										lineHeight: 1.4,
+										maxWidth: '800px',
+										display: 'flex'
+									},
+									children: subtitle
+								}
+							}
+						]
+					}
+				}
+			]
+		}
+	};
+
+	const svg = await satori(node, {
+		fonts: [{ name: 'JetBrains Mono', data: fontData, style: 'normal', weight: 700 }],
 		height,
 		width
 	});
 
-	const resvg = new Resvg(svg, {
-		fitTo: {
-			mode: 'width',
-			value: width,
-		},
-	});
-
+	const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: width } });
 	const image = resvg.render();
 
 	return new Response(new Uint8Array(image.asPng()), {
 		headers: {
 			'content-type': 'image/png',
-			'cache-control': 'public, immutable, no-transform, max-age=31536000',
-		},
+			'cache-control': 'public, immutable, no-transform, max-age=31536000'
+		}
 	});
 };
