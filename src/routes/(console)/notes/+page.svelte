@@ -2,6 +2,7 @@
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Placeholder from '$lib/ui/Placeholder.svelte';
 	import { resolveLogImage } from '$lib/utils/image';
+	import { fmtDate } from '$lib/utils/fmt';
 	import type { NoteFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
 
@@ -26,7 +27,7 @@
 		<div class="meta">
 			<span><b>{data.entries.length}</b> PIECES</span>
 			{#if data.entries[0]}
-				<span><b>LATEST</b> {data.entries[0].date.split('T')[0]}</span>
+				<span><b>LATEST</b> {fmtDate(data.entries[0].date)}</span>
 			{/if}
 		</div>
 	</section>
@@ -39,7 +40,7 @@
 			<div class="idx-t">
 				{entry.title}
 				<small
-					>{entry.date.split('T')[0]} · {entry.kind ?? 'LOG'}{entry.lede
+					>{fmtDate(entry.date)} · {entry.kind ?? 'LOG'}{entry.lede
 						? ' · ' + entry.lede.slice(0, 80) + (entry.lede.length > 80 ? '…' : '')
 						: ''}</small
 				>

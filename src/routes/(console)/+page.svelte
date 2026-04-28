@@ -4,6 +4,7 @@
 	import Signature from '$lib/ui/Signature.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import { fmtDate } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
@@ -29,7 +30,7 @@
 			<a href="/feed" class="status">
 				<div class="status-head">
 					<span>// STATUS · LATEST FROM THE FEED</span>
-					<span>{data.latestFeed.date} →</span>
+					<span>{fmtDate(data.latestFeed.date)} →</span>
 				</div>
 				<div class="status-line">
 					<Led tone="amber" blink />
@@ -51,7 +52,7 @@
 					<h3 class="card-title">{note.title}</h3>
 					{#if note.lede}<p class="card-desc">{note.lede}</p>{/if}
 					<div class="card-foot">
-						<span>{note.date.split('T')[0]}</span>
+						<span>{fmtDate(note.date)}</span>
 						<span class="card-read">READ →</span>
 					</div>
 				</a>
