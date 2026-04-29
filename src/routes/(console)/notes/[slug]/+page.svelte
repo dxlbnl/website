@@ -7,7 +7,9 @@
 	import type { NoteFrontmatter, ProductFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
 
-	type Props = { data: { component: Component; metadata: NoteFrontmatter; product?: ProductFrontmatter } };
+	type Props = {
+		data: { component: Component; metadata: NoteFrontmatter; product?: ProductFrontmatter };
+	};
 	let { data }: Props = $props();
 
 	const images = $derived(
@@ -42,7 +44,8 @@
 		{#if data.product}
 			{@const p = data.product}
 			{@const orderable = !!(p.stripePriceId || p.tindieUrl)}
-			{@const cta = p.status === 'available' ? 'GET ONE HERE' : orderable ? 'PREORDER NOW' : 'GET NOTIFIED'}
+			{@const cta =
+				p.status === 'available' ? 'GET ONE HERE' : orderable ? 'PREORDER NOW' : 'GET NOTIFIED'}
 			<a href="/catalogue/{p.id}" class="product-cta">
 				<div class="cta-body">
 					<span class="cta-eyebrow">// THE HARDWARE</span>

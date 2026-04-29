@@ -6,11 +6,7 @@
 	let { product, isEU = false }: Props = $props();
 
 	const displayPrice = $derived(
-		product.price
-			? isEU
-				? `€${Math.round(product.price * 1.21)}`
-				: `€${product.price}`
-			: null
+		product.price ? (isEU ? `€${Math.round(product.price * 1.21)}` : `€${product.price}`) : null
 	);
 	const taxLabel = $derived(product.price ? (isEU ? 'incl. BTW' : 'excl. VAT') : null);
 

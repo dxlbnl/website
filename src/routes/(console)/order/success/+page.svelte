@@ -4,7 +4,10 @@
 	import SEO from '$lib/ui/SEO.svelte';
 </script>
 
-<SEO title="Order Confirmed" description="Your order is in. We'll be in touch when your batch ships." />
+<SEO
+	title="Order Confirmed"
+	description="Your order is in. We'll be in touch when your batch ships."
+/>
 
 <div class="wrap">
 	<div class="box">

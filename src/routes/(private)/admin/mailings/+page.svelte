@@ -8,7 +8,6 @@
 	let { data, form }: Props = $props();
 
 	let sending = $state<string | null>(null);
-
 </script>
 
 {#if !data.authed}
@@ -37,9 +36,7 @@
 			<div class="row">
 				<div class="row-meta">
 					<span class="date">{fmtDate(m.date)}</span>
-					<span class="published" class:live={!!broadcast}
-						>{broadcast ? 'SENT' : 'DRAFT'}</span
-					>
+					<span class="published" class:live={!!broadcast}>{broadcast ? 'SENT' : 'DRAFT'}</span>
 				</div>
 				<div class="row-title">
 					<a href="/mailings/{m.slug}" target="_blank">{m.title}</a>
@@ -48,7 +45,9 @@
 						<span class="row-err"><Led tone="danger" />{form.error}</span>
 					{/if}
 					{#if form?.slug === m.slug && form?.broadcastId}
-						<span class="row-ok"><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span>
+						<span class="row-ok"
+							><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span
+						>
 					{/if}
 				</div>
 				<div class="row-stats">

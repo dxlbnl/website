@@ -5,7 +5,6 @@
 
 	let { data }: { data: PageData } = $props();
 
-
 	function statusTone(status: string): 'ok' | 'amber' | 'danger' {
 		if (status === 'paid') return 'ok';
 		if (status === 'failed') return 'danger';

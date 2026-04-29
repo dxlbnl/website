@@ -29,7 +29,7 @@
 
 	const galleryImages = $derived(
 		data.product.images?.length
-			? data.product.images.map(img => resolveProductImage(img, data.product.id))
+			? data.product.images.map((img) => resolveProductImage(img, data.product.id))
 			: data.product.image
 				? [resolveProductImage(data.product.image, data.product.id)]
 				: []
@@ -95,7 +95,9 @@
 
 		<div class="side">
 			<div class="side-top">
-				<div class="sub">{data.product.id.toUpperCase()} · {data.product.category.toUpperCase()}</div>
+				<div class="sub">
+					{data.product.id.toUpperCase()} · {data.product.category.toUpperCase()}
+				</div>
 				<h1>{data.product.name}</h1>
 				{#if data.product.tags?.length}
 					<div class="tags">
@@ -128,7 +130,9 @@
 				>
 					<div class="price-col">
 						{#if data.product.price}
-							<span class="price">€{data.isEU ? Math.round(data.product.price * 1.21) : data.product.price}</span>
+							<span class="price"
+								>€{data.isEU ? Math.round(data.product.price * 1.21) : data.product.price}</span
+							>
 							<span class="price-tax">{data.isEU ? 'incl. BTW' : 'excl. VAT'}</span>
 						{:else}
 							<span class="price">TBD</span>

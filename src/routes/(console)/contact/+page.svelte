@@ -10,7 +10,10 @@
 	});
 </script>
 
-<SEO title="Contact" description="Get in touch — hardware commissions, prototype work, or just to say hello." />
+<SEO
+	title="Contact"
+	description="Get in touch — hardware commissions, prototype work, or just to say hello."
+/>
 
 <div class="wrap">
 	<section class="hero">

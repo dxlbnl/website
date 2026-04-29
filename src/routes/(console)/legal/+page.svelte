@@ -2,7 +2,10 @@
 	import SEO from '$lib/ui/SEO.svelte';
 </script>
 
-<SEO title="Legal" description="Legal information for Dexterlabs — privacy policy, terms and conditions, shipping and returns." />
+<SEO
+	title="Legal"
+	description="Legal information for Dexterlabs — privacy policy, terms and conditions, shipping and returns."
+/>
 
 <div class="wrap">
 	<div class="eyebrow">// LEGAL · DEXTERLABS</div>

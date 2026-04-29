@@ -10,7 +10,11 @@ export function fmtDate(d: string | Date): string {
 /** "28 apr. 2026 · 14:32" */
 export function fmtDateTime(d: string | Date): string {
 	const date = new Date(d);
-	const datePart = date.toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric' });
+	const datePart = date.toLocaleDateString('nl-NL', {
+		day: 'numeric',
+		month: 'short',
+		year: 'numeric'
+	});
 	const timePart = date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
 	return `${datePart} · ${timePart}`;
 }

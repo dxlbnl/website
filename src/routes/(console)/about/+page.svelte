@@ -4,7 +4,10 @@
 	import SEO from '$lib/ui/SEO.svelte';
 </script>
 
-<SEO title="About" description="Dexter — hardware and software engineer, Eurorack builder, based in Delft. The story behind Dexterlabs." />
+<SEO
+	title="About"
+	description="Dexter — hardware and software engineer, Eurorack builder, based in Delft. The story behind Dexterlabs."
+/>
 
 <div class="wrap">
 	<section class="hero">

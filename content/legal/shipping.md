@@ -10,10 +10,10 @@ All orders are shipped from Delft, the Netherlands.
 
 ## Delivery estimates
 
-| Destination | Estimated delivery |
-|-------------|-------------------|
-| Netherlands | 1–3 business days |
-| EU | 3–7 business days |
+| Destination   | Estimated delivery |
+| ------------- | ------------------ |
+| Netherlands   | 1–3 business days  |
+| EU            | 3–7 business days  |
 | Rest of world | 7–21 business days |
 
 These are estimates from the moment of dispatch, not from the order date. Pre-orders ship approximately 2 months after purchase — see your order confirmation for the expected dispatch window.

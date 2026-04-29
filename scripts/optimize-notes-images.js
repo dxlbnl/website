@@ -11,8 +11,14 @@ async function optimizeFile(inputPath, outDir, baseName, logInfo) {
 	let doWebp = true;
 	let doJpg = true;
 
-	try { await fs.access(webpPath); doWebp = false; } catch {}
-	try { await fs.access(jpgPath); doJpg = false; } catch {}
+	try {
+		await fs.access(webpPath);
+		doWebp = false;
+	} catch {}
+	try {
+		await fs.access(jpgPath);
+		doJpg = false;
+	} catch {}
 
 	if (!doWebp && !doJpg) {
 		console.log(`[SKIP] ${logInfo} (already exists)`);
@@ -37,7 +43,7 @@ async function optimizeDir(contentDir, staticDir) {
 
 	for (const entry of entries) {
 		const fullPath = path.join(contentDir, entry.name);
-		
+
 		if (entry.isFile()) {
 			const ext = path.extname(entry.name).toLowerCase();
 			if (!validExts.includes(ext)) continue;
@@ -74,7 +80,12 @@ async function optimizeDir(contentDir, staticDir) {
 					if (!validExts.includes(ext)) continue;
 
 					const baseName = path.parse(image).name;
-					await optimizeFile(path.join(mediaDir, image), targetDir, baseName, `${slug}/media/${image}`);
+					await optimizeFile(
+						path.join(mediaDir, image),
+						targetDir,
+						baseName,
+						`${slug}/media/${image}`
+					);
 				}
 			}
 		}

@@ -11,7 +11,10 @@
 	const fmt = fmtDateShort;
 </script>
 
-<SEO title="Feed" description="Live updates from the lab — builds in progress, links, and notes from the bench." />
+<SEO
+	title="Feed"
+	description="Live updates from the lab — builds in progress, links, and notes from the bench."
+/>
 
 <div class="wrap">
 	<section class="hero">

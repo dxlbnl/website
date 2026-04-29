@@ -2,8 +2,8 @@
 	import { page } from '$app/state';
 
 	let {
-		title = "Dexterlabs",
-		description = "Software engineering, Eurorack hardware, and small web experiments from the lab.",
+		title = 'Dexterlabs',
+		description = 'Software engineering, Eurorack hardware, and small web experiments from the lab.',
 		image = '', // We will default this to our dynamic OG endpoint
 		type = 'website',
 		articleDate = undefined,
@@ -19,7 +19,9 @@
 
 	let url = $derived(page.url.origin + page.url.pathname);
 	let relativeImage = $derived(image?.replace(page.url.origin, ''));
-	let ogImage = $derived(`${page.url.origin}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description)}${relativeImage ? `&image=${relativeImage}` : ''}`);
+	let ogImage = $derived(
+		`${page.url.origin}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description)}${relativeImage ? `&image=${relativeImage}` : ''}`
+	);
 
 	// Structured Data (JSON-LD)
 	let jsonLd = $derived({

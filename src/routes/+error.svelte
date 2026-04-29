@@ -71,7 +71,9 @@
 	}
 
 	@keyframes blink {
-		to { opacity: 0.2; }
+		to {
+			opacity: 0.2;
+		}
 	}
 
 	.status-text {
@@ -130,7 +132,7 @@
 			padding: 20px;
 			border: none;
 		}
-		
+
 		h1 {
 			font-size: 60px;
 		}
