@@ -30,7 +30,7 @@
 			const res = await fetch('/api/checkout', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ productId: product.id })
+				body: JSON.stringify({ product: product.id })
 			});
 			if (!res.ok) throw new Error(`Checkout failed: ${res.status}`);
 			const { url } = await res.json();
