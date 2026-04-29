@@ -10,10 +10,9 @@ These terms apply to all purchases made through dexterlabs.nl.
 
 > **Seller:** Alexander Esselink, trading as Dexterlabs  
 > **KvK:** 94740860  
+> **BTW:** NL005106670B98
 > **Address:**  
 > <span style="display:block;padding-left:1em">Hopstraat 32<br>2611TC Delft<br>Netherlands</span>
->
-> **BTW:** NL005106670B98
 
 For questions, visit our [contact page](/contact).
 
