@@ -1,14 +1,14 @@
 import { fail } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
 import { db } from '$lib/server/db';
 import { feedPosts } from '$lib/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
+import { verifyAdminSession } from '$lib/utils/auth';
 import type { Actions, PageServerLoad } from './$types';
 
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ cookies }) => {
-	const authed = cookies.get('admin_session') === env.ADMIN_TOKEN;
+	const authed = await verifyAdminSession(cookies.get('admin_session'));
 	if (!authed) return { authed: false as const, posts: [] };
 
 	const rows = await db.select().from(feedPosts).orderBy(desc(feedPosts.date));
@@ -24,7 +24,7 @@ export const actions: Actions = {
 	},
 
 	create: async ({ request, cookies }) => {
-		if (cookies.get('admin_session') !== env.ADMIN_TOKEN) return fail(401);
+		if (!(await verifyAdminSession(cookies.get('admin_session')))) return fail(401);
 		const data = await request.formData();
 		const body = (data.get('body') as string)?.trim();
 		if (!body) return fail(400, { error: 'Body required' });
@@ -37,7 +37,7 @@ export const actions: Actions = {
 	},
 
 	delete: async ({ request, cookies }) => {
-		if (cookies.get('admin_session') !== env.ADMIN_TOKEN) return fail(401);
+		if (!(await verifyAdminSession(cookies.get('admin_session')))) return fail(401);
 		const id = Number((await request.formData()).get('id'));
 		if (!id) return fail(400);
 		await db.delete(feedPosts).where(eq(feedPosts.id, id));

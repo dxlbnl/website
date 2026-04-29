@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { RESEND_WEBHOOK_SECRET } from '$env/static/private';
 import { db } from '$lib/server/db';
 import { emailOpens } from '$lib/server/db/schema';
 
@@ -13,10 +13,14 @@ async function verifySvixSignature(
 	svixSignature: string,
 	secret: string
 ): Promise<boolean> {
-	const secretBytes = Uint8Array.from(atob(secret.replace(/^whsec_/, '')), (c) =>
-		c.charCodeAt(0)
+	const secretBytes = Uint8Array.from(atob(secret.replace(/^whsec_/, '')), (c) => c.charCodeAt(0));
+	const key = await crypto.subtle.importKey(
+		'raw',
+		secretBytes,
+		{ name: 'HMAC', hash: 'SHA-256' },
+		false,
+		['sign']
 	);
-	const key = await crypto.subtle.importKey('raw', secretBytes, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
 	const payload = `${svixId}.${svixTimestamp}.${body}`;
 	const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload));
 	const computed = btoa(String.fromCharCode(...new Uint8Array(sig)));
@@ -29,7 +33,7 @@ export const POST = async ({ request }) => {
 	const svixSignature = request.headers.get('svix-signature') ?? '';
 	const body = await request.text();
 
-	const secret = env.RESEND_WEBHOOK_SECRET ?? '';
+	const secret = RESEND_WEBHOOK_SECRET ?? '';
 	if (!secret || !(await verifySvixSignature(body, svixId, svixTimestamp, svixSignature, secret))) {
 		return new Response('Unauthorized', { status: 401 });
 	}

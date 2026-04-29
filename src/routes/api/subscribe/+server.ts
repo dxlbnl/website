@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { env } from '$env/dynamic/private';
+import { RESEND_API_KEY, RESEND_SEGMENT_ID } from '$env/static/private';
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -10,13 +10,13 @@ export const POST: RequestHandler = async ({ request }) => {
 		error(400, 'Invalid email');
 	}
 
-	const resend = new Resend(env.RESEND_API_KEY);
+	const resend = new Resend(RESEND_API_KEY);
 
 	const { error: resendError } = await resend.contacts.create({
 		email,
 		firstName: firstName ?? undefined,
 		unsubscribed: false,
-		...(env.RESEND_SEGMENT_ID ? { segments: [{ id: env.RESEND_SEGMENT_ID }] } : {})
+		...(RESEND_SEGMENT_ID ? { segments: [{ id: RESEND_SEGMENT_ID }] } : {})
 	});
 
 	if (resendError) {

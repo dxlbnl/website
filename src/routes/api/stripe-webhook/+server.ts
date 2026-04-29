@@ -1,6 +1,11 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
-import { env } from '$env/dynamic/private';
+import {
+	STRIPE_SECRET_KEY,
+	STRIPE_WEBHOOK_SECRET,
+	RESEND_API_KEY,
+	RESEND_FROM
+} from '$env/static/private';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
@@ -12,13 +17,13 @@ export const prerender = false;
 export const trailingSlash = 'ignore';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const stripe = new Stripe(env.STRIPE_SECRET_KEY, { apiVersion: '2026-04-22.dahlia' });
+	const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2026-04-22.dahlia' });
 	const sig = request.headers.get('stripe-signature');
 	const body = await request.text();
 
 	let event: Stripe.Event;
 	try {
-		event = stripe.webhooks.constructEvent(body, sig!, env.STRIPE_WEBHOOK_SECRET);
+		event = stripe.webhooks.constructEvent(body, sig!, STRIPE_WEBHOOK_SECRET);
 	} catch (err) {
 		console.error('[webhook] signature verification failed', err);
 		error(400, 'Invalid webhook signature');
@@ -59,7 +64,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 				if (session.customer_details?.email) {
 					try {
-						const resend = new Resend(env.RESEND_API_KEY);
+						const resend = new Resend(RESEND_API_KEY);
 						const html = renderOrderEmail({
 							productId: session.metadata?.productId ?? '',
 							amountTotal: session.amount_total ?? 0,
@@ -67,7 +72,7 @@ export const POST: RequestHandler = async ({ request }) => {
 							customerName: session.customer_details.name ?? undefined
 						});
 						const { data: emailData } = await resend.emails.send({
-							from: env.RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
+							from: RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
 							to: session.customer_details.email,
 							subject: 'Order received — DEXTERLABS',
 							html

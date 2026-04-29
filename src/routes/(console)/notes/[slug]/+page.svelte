@@ -4,10 +4,10 @@
 	import { resolveLogImage } from '$lib/utils/image';
 	import { page } from '$app/state';
 	import type { Component } from 'svelte';
-	import type { NoteFrontmatter } from '$lib/types';
+	import type { NoteFrontmatter, ProductFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
 
-	type Props = { data: { component: Component; metadata: NoteFrontmatter; productCta?: string } };
+	type Props = { data: { component: Component; metadata: NoteFrontmatter; product?: ProductFrontmatter } };
 	let { data }: Props = $props();
 
 	const images = $derived(
@@ -39,11 +39,18 @@
 			<data.component />
 		</div>
 
-		{#if data.metadata.productId && data.productCta}
-			<div class="product-cta">
-				<span class="cta-label">// DEXTERLABS CATALOGUE</span>
-				<a href="/catalogue/{data.metadata.productId}" class="cta-link">{data.productCta} →</a>
-			</div>
+		{#if data.product}
+			{@const p = data.product}
+			{@const orderable = !!(p.stripePriceId || p.tindieUrl)}
+			{@const cta = p.status === 'available' ? 'GET ONE HERE' : orderable ? 'PREORDER NOW' : 'GET NOTIFIED'}
+			<a href="/catalogue/{p.id}" class="product-cta">
+				<div class="cta-body">
+					<span class="cta-eyebrow">// THE HARDWARE</span>
+					<span class="cta-name">{p.name}</span>
+					<span class="cta-desc">{p.description}</span>
+				</div>
+				<span class="cta-link">{cta} →</span>
+			</a>
 		{/if}
 	</article>
 
@@ -225,26 +232,50 @@
 	}
 	.product-cta {
 		max-width: 68ch;
-		margin: 40px auto 0;
-		border: 1px solid var(--rule);
-		padding: 16px 20px;
+		margin: 48px auto 0;
+		border: 1px solid var(--amber);
+		padding: 20px 24px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 24px;
+		text-decoration: none;
+		transition: background 0.15s;
+		&:hover {
+			background: color-mix(in srgb, var(--amber) 6%, transparent);
+		}
+	}
+	.cta-body {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+	.cta-eyebrow {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.12em;
+		color: var(--ink-faint);
+		text-transform: uppercase;
+	}
+	.cta-name {
+		font-weight: 500;
+		font-size: 20px;
+		letter-spacing: -0.01em;
+		color: var(--ink);
+	}
+	.cta-desc {
+		font-size: 13px;
+		color: var(--ink-dim);
+		line-height: 1.4;
+	}
+	.cta-link {
 		font-family: var(--mono);
 		font-size: var(--t-micro);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-	}
-	.cta-label {
-		color: var(--ink-faint);
-	}
-	.cta-link {
 		color: var(--amber);
-		border-bottom: none;
-		&:hover {
-			color: var(--ink);
-		}
+		white-space: nowrap;
+		flex-shrink: 0;
 	}
 	.post-foot {
 		max-width: 68ch;

@@ -15,17 +15,11 @@ export const load: PageLoad = async ({ params }) => {
 	if (!loadModule) throw error(404, `Note not found: ${params.slug}`);
 	const { default: component, metadata } = await loadModule();
 
-	let productCta: string | undefined;
+	let product: ProductFrontmatter | undefined;
 	if (metadata.productId) {
 		const loadProduct = productModules[`/content/products/${metadata.productId}.md`];
-		if (loadProduct) {
-			const { metadata: p } = await loadProduct();
-			const orderable = !!(p.stripePriceId || p.tindieUrl);
-			if (p.status === 'available') productCta = 'GET ONE HERE';
-			else if (p.status === 'coming-soon' && orderable) productCta = 'PREORDER NOW';
-			else productCta = 'GET NOTIFIED';
-		}
+		if (loadProduct) product = (await loadProduct()).metadata;
 	}
 
-	return { component, metadata, productCta };
+	return { component, metadata, product };
 };

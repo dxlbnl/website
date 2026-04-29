@@ -1,11 +1,12 @@
 import { fail } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import { RESEND_API_KEY, RESEND_SEGMENT_ID, RESEND_FROM } from '$env/static/private';
 import { Resend } from 'resend';
 import { render } from 'svelte/server';
 import { renderMailingEmail } from '$lib/email/render';
 import { db } from '$lib/server/db';
 import { emailOpens, mailingBroadcasts } from '$lib/server/db/schema';
 import { count } from 'drizzle-orm';
+import { verifyAdminSession } from '$lib/utils/auth';
 import type { Component } from 'svelte';
 import type { MailingFrontmatter } from '$lib/types';
 import type { Actions, PageServerLoad } from './$types';
@@ -20,7 +21,7 @@ type MailingModule = {
 const modules = import.meta.glob<MailingModule>('/content/mailings/*.md', { eager: true });
 
 export const load: PageServerLoad = async ({ cookies }) => {
-	const authed = cookies.get('admin_session') === env.ADMIN_TOKEN;
+	const authed = await verifyAdminSession(cookies.get('admin_session'));
 	if (!authed) return { authed: false as const, mailings: [], opensMap: {} };
 
 	const mailings = Object.entries(modules)
@@ -28,13 +29,19 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 	const broadcasts = await db.select().from(mailingBroadcasts);
-	const broadcastsMap: Record<string, { broadcastId: string; sentAt: string; recipientCount: number }> =
-		Object.fromEntries(
-			broadcasts.map((b) => [
-				b.slug,
-				{ broadcastId: b.broadcastId, sentAt: b.sentAt.toISOString(), recipientCount: b.recipientCount }
-			])
-		);
+	const broadcastsMap: Record<
+		string,
+		{ broadcastId: string; sentAt: string; recipientCount: number }
+	> = Object.fromEntries(
+		broadcasts.map((b) => [
+			b.slug,
+			{
+				broadcastId: b.broadcastId,
+				sentAt: b.sentAt.toISOString(),
+				recipientCount: b.recipientCount
+			}
+		])
+	);
 
 	const broadcastIdToSlug = Object.fromEntries(broadcasts.map((b) => [b.broadcastId, b.slug]));
 
@@ -63,7 +70,7 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const slug = (formData.get('slug') as string) || '';
 
-		if (cookies.get('admin_session') !== env.ADMIN_TOKEN)
+		if (!(await verifyAdminSession(cookies.get('admin_session'))))
 			return fail(401, { error: 'Not authenticated', slug });
 		if (!slug) return fail(400, { error: 'Missing slug', slug });
 
@@ -74,17 +81,17 @@ export const actions: Actions = {
 		const { body: bodyHtml } = render(mod.default, {});
 		const emailHtml = renderMailingEmail(mod.metadata.title, bodyHtml, mod.metadata.date);
 
-		const resend = new Resend(env.RESEND_API_KEY);
+		const resend = new Resend(RESEND_API_KEY);
 
 		// Get recipient count before sending
 		const { data: contactsData } = await resend.contacts.list({
-			segmentId: env.RESEND_SEGMENT_ID ?? ''
+			segmentId: RESEND_SEGMENT_ID ?? ''
 		});
 		const recipientCount = contactsData?.data?.length ?? 0;
 
 		const { data, error: resendError } = await resend.broadcasts.create({
-			segmentId: env.RESEND_SEGMENT_ID ?? '',
-			from: env.RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
+			segmentId: RESEND_SEGMENT_ID ?? '',
+			from: RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
 			name: mod.metadata.title,
 			subject: mod.metadata.subject,
 			html: emailHtml
