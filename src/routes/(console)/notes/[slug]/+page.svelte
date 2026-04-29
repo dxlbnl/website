@@ -7,7 +7,7 @@
 	import type { NoteFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
 
-	type Props = { data: { component: Component; metadata: NoteFrontmatter } };
+	type Props = { data: { component: Component; metadata: NoteFrontmatter; productCta?: string } };
 	let { data }: Props = $props();
 
 	const images = $derived(
@@ -38,6 +38,13 @@
 		<div class="body">
 			<data.component />
 		</div>
+
+		{#if data.metadata.productId && data.productCta}
+			<div class="product-cta">
+				<span class="cta-label">// DEXTERLABS CATALOGUE</span>
+				<a href="/catalogue/{data.metadata.productId}" class="cta-link">{data.productCta} →</a>
+			</div>
+		{/if}
 	</article>
 
 	<div class="post-foot">
@@ -214,6 +221,29 @@
 			td:last-child {
 				color: var(--ink);
 			}
+		}
+	}
+	.product-cta {
+		max-width: 68ch;
+		margin: 40px auto 0;
+		border: 1px solid var(--rule);
+		padding: 16px 20px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.cta-label {
+		color: var(--ink-faint);
+	}
+	.cta-link {
+		color: var(--amber);
+		border-bottom: none;
+		&:hover {
+			color: var(--ink);
 		}
 	}
 	.post-foot {

@@ -6,6 +6,7 @@ kind: HARDWARE
 tags: [Hardware, Eurorack, USB-C, Power Supply, PCB]
 images: [media/conduit.jpg]
 lede: "Building a USB-C powered Eurorack supply that doesn't sound like a swarm of bees — and iterating toward something actually shippable."
+productId: conduit-pdx2
 ---
 
 I’ve been iterating on the Conduit PDX for a while now. There aren't many USB-to-Eurorack solutions out there that actually deliver enough power without sounding like a swarm of bees, so I decided to build my own.

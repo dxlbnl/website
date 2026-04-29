@@ -2,8 +2,17 @@
 	import type { ProductFrontmatter } from '$lib/types';
 	import { resolveProductImage } from '$lib/utils/image';
 
-	type Props = { product: ProductFrontmatter };
-	let { product }: Props = $props();
+	type Props = { product: ProductFrontmatter; isEU?: boolean };
+	let { product, isEU = false }: Props = $props();
+
+	const displayPrice = $derived(
+		product.price
+			? isEU
+				? `€${Math.round(product.price * 1.21)}`
+				: `€${product.price}`
+			: null
+	);
+	const taxLabel = $derived(product.price ? (isEU ? 'incl. BTW' : 'excl. VAT') : null);
 
 	const orderable = $derived(!!(product.stripePriceId || product.tindieUrl));
 
@@ -35,7 +44,10 @@
 		<h3 class="title">{product.name}</h3>
 		<p class="desc">{product.description}</p>
 		<div class="meta">
-			<span class="price">{product.price ? `€${product.price}` : '—'}</span>
+			<span class="price">
+				{displayPrice ?? '—'}
+				{#if taxLabel}<span class="tax-hint">{taxLabel}</span>{/if}
+			</span>
 			<span class="stock {stock.cls}">{stock.label}</span>
 		</div>
 	</div>
@@ -113,6 +125,15 @@
 	.price {
 		font-size: 15px;
 		color: var(--amber);
+		display: flex;
+		align-items: baseline;
+		gap: 5px;
+	}
+	.tax-hint {
+		font-size: 9px;
+		color: var(--ink-faint);
+		letter-spacing: 0.06em;
+		text-transform: lowercase;
 	}
 	.stock.ok {
 		color: var(--ok);

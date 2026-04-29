@@ -7,7 +7,7 @@
 	import { resolveProductImage } from '$lib/utils/image';
 	import SEO from '$lib/ui/SEO.svelte';
 
-	type Props = { data: { component: Component; product: ProductFrontmatter } };
+	type Props = { data: { component: Component; product: ProductFrontmatter; isEU: boolean } };
 	let { data }: Props = $props();
 
 	const stockMap: Record<
@@ -127,7 +127,12 @@
 						!data.product.tindieUrl}
 				>
 					<div class="price-col">
-						<span class="price">{data.product.price ? `€${data.product.price}` : 'TBD'}</span>
+						{#if data.product.price}
+							<span class="price">€{data.isEU ? Math.round(data.product.price * 1.21) : data.product.price}</span>
+							<span class="price-tax">{data.isEU ? 'incl. BTW' : 'excl. VAT'}</span>
+						{:else}
+							<span class="price">TBD</span>
+						{/if}
 						<span class="stock-info {stock.cls}">
 							<Led tone={stock.led} />
 							{stock.label}{#if stock.ship}
@@ -360,6 +365,14 @@
 		font-size: 28px;
 		color: var(--amber);
 		letter-spacing: 0.02em;
+	}
+	.price-tax {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--ink-faint);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		margin-top: -2px;
 	}
 	.stock-info {
 		display: flex;

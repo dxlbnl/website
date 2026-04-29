@@ -38,6 +38,7 @@ export type NoteFrontmatter = {
 	kind?: string;
 	lede?: string;
 	images?: string[];
+	productId?: string;
 };
 
 export type MailingFrontmatter = {

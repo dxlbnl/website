@@ -5,7 +5,7 @@
 	import type { ProductFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
 
-	type Props = { data: { products: ProductFrontmatter[] } };
+	type Props = { data: { products: ProductFrontmatter[]; isEU: boolean } };
 	let { data }: Props = $props();
 </script>
 
@@ -38,7 +38,7 @@
 
 	<div class="grid">
 		{#each data.products as product}
-			<ProductCard {product} />
+			<ProductCard {product} isEU={data.isEU} />
 		{/each}
 	</div>
 

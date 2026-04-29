@@ -6,6 +6,7 @@ kind: TALK
 tags: [Hardware, Distrans AR-1, AI, Talk]
 images: [media/distrans.jpg, media/circuit.png]
 lede: 'A talk at 0xFEFE about using AI to design hardware — what actually worked, what exploded, and why structure beat cleverness.'
+productId: distrans-ar1
 ---
 
 I recently gave a talk at 0xFEFE about the Distrans AR-1 project. The core message was pretty simple: getting AI to help design hardware is both incredible and incredibly frustrating.
