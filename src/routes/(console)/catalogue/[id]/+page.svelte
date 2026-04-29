@@ -24,6 +24,7 @@
 	const cta = $derived(data.product.status === 'coming-soon' ? 'PREORDER' : 'ADD TO RACK');
 
 	let buying = $state(false);
+	let checkoutError = $state(false);
 	let activeIndex = $state(0);
 
 	const galleryImages = $derived(
@@ -37,15 +38,19 @@
 	async function startCheckout() {
 		if (!data.product.stripePriceId) return;
 		buying = true;
+		checkoutError = false;
 		try {
 			const res = await fetch('/api/checkout', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
 				body: JSON.stringify({ priceId: data.product.stripePriceId, productId: data.product.id })
 			});
+			if (!res.ok) throw new Error(`Checkout failed: ${res.status}`);
 			const { url } = await res.json();
 			window.location.href = url;
-		} finally {
+		} catch (err) {
+			console.error(err);
+			checkoutError = true;
 			buying = false;
 		}
 	}
@@ -134,6 +139,9 @@
 							<button class="buy" onclick={startCheckout} disabled={buying}>
 								{buying ? 'LOADING…' : `${cta} →`}
 							</button>
+							{#if checkoutError}
+								<span class="checkout-err">Something went wrong. Please try again.</span>
+							{/if}
 						{:else if data.product.tindieUrl}
 							<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
 								{cta} →
@@ -386,6 +394,12 @@
 	.buy:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
+	}
+	.checkout-err {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--danger, #e53);
+		letter-spacing: 0.06em;
 	}
 	.sold-out-label {
 		font-family: var(--mono);

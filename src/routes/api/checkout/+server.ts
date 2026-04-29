@@ -3,6 +3,8 @@ import { env } from '$env/dynamic/private';
 import { json, error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
+export const prerender = false;
+
 export const POST: RequestHandler = async ({ request, url }) => {
 	const stripe = new Stripe(env.STRIPE_SECRET_KEY, { apiVersion: '2026-04-22.dahlia' });
 	const { priceId, productId } = await request.json();
