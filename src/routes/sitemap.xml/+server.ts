@@ -15,14 +15,23 @@ export const GET = async ({ url }) => {
 		return `${domain}/notes/${slug}`;
 	});
 
+	// Load legal pages
+	const legalModules = import.meta.glob('/content/legal/*.md', { eager: true });
+	const legalPages = Object.keys(legalModules).map((path) => {
+		const slug = path.split('/').at(-1)?.replace('.md', '');
+		return `${domain}/legal/${slug}`;
+	});
+
 	const staticPages = [
 		domain,
 		`${domain}/catalogue`,
 		`${domain}/notes`,
-		`${domain}/about`
+		`${domain}/about`,
+		`${domain}/contact`,
+		`${domain}/legal`
 	];
 
-	const allPages = [...staticPages, ...products, ...notes];
+	const allPages = [...staticPages, ...products, ...notes, ...legalPages];
 
 	const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
