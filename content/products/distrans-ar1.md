@@ -7,14 +7,15 @@ status: coming-soon
 category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
 # tindieUrl: https://www.tindie.com/stores/dexterlabs/
-stripePriceId: price_1TQYAiJyqPItsUADWgfXKghu
+stripeProduct: prod_UPMuXHezrWyNpN
 image: media/distrans-dune.png
 images:
   - media/distrans-glitch.png
   - media/distrans-space-1.png
   - media/distrans-space.png
   - media/distrans-tv-glitch.png
-price: 250
+priceIncl: 250
+priceExcl: 220
 specs:
   Width: 6 HP
   Audio Resolution: 48kHz / 24-bit PCM

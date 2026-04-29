@@ -60,6 +60,7 @@
 		"resend": "^6.12.2",
 		"satori": "^0.26.0",
 		"stripe": "^22.1.0",
-		"svelte-email": "^0.0.4"
+		"svelte-email": "^0.0.4",
+		"zod": "^4.3.6"
 	}
 }

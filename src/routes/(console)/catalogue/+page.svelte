@@ -4,8 +4,9 @@
 	import Led from '$lib/ui/Led.svelte';
 	import type { ProductFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
+	import type { Region } from '$lib/utils/location';
 
-	type Props = { data: { products: ProductFrontmatter[]; isEU: boolean } };
+	type Props = { data: { products: ProductFrontmatter[]; region: Region } };
 	let { data }: Props = $props();
 </script>
 
@@ -38,7 +39,7 @@
 
 	<div class="grid">
 		{#each data.products as product}
-			<ProductCard {product} isEU={data.isEU} />
+			<ProductCard {product} region={data.region} />
 		{/each}
 	</div>
 

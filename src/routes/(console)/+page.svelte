@@ -64,7 +64,7 @@
 		<SectionH num="// 0x02" title="Catalogue" sub="EURORACK HARDWARE" />
 		<div class="cat-grid">
 			{#each data.products as product}
-				<ProductCard {product} />
+				<ProductCard {product} region={data.region} />
 			{/each}
 		</div>
 		<div class="cat-foot">

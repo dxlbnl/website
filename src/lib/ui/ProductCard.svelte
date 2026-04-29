@@ -1,29 +1,16 @@
 <script lang="ts">
 	import type { ProductFrontmatter } from '$lib/types';
 	import { resolveProductImage } from '$lib/utils/image';
+	import { type Region } from '$lib/utils/location';
+	import { useProduct } from '$lib/utils/product.svelte';
+	import Led from './Led.svelte';
 
-	type Props = { product: ProductFrontmatter; isEU?: boolean };
-	let { product, isEU = false }: Props = $props();
+	type Props = { product: ProductFrontmatter; region: Region };
+	let { product, region = null }: Props = $props();
 
-	const displayPrice = $derived(
-		product.price ? (isEU ? `€${Math.round(product.price * 1.21)}` : `€${product.price}`) : null
-	);
-	const taxLabel = $derived(product.price ? (isEU ? 'incl. BTW' : 'excl. VAT') : null);
-
-	const orderable = $derived(!!(product.stripePriceId || product.tindieUrl));
-
-	const stockMap: Record<string, { label: string; cls: string }> = {
-		available: { label: 'IN STOCK', cls: 'ok' },
-		'sold-out': { label: 'SOLD OUT', cls: 'out' },
-		'coming-soon': { label: 'PREORDER', cls: 'low' }
-	};
-	const stock = $derived(
-		product.status === 'coming-soon' && !orderable
-			? { label: 'COMING SOON', cls: 'out' }
-			: (stockMap[product.status] ?? { label: product.status, cls: '' })
-	);
-	const cta = $derived(
-		product.status === 'coming-soon' ? (orderable ? 'PREORDER' : 'COMING SOON') : 'ADD TO RACK'
+	const pd = useProduct(
+		() => product,
+		() => region
 	);
 </script>
 
@@ -41,14 +28,19 @@
 		<p class="desc">{product.description}</p>
 		<div class="meta">
 			<span class="price">
-				{displayPrice ?? '—'}
-				{#if taxLabel}<span class="tax-hint">{taxLabel}</span>{/if}
+				{pd.displayPrice ?? '—'}
+				{#if pd.taxLabel}<span class="tax-hint">{pd.taxLabel}</span>{/if}
 			</span>
-			<span class="stock {stock.cls}">{stock.label}</span>
+
+			<span class="stock {pd.stock.cls}">
+				<Led tone={pd.stock.led} />
+				{pd.stock.label}{#if pd.stock.ship}
+					· {pd.stock.ship}{/if}
+			</span>
 		</div>
 	</div>
 	<div class="cta">
-		<span>{cta}</span>
+		<span>{pd.cta}</span>
 		<span>→</span>
 	</div>
 </a>
@@ -131,15 +123,29 @@
 		letter-spacing: 0.06em;
 		text-transform: lowercase;
 	}
-	.stock.ok {
-		color: var(--ok);
-	}
-	.stock.low {
-		color: var(--amber);
-	}
-	.stock.out {
+	.stock {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
 		color: var(--ink-faint);
+
+		&.ok {
+			color: var(--ok);
+		}
+
+		&.low {
+			color: var(--amber);
+		}
+
+		&.out {
+			color: var(--ink-faint);
+		}
 	}
+
 	.cta {
 		border-top: 1px solid var(--rule);
 		padding: 10px 14px;

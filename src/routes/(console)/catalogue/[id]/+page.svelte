@@ -1,30 +1,15 @@
 <script lang="ts">
 	import Signature from '$lib/ui/Signature.svelte';
-	import Led from '$lib/ui/Led.svelte';
 	import type { Component } from 'svelte';
 	import type { ProductFrontmatter } from '$lib/types';
-	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
 	import { resolveProductImage } from '$lib/utils/image';
 	import SEO from '$lib/ui/SEO.svelte';
+	import Pricebox from './Pricebox.svelte';
+	import type { Region } from '$lib/utils/location';
 
-	type Props = { data: { component: Component; product: ProductFrontmatter; isEU: boolean } };
+	type Props = { data: { component: Component; product: ProductFrontmatter; region: Region } };
 	let { data }: Props = $props();
 
-	const stockMap: Record<
-		string,
-		{ label: string; cls: string; led: 'ok' | 'amber' | 'off'; ship?: string }
-	> = {
-		available: { label: 'IN STOCK', cls: 'ok', led: 'ok', ship: 'SHIPS IN 3–5 DAYS' },
-		'sold-out': { label: 'SOLD OUT', cls: 'out', led: 'off' },
-		'coming-soon': { label: 'PREORDER', cls: 'low', led: 'amber' }
-	};
-	const stock = $derived(
-		stockMap[data.product.status] ?? { label: data.product.status, cls: '', led: 'off' }
-	);
-	const cta = $derived(data.product.status === 'coming-soon' ? 'PREORDER' : 'ADD TO RACK');
-
-	let buying = $state(false);
-	let checkoutError = $state(false);
 	let activeIndex = $state(0);
 
 	const galleryImages = $derived(
@@ -34,26 +19,6 @@
 				? [resolveProductImage(data.product.image, data.product.id)]
 				: []
 	);
-
-	async function startCheckout() {
-		if (!data.product.stripePriceId) return;
-		buying = true;
-		checkoutError = false;
-		try {
-			const res = await fetch('/api/checkout', {
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ priceId: data.product.stripePriceId, productId: data.product.id })
-			});
-			if (!res.ok) throw new Error(`Checkout failed: ${res.status}`);
-			const { url } = await res.json();
-			window.location.href = url;
-		} catch (err) {
-			console.error(err);
-			checkoutError = true;
-			buying = false;
-		}
-	}
 </script>
 
 <SEO
@@ -121,49 +86,7 @@
 					</table>
 				{/if}
 
-				<div
-					class="pricebox"
-					class:notify={(data.product.status === 'available' ||
-						data.product.status === 'coming-soon') &&
-						!data.product.stripePriceId &&
-						!data.product.tindieUrl}
-				>
-					<div class="price-col">
-						{#if data.product.price}
-							<span class="price"
-								>€{data.isEU ? Math.round(data.product.price * 1.21) : data.product.price}</span
-							>
-							<span class="price-tax">{data.isEU ? 'incl. BTW' : 'excl. VAT'}</span>
-						{:else}
-							<span class="price">TBD</span>
-						{/if}
-						<span class="stock-info {stock.cls}">
-							<Led tone={stock.led} />
-							{stock.label}{#if stock.ship}
-								· {stock.ship}{/if}
-						</span>
-					</div>
-					{#if data.product.status === 'available' || data.product.status === 'coming-soon'}
-						{#if data.product.stripePriceId}
-							<button class="buy" onclick={startCheckout} disabled={buying}>
-								{buying ? 'LOADING…' : `${cta} →`}
-							</button>
-							{#if checkoutError}
-								<span class="checkout-err">Something went wrong. Please try again.</span>
-							{/if}
-						{:else if data.product.tindieUrl}
-							<a href={data.product.tindieUrl} target="_blank" rel="noopener" class="buy">
-								{cta} →
-							</a>
-						{:else}
-							<div class="notify-form">
-								<SubscribeForm label="Want to be in the loop?" buttonText="NOTIFY ME →" />
-							</div>
-						{/if}
-					{:else}
-						<span class="sold-out-label">SOLD OUT</span>
-					{/if}
-				</div>
+				<Pricebox product={data.product} region={data.region} />
 			</div>
 		</div>
 	</div>
@@ -344,89 +267,6 @@
 	.specs td:last-child {
 		color: var(--ink);
 		text-align: right;
-	}
-	.pricebox {
-		margin-top: 24px;
-		padding: 20px;
-		border: 1px solid var(--rule);
-		background: var(--bg-rail);
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 16px;
-	}
-	.pricebox.notify {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	.price-col {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-	}
-	.price {
-		font-family: var(--mono);
-		font-size: 28px;
-		color: var(--amber);
-		letter-spacing: 0.02em;
-	}
-	.price-tax {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		color: var(--ink-faint);
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		margin-top: -2px;
-	}
-	.stock-info {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-	}
-	.stock-info.ok {
-		color: var(--ok);
-	}
-	.stock-info.low {
-		color: var(--amber);
-	}
-	.buy {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.1em;
-		padding: 10px 16px;
-		background: var(--amber);
-		color: var(--bg);
-		text-transform: uppercase;
-		transition: background 0.15s;
-		white-space: nowrap;
-	}
-	.buy:hover {
-		background: var(--ink);
-	}
-	.buy:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-	.checkout-err {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		color: var(--danger, #e53);
-		letter-spacing: 0.06em;
-	}
-	.sold-out-label {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		color: var(--ink-faint);
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-	}
-	.notify-form {
-		width: 100%;
 	}
 	.content {
 		max-width: 68ch;

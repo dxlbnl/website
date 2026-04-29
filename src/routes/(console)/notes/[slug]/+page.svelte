@@ -5,10 +5,17 @@
 	import { page } from '$app/state';
 	import type { Component } from 'svelte';
 	import type { NoteFrontmatter, ProductFrontmatter } from '$lib/types';
+	import { useProduct } from '$lib/utils/product.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import type { Region } from '$lib/utils/location';
 
 	type Props = {
-		data: { component: Component; metadata: NoteFrontmatter; product?: ProductFrontmatter };
+		data: {
+			component: Component;
+			metadata: NoteFrontmatter;
+			product?: ProductFrontmatter;
+			region: Region;
+		};
 	};
 	let { data }: Props = $props();
 
@@ -42,17 +49,18 @@
 		</div>
 
 		{#if data.product}
+			{@const pd = useProduct(
+				() => data.product!,
+				() => data.region
+			)}
 			{@const p = data.product}
-			{@const orderable = !!(p.stripePriceId || p.tindieUrl)}
-			{@const cta =
-				p.status === 'available' ? 'GET ONE HERE' : orderable ? 'PREORDER NOW' : 'GET NOTIFIED'}
 			<a href="/catalogue/{p.id}" class="product-cta">
 				<div class="cta-body">
 					<span class="cta-eyebrow">// THE HARDWARE</span>
 					<span class="cta-name">{p.name}</span>
 					<span class="cta-desc">{p.description}</span>
 				</div>
-				<span class="cta-link">{cta} →</span>
+				<span class="cta-link">{pd.cta} →</span>
 			</a>
 		{/if}
 	</article>

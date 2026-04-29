@@ -6,13 +6,13 @@ description: Power your entire Eurorack from a laptop charger - studio-grade sil
 status: coming-soon
 category: Power
 tags: [Power Supply, USB-C, PD, Utility]
-# tindieUrl: https://www.tindie.com/stores/dexterlabs/
 image: media/conduit-galaxy.webp
 images:
   - media/conduit-galaxy.webp
   - media/conduit-motherboard.webp
   - media/conduit-starglitch.webp
-price: 200
+priceIncl: 200
+priceExcl: 180
 specs:
   Width: 4 HP
   Depth: 35mm (Skiff Friendly)
