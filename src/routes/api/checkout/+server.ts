@@ -68,7 +68,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 				price_data: {
 					currency: 'eur',
 					product: product?.stripeProduct,
-					unit_amount: eu ? product.priceIncl : product.priceExcl,
+					unit_amount: eu ? product.priceIncl * 100 : product.priceExcl * 100,
 					tax_behavior: eu ? 'inclusive' : 'exclusive'
 				}
 			}

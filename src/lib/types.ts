@@ -19,8 +19,8 @@ export type ProductFrontmatter = {
 	stripeProduct?: string;
 	image?: string;
 	images?: string[];
-	priceIncl?: number;
-	priceExcl?: number;
+	priceIncl: number;
+	priceExcl: number;
 	specs?: Record<string, string>;
 };
 
