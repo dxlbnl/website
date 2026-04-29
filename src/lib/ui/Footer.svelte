@@ -14,13 +14,12 @@
 		<div class="faint">Est. 2019 · Delft, NL</div>
 	</div>
 	<div>
-		<h4>// SECTIONS</h4>
+		<h4>// LEGAL</h4>
 		<ul>
-			<li><a href="/feed">Feed</a></li>
-			<li><a href="/notes">Notes</a></li>
-			<li><a href="/catalogue">Catalogue</a></li>
-			<li><a href="/about">About</a></li>
-			<li><a href="/contact">Contact</a></li>
+			<li><a href="/legal/privacy">Privacy</a></li>
+			<li><a href="/legal/terms">Terms</a></li>
+			<li><a href="/legal/shipping">Shipping</a></li>
+			<li><a href="/legal/returns">Returns</a></li>
 		</ul>
 	</div>
 	<div>

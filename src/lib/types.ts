@@ -49,6 +49,12 @@ export type MailingFrontmatter = {
 	published: boolean;
 };
 
+export type LegalFrontmatter = {
+	pageType: 'legal';
+	title: string;
+	lastUpdated: string;
+};
+
 export type InvoiceFrontmatter = {
 	paginaType: 'factuur';
 	factuurnr: string;

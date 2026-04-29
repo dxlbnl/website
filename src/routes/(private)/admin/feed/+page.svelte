@@ -7,7 +7,6 @@
 
 	type Props = { data: PageData; form: ActionData };
 	let { data, form }: Props = $props();
-
 </script>
 
 {#if !data.authed}
@@ -175,8 +174,7 @@
 
 	/* shared inputs */
 	textarea,
-	input[type='text'],
-	input[type='password'] {
+	input[type='text'] {
 		width: 100%;
 		background: var(--bg-sunken);
 		border: 1px solid var(--rule-strong);
