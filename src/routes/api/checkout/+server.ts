@@ -29,9 +29,9 @@ const bodySchema = z.object({
 });
 
 const loadProduct = async (productSlug: string) => {
-	const load = productModules[`/content/products/${productSlug}.md`];
-	if (module) {
-		return (await load()).metadata;
+	const productModule = productModules[`/content/products/${productSlug}.md`];
+	if (productModule) {
+		return (await productModule()).metadata;
 	}
 };
 
