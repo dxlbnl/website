@@ -5,30 +5,30 @@ export const GET = async ({ url }) => {
 	const productModules = import.meta.glob('/content/products/*.md', { eager: true });
 	const products = Object.keys(productModules).map((path) => {
 		const id = path.split('/').at(-1)?.replace('.md', '');
-		return `${domain}/catalogue/${id}`;
+		return `${domain}/catalogue/${id}/`;
 	});
 
 	// Load notes
 	const noteModules = import.meta.glob('/content/notes/*/index.md', { eager: true });
 	const notes = Object.keys(noteModules).map((path) => {
 		const slug = path.split('/').at(-2);
-		return `${domain}/notes/${slug}`;
+		return `${domain}/notes/${slug}/`;
 	});
 
 	// Load legal pages
 	const legalModules = import.meta.glob('/content/legal/*.md', { eager: true });
 	const legalPages = Object.keys(legalModules).map((path) => {
 		const slug = path.split('/').at(-1)?.replace('.md', '');
-		return `${domain}/legal/${slug}`;
+		return `${domain}/legal/${slug}/`;
 	});
 
 	const staticPages = [
-		domain,
-		`${domain}/catalogue`,
-		`${domain}/notes`,
-		`${domain}/about`,
-		`${domain}/contact`,
-		`${domain}/legal`
+		`${domain}/`,
+		`${domain}/catalogue/`,
+		`${domain}/notes/`,
+		`${domain}/about/`,
+		`${domain}/contact/`,
+		`${domain}/legal/`
 	];
 
 	const allPages = [...staticPages, ...products, ...notes, ...legalPages];
@@ -40,7 +40,7 @@ ${allPages
 		(page) => `  <url>
     <loc>${page}</loc>
     <changefreq>weekly</changefreq>
-    <priority>${page === domain ? '1.0' : '0.7'}</priority>
+    <priority>${page === `${domain}/` ? '1.0' : '0.7'}</priority>
   </url>`
 	)
 	.join('\n')}
