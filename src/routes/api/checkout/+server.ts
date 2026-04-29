@@ -64,6 +64,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 		},
 		line_items: [
 			{
+				quantity: 1,
 				price_data: {
 					currency: 'eur',
 					product: product?.stripeProduct,
