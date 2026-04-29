@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Led from '$lib/ui/Led.svelte';
-	import { fmtDate, fmtCents } from '$lib/utils/fmt';
+	import { fmtDateTime, fmtCents } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -54,7 +54,7 @@
 		<div class="section-label">// LOG</div>
 		{#each data.orders as order}
 			<div class="entry">
-				<span class="date">{fmtDate(order.createdAt)}</span>
+				<span class="date">{fmtDateTime(order.createdAt)}</span>
 				<div class="entry-body">
 					<span class="product">{order.productId}</span>
 					{#if order.customerEmail}
@@ -124,7 +124,7 @@
 	}
 	.entry {
 		display: grid;
-		grid-template-columns: 80px 1fr auto auto;
+		grid-template-columns: 160px 1fr auto auto;
 		gap: 20px;
 		align-items: center;
 		padding: 14px 0;
