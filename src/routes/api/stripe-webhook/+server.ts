@@ -9,6 +9,7 @@ import { renderOrderEmail } from '$lib/email/render';
 import type { RequestHandler } from './$types';
 
 export const prerender = false;
+export const trailingSlash = 'ignore';
 
 export const POST: RequestHandler = async ({ request }) => {
 	const stripe = new Stripe(env.STRIPE_SECRET_KEY, { apiVersion: '2026-04-22.dahlia' });
