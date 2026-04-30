@@ -4,67 +4,20 @@
     "type": "split",
     "children": [
       {
-        "id": "83b7e4640383056e",
+        "id": "139207fca3d2e5f5",
         "type": "tabs",
         "children": [
           {
-            "id": "9c3fa04a08b3bceb",
+            "id": "c98a4e248c451ed7",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Untitled.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Untitled"
-            }
-          },
-          {
-            "id": "5c85b8dffa759ba5",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/003-conduit-pdx1/index.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "index"
-            }
-          },
-          {
-            "id": "456e8090b7cda592",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/new nowas asdfjasdf.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "new nowas asdfjasdf"
-            }
-          },
-          {
-            "id": "8991d65e97d3950f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/003-conduit-pdx1/index.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "index"
+              "title": "New tab"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       }
     ],
     "direction": "vertical"
@@ -224,24 +177,27 @@
       "bases:Create new base": false
     }
   },
-  "active": "8991d65e97d3950f",
+  "active": "c98a4e248c451ed7",
   "lastOpenFiles": [
-    "notes/006-testing new note/index.md",
+    "mailings/Website nearing completion.md",
     "notes/003-conduit-pdx1/index.md",
     "notes/new nowas asdfjasdf.md",
+    "mailings/2026-04-30-hello-world3.md",
+    "mailings/2026-04-30-hello-world2.md",
+    "mailings/2026-04-27-hello-world.md",
+    "Untitled.md",
+    "notes/006-testing new note/index.md",
     "notes/006-testing new note/media",
     "notes/006-testing new note",
     "notes/Obsidian cms 123.md",
     "notes/media",
     "notes/obsidian cms is very cool.md",
-    "Untitled.md",
     "notes/Obsidian CMS.md",
     "products/media/conduit.png",
     "products/media/distrans-dune.png",
     "products/media/distrans-circuit-glitch-1.png",
     "products/media/conduit-starglitch.png",
     "products/media/conduit-galaxy.png",
-    "mailings/Website nearing completion.md",
     "Untitled 1.md",
     "products/Untitled 1.md",
     "mailings/Untitled.md",
@@ -258,9 +214,7 @@
     "invoices/2026-0002.md",
     "invoices/_template.md",
     "invoices/@template.md",
-    "invoices/2026-TEST.md",
     "invoices/2026-TEST.md.tmp.301845.1768337189981",
-    "console.md",
     "blog",
     "products",
     "catalogue",

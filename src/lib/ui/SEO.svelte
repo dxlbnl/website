@@ -31,10 +31,8 @@
 	function buildJsonLd() {
 		const base = {
 			'@context': 'https://schema.org',
-			'@type': type === 'article' ? 'Article' : type === 'product' ? 'Product' : 'WebSite',
 			url,
-			name: fullTitle,
-			headline: title,
+			name: title,
 			description,
 			image: ogImage
 		};
@@ -42,6 +40,8 @@
 		if (type === 'article') {
 			return {
 				...base,
+				'@type': 'Article',
+				headline: title,
 				author: { '@type': 'Person', name: articleAuthor },
 				...(articleDate ? { datePublished: articleDate } : {})
 			};
@@ -55,22 +55,31 @@
 						? 'https://schema.org/PreOrder'
 						: 'https://schema.org/OutOfStock';
 
+			// Build images array
+			const productImages = product.images 
+				? product.images.map(img => img.startsWith('http') ? img : `${page.url.origin}/${img.replace(/^\//, '')}`)
+				: [ogImage];
+
 			return {
 				...base,
+				'@type': 'Product',
 				brand: { '@type': 'Brand', name: 'Dexterlabs' },
 				sku: product.id,
 				mpn: product.id,
+				image: productImages,
 				offers: {
 					'@type': 'Offer',
 					price: product.priceIncl,
 					priceCurrency: 'EUR',
 					availability,
-					url
+					url,
+					priceValidUntil: '2026-12-31',
+					itemCondition: 'https://schema.org/NewCondition'
 				}
 			};
 		}
 
-		return base;
+		return { ...base, '@type': 'WebSite' };
 	}
 
 	let jsonLd = $derived(buildJsonLd());
