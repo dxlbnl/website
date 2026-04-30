@@ -7,6 +7,15 @@
 		<link rel="alternate icon" href="%sveltekit.assets%/logo.png" />
 		<link rel="apple-touch-icon" href="%sveltekit.assets%/logo.png" />
 		%sveltekit.head%
+		<script>
+			try {
+				let theme = localStorage.getItem('dxlb-palette');
+				if (!theme) {
+					theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'phosphor' : 'paper';
+				}
+				document.documentElement.dataset.palette = theme;
+			} catch (e) {}
+		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

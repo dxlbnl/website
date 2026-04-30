@@ -1,4 +1,9 @@
 <script lang="ts">
+	import '@fontsource/inter-tight/400.css';
+	import '@fontsource/inter-tight/500.css';
+	import '@fontsource/inter-tight/600.css';
+	import '@fontsource/jetbrains-mono/400.css';
+	import '@fontsource/jetbrains-mono/500.css';
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { getPalette, setPalette } from '$lib/theme.svelte';
@@ -24,12 +29,6 @@
 </script>
 
 <svelte:head>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
-		rel="stylesheet"
-	/>
 </svelte:head>
 
 {@render children()}

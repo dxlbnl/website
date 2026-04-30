@@ -69,8 +69,8 @@ The PDX-2 automatically negotiates the 20V Power Delivery profile, providing hig
 **Physical & Operational:**
 - **Width:** 4 HP (20mm)
 - **Depth:** 15mm (Ultra-Shallow)
-- **Efficiency:** > 92%
-- **Ripple:** < 5mVpp
+- **Efficiency:** &gt; 92%
+- **Ripple:** &lt; 5mVpp
 
 ## Status
 
