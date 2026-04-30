@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_SITE_URL } from '$env/static/public';
 	import { page } from '$app/state';
 	import type { ProductFrontmatter } from '$lib/types';
 
@@ -20,11 +21,13 @@
 		product?: ProductFrontmatter;
 	} = $props();
 
-	let url = $derived(page.url.origin + page.url.pathname);
+	const siteOrigin = PUBLIC_SITE_URL;
+	let origin = $derived(page.url.origin === 'http://sveltekit-prerender' ? siteOrigin : page.url.origin);
+	let url = $derived(origin + page.url.pathname);
 	let relativeImage = $derived(image?.replace(page.url.origin, ''));
 	let fullTitle = $derived(title === 'Dexterlabs' ? title : `${title} | Dexterlabs`);
 	let ogImage = $derived(
-		`${page.url.origin}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description)}${relativeImage ? `&image=${relativeImage}` : ''}`
+		`${origin}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description)}${relativeImage ? `&image=${relativeImage}` : ''}`
 	);
 
 	// Structured Data (JSON-LD)
@@ -57,7 +60,7 @@
 
 			// Build images array
 			const productImages = product.images 
-				? product.images.map(img => img.startsWith('http') ? img : `${page.url.origin}/${img.replace(/^\//, '')}`)
+				? product.images.map(img => img.startsWith('http') ? img : `${origin}/${img.replace(/^\//, '')}`)
 				: [ogImage];
 
 			return {
