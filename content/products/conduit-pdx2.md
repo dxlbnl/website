@@ -23,8 +23,6 @@ specs:
   Protection: Short Circuit, Thermal, Reverse Voltage, TVS
 ---
 
-## Overview
-
 Ditch the bulky brick transformer. The **Conduit PDX-2** powers your entire Eurorack case from any USB-C laptop charger - with studio-grade performance in just 4HP.
 
 At 35mm deep, it delivers massive clean power (3A on +12V, 1.5A on -12V) while staying completely silent. No audible whine, no interference with your audio signals. Enough power for 15+ modules from something that fits in your laptop bag.

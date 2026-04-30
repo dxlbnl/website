@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_SITE_URL } from '$env/static/public';
+	import { PUBLIC_SITE_URL, PUBLIC_COUNTRIES_EU, PUBLIC_COUNTRIES_WORLD } from '$env/static/public';
 	import { page } from '$app/state';
 	import type { ProductFrontmatter } from '$lib/types';
 
@@ -22,7 +22,9 @@
 	} = $props();
 
 	const siteOrigin = PUBLIC_SITE_URL;
-	let origin = $derived(page.url.origin === 'http://sveltekit-prerender' ? siteOrigin : page.url.origin);
+	let origin = $derived(
+		page.url.origin === 'http://sveltekit-prerender' ? siteOrigin : page.url.origin
+	);
 	let url = $derived(origin + page.url.pathname);
 	let relativeImage = $derived(image?.replace(page.url.origin, ''));
 	let fullTitle = $derived(title === 'Dexterlabs' ? title : `${title} | Dexterlabs`);
@@ -59,8 +61,10 @@
 						: 'https://schema.org/OutOfStock';
 
 			// Build images array
-			const productImages = product.images 
-				? product.images.map(img => img.startsWith('http') ? img : `${origin}/${img.replace(/^\//, '')}`)
+			const productImages = product.images
+				? product.images.map((img) =>
+						img.startsWith('http') ? img : `${origin}/${img.replace(/^\//, '')}`
+					)
 				: [ogImage];
 
 			return {
@@ -77,7 +81,53 @@
 					availability,
 					url,
 					priceValidUntil: '2026-12-31',
-					itemCondition: 'https://schema.org/NewCondition'
+					itemCondition: 'https://schema.org/NewCondition',
+					shippingDetails: [
+						{
+							'@type': 'OfferShippingDetails',
+							shippingRate: {
+								'@type': 'MonetaryAmount',
+								value: 8,
+								currency: 'EUR'
+							},
+							shippingDestination: {
+								'@type': 'DefinedRegion',
+								addressCountry: 'NL'
+							}
+						},
+						{
+							'@type': 'OfferShippingDetails',
+							shippingRate: {
+								'@type': 'MonetaryAmount',
+								value: 12,
+								currency: 'EUR'
+							},
+							shippingDestination: {
+								'@type': 'DefinedRegion',
+								addressCountry: PUBLIC_COUNTRIES_EU.split(',')
+							}
+						},
+						{
+							'@type': 'OfferShippingDetails',
+							shippingRate: {
+								'@type': 'MonetaryAmount',
+								value: 20,
+								currency: 'EUR'
+							},
+							shippingDestination: {
+								'@type': 'DefinedRegion',
+								addressCountry: PUBLIC_COUNTRIES_WORLD.split(',')
+							}
+						}
+					],
+					hasMerchantReturnPolicy: {
+						'@type': 'MerchantReturnPolicy',
+						applicableCountry: 'NL',
+						returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnPeriod',
+						merchantReturnDays: 14,
+						returnMethod: 'https://schema.org/ReturnByMail',
+						returnFees: 'https://schema.org/CustomerResponsibility'
+					}
 				}
 			};
 		}

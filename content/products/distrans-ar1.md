@@ -25,8 +25,6 @@ specs:
   USB: Class Compliant UAC 1.0
 ---
 
-## Overview
-
 The **Distrans AR-1** is a high-performance 6HP bridge designed to seamlessly integrate Eurorack systems with studio environments. It functions as a simultaneous 48kHz/24-bit standalone MicroSD recorder, a class-compliant USB audio interface, and a balanced I/O hub for professional studio gear.
 
 ## No more "lost" patches
