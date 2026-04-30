@@ -93,6 +93,21 @@
 							shippingDestination: {
 								'@type': 'DefinedRegion',
 								addressCountry: 'NL'
+							},
+							deliveryTime: {
+								'@type': 'ShippingDeliveryTime',
+								handlingTime: {
+									'@type': 'QuantitativeValue',
+									minValue: 1,
+									maxValue: 2,
+									unitCode: 'd'
+								},
+								transitTime: {
+									'@type': 'QuantitativeValue',
+									minValue: 1,
+									maxValue: 3,
+									unitCode: 'd'
+								}
 							}
 						},
 						{
@@ -105,6 +120,21 @@
 							shippingDestination: {
 								'@type': 'DefinedRegion',
 								addressCountry: PUBLIC_COUNTRIES_EU.split(',')
+							},
+							deliveryTime: {
+								'@type': 'ShippingDeliveryTime',
+								handlingTime: {
+									'@type': 'QuantitativeValue',
+									minValue: 1,
+									maxValue: 2,
+									unitCode: 'd'
+								},
+								transitTime: {
+									'@type': 'QuantitativeValue',
+									minValue: 3,
+									maxValue: 7,
+									unitCode: 'd'
+								}
 							}
 						},
 						{
@@ -117,6 +147,21 @@
 							shippingDestination: {
 								'@type': 'DefinedRegion',
 								addressCountry: PUBLIC_COUNTRIES_WORLD.split(',')
+							},
+							deliveryTime: {
+								'@type': 'ShippingDeliveryTime',
+								handlingTime: {
+									'@type': 'QuantitativeValue',
+									minValue: 1,
+									maxValue: 2,
+									unitCode: 'd'
+								},
+								transitTime: {
+									'@type': 'QuantitativeValue',
+									minValue: 7,
+									maxValue: 21,
+									unitCode: 'd'
+								}
 							}
 						}
 					],
@@ -126,7 +171,7 @@
 						returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnPeriod',
 						merchantReturnDays: 14,
 						returnMethod: 'https://schema.org/ReturnByMail',
-						returnFees: 'https://schema.org/CustomerResponsibility'
+						returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility'
 					}
 				}
 			};
