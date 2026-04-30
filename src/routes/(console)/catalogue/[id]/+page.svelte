@@ -26,6 +26,7 @@
 	description={data.product.description}
 	image={galleryImages[0]}
 	type="product"
+	product={data.product}
 />
 
 <div class="wrap">
