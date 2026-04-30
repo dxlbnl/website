@@ -19,8 +19,6 @@ const productsMods = import.meta.glob<{ metadata: ProductFrontmatter }>('/conten
 export const prerender = false;
 
 export const load: PageServerLoad = async () => {
-	const { metadata } = consoleMods['/content/console.md'];
-
 	const [latestPost] = await db.select().from(feedPosts).orderBy(desc(feedPosts.date)).limit(1);
 	const latestFeed = latestPost ? { ...latestPost, date: latestPost.date.toISOString() } : null;
 
@@ -33,5 +31,5 @@ export const load: PageServerLoad = async () => {
 		.map((mod) => mod.metadata)
 		.slice(0, 3);
 
-	return { metadata, latestFeed, notes, products };
+	return { latestFeed, notes, products };
 };
