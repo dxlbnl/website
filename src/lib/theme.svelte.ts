@@ -1,4 +1,21 @@
-let palette = $state('phosphor');
+import { browser } from '$app/environment';
+
+let initial = 'phosphor';
+
+if (browser) {
+	try {
+		const saved = localStorage.getItem('dxlb-palette');
+		if (saved) {
+			initial = saved;
+		} else if (matchMedia('(prefers-color-scheme: dark)').matches) {
+			initial = 'phosphor';
+		} else {
+			initial = 'paper';
+		}
+	} catch (e) {}
+}
+
+let palette = $state(initial);
 
 export function getPalette() {
 	return palette;
@@ -6,7 +23,9 @@ export function getPalette() {
 
 export function setPalette(value: string) {
 	palette = value;
-	localStorage.setItem('dxlb-palette', value);
+	if (browser) {
+		localStorage.setItem('dxlb-palette', value);
+	}
 }
 
 export function togglePalette() {
