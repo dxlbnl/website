@@ -27,7 +27,7 @@ specs:
 
 ## Overview
 
-I built the AR-1 because I was tired of dragging a laptop to every jam just to record a stereo output. It's a 6HP bridge for exactly that: recording to SD, USB audio to your DAW, and balanced outputs for the PA. It does all three at once.
+The **Distrans AR-1** is a high-performance 6HP bridge designed to seamlessly integrate Eurorack systems with studio environments. It functions as a simultaneous 48kHz/24-bit standalone MicroSD recorder, a class-compliant USB audio interface, and a balanced I/O hub for professional studio gear.
 
 ## No more "lost" patches
 
