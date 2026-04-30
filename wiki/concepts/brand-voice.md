@@ -1,7 +1,7 @@
 # Brand Voice & Aesthetic
 
 > Sources: Internal, 2026-04-26
-> Updated: 2026-04-26
+> Updated: 2026-04-30
 
 ## Overview
 
@@ -27,12 +27,15 @@ The test for adding something new: would this element exist on a real instrument
 
 ## Writing tone
 
-Write for someone who already knows what they're looking at. No hand-holding, no preamble.
+Write for someone who already knows what they're looking at. No hand-holding, no preamble. The tone is authoritative, direct, and technically accurate.
 
-- Short paragraphs, direct sentences
-- Technical terms without apology
-- Document failures and half-finished things alongside successes — the rough edges are the point
+- **Authoritative & Professional**: Use professional-grade or studio-grade terminology. Avoid the "hobbyist" vibe.
+- **The Wins/Fails Philosophy**: "The fails stay in the log, the wins ship to your rack."
+- **Spec-Led Benefit**: Sell the impact (e.g., "Power an entire case") backed by the technical reality (e.g., "3.0A output").
+- **Direct Technicality**: Technical terms without apology.
+- **Translucent Process**: Document failures and half-finished things alongside successes—the rough edges prove the engineering.
 
 ## What the site is not
 
-Not a portfolio trying to get hired. Not a product marketing site. A working engineer's public bench — the products, the process, and the thinking, in one place.
+Not a portfolio trying to get hired. Not a generic product marketing site. It is a **Public Lab Bench**—a hybrid of a working engineer's repository, a professional storefront, and a showcase of thinking.
+
