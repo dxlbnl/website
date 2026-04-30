@@ -5,6 +5,5 @@ export const load: LayoutServerLoad = ({ request }) => {
 	const country = request.headers.get('x-vercel-ip-country') ?? '';
 	const region = getRegion(country);
 
-	console.log('User in region', country, region);
 	return { region, country };
 };

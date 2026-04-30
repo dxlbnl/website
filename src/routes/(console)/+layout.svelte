@@ -4,10 +4,6 @@
 	import { onMount } from 'svelte';
 
 	let { children, data } = $props();
-
-	onMount(() => {
-		console.log('Data', data);
-	});
 </script>
 
 <div class="page">
