@@ -1,1 +1,9 @@
-{}
+{
+  "legacyEditor": false,
+  "livePreview": true,
+  "useMarkdownLinks": true,
+  "pluginEnabledStatus": {
+    "templater-obsidian": true,
+    "quickadd": true
+  }
+}

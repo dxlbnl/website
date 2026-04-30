@@ -4,40 +4,67 @@
     "type": "split",
     "children": [
       {
-        "id": "e3ef5b6daa588835",
+        "id": "83b7e4640383056e",
         "type": "tabs",
         "children": [
           {
-            "id": "4093432f9ae84ba4",
+            "id": "9c3fa04a08b3bceb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Design.md",
+                "file": "Untitled.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Design"
+              "title": "Untitled"
             }
           },
           {
-            "id": "c0b9031a6650d392",
+            "id": "5c85b8dffa759ba5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "invoices/2026-0001.md",
+                "file": "notes/003-conduit-pdx1/index.md",
                 "mode": "source",
-                "source": true,
-                "backlinks": false
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-0001"
+              "title": "index"
+            }
+          },
+          {
+            "id": "456e8090b7cda592",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/new nowas asdfjasdf.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "new nowas asdfjasdf"
+            }
+          },
+          {
+            "id": "8991d65e97d3950f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "notes/003-conduit-pdx1/index.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "index"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -57,7 +84,7 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": true
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -187,6 +214,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "templater-obsidian:Templater": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
@@ -196,16 +224,43 @@
       "bases:Create new base": false
     }
   },
-  "active": "c0b9031a6650d392",
+  "active": "8991d65e97d3950f",
   "lastOpenFiles": [
-    "invoices/2026-0002.md",
+    "notes/006-testing new note/index.md",
+    "notes/003-conduit-pdx1/index.md",
+    "notes/new nowas asdfjasdf.md",
+    "notes/006-testing new note/media",
+    "notes/006-testing new note",
+    "notes/Obsidian cms 123.md",
+    "notes/media",
+    "notes/obsidian cms is very cool.md",
+    "Untitled.md",
+    "notes/Obsidian CMS.md",
+    "products/media/conduit.png",
+    "products/media/distrans-dune.png",
+    "products/media/distrans-circuit-glitch-1.png",
+    "products/media/conduit-starglitch.png",
+    "products/media/conduit-galaxy.png",
+    "mailings/Website nearing completion.md",
+    "Untitled 1.md",
+    "products/Untitled 1.md",
+    "mailings/Untitled.md",
+    "products/Untitled.md",
+    "templates/Invoice.md",
+    "templates/Note.md",
+    "templates/Mailing.md",
+    "templates/Legal.md",
+    "legal/Untitled.md",
+    "templates/Product.md",
+    "templates",
+    "mailings/Untitled 1.md",
     "invoices/2026-0001.md",
+    "invoices/2026-0002.md",
     "invoices/_template.md",
     "invoices/@template.md",
     "invoices/2026-TEST.md",
     "invoices/2026-TEST.md.tmp.301845.1768337189981",
     "console.md",
-    "Design.md",
     "blog",
     "products",
     "catalogue",

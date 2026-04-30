@@ -1,0 +1,34 @@
+{
+  "command_hotkeys": [],
+  "template_folder": "templates",
+  "new_file_templates": [],
+  "folder_templates": [
+    {
+      "folder": "notes",
+      "template": "templates/Note.md"
+    },
+    {
+      "folder": "products",
+      "template": "templates/Product.md"
+    },
+    {
+      "folder": "mailings",
+      "template": "templates/Mailing.md"
+    },
+    {
+      "folder": "legal",
+      "template": "templates/Legal.md"
+    },
+    {
+      "folder": "invoices",
+      "template": "templates/Invoice.md"
+    }
+  ],
+  "syntax_highlighting": true,
+  "trigger_on_file_creation": true,
+  "auto_jump_to_cursor": false,
+  "enable_system_commands": false,
+  "shell_binary": "",
+  "user_scripts_folder": "",
+  "templates_pairs": []
+}

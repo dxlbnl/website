@@ -1,0 +1,33 @@
+{
+  "types": {
+    "pageType": "text",
+    "paginaType": "text",
+    "title": "text",
+    "date": "date",
+    "datum": "date",
+    "vervaldatum": "date",
+    "lastUpdated": "date",
+    "kind": "text",
+    "tags": "tags",
+    "images": "multiselect",
+    "image": "text",
+    "lede": "text",
+    "id": "text",
+    "name": "text",
+    "description": "text",
+    "status": "text",
+    "category": "text",
+    "published": "checkbox",
+    "subject": "text",
+    "slug": "text",
+    "tindieUrl": "text",
+    "stripeProduct": "text",
+    "priceIncl": "number",
+    "priceExcl": "number",
+    "factuurnr": "text",
+    "btw_verlegd": "checkbox",
+    "valuta": "text",
+    "taal": "text",
+    "productId": "text"
+  }
+}
