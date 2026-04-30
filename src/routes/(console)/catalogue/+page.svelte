@@ -1,4 +1,5 @@
 <script lang="ts">
+	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
 	import Led from '$lib/ui/Led.svelte';
@@ -8,6 +9,8 @@
 
 	type Props = { data: { products: ProductFrontmatter[]; region: Region } };
 	let { data }: Props = $props();
+	const production = $derived(data.products.filter((p) => p.status !== 'sold-out'));
+	const archive = $derived(data.products.filter((p) => p.status === 'sold-out'));
 </script>
 
 <SEO
@@ -20,9 +23,9 @@
 		<div class="eyebrow">// CATALOGUE · HARDWARE · FOR SALE</div>
 		<h1>Catalogue.</h1>
 		<p class="sub">
-			Eurorack modules, hand-built in Delft. Small batches. Solder joints checked twice. Shipped by
-			<em>Dexterlabs</em>. Custom or prototype work?
-			<a href="/contact" class="contact-link">get in touch</a>.
+			Professional-grade Eurorack modules and studio tools. Engineered for stability and
+			performance. Built in Delft, shipped worldwide. For custom engineering or prototype
+			development, use the link below.
 		</p>
 		<div class="meta">
 			<span><b>{data.products.length}</b> MODULES LIVE</span>
@@ -31,24 +34,40 @@
 		</div>
 	</section>
 
-	<header class="section-h">
-		<span class="s-num">// 0x01</span>
-		<span class="s-title">Currently in production</span>
-		<span class="s-right"><Led tone="amber" blink />ACCEPTING ORDERS</span>
-	</header>
+	{#if production.length > 0}
+		<SectionH num="// 0x01" title="In development">
+			<Led tone="amber" blink />
+			<span>ACTIVE PROTOTYPING</span>
+		</SectionH>
 
-	<div class="grid">
-		{#each data.products as product}
-			<ProductCard {product} region={data.region} />
-		{/each}
-	</div>
+		<div class="grid">
+			{#each production as product}
+				<ProductCard {product} region={data.region} />
+			{/each}
+		</div>
+	{/if}
+
+	{#if archive.length > 0}
+		<SectionH
+			num={production.length ? '// 0x02' : '// 0x01'}
+			title="Archive"
+			sub="SOLD OUT / DISCONTINUED"
+		/>
+
+		<div class="grid">
+			{#each archive as product}
+				<ProductCard {product} region={data.region} />
+			{/each}
+		</div>
+	{/if}
 
 	<div class="hire">
-		<div class="hire-label">// PROTOTYPE-FOR-HIRE</div>
-		<h3>Got an idea for a module? I sometimes build prototypes.</h3>
+		<div class="hire-label">// ENGINEERING & PROTOTYPING</div>
+		<h3>Custom hardware and software development.</h3>
 		<p>
-			If you have a concept for a Eurorack module and want a working PCB to test it on, I can
-			occasionally take on a small prototyping job on the side. Drop me a line and we'll talk scope.
+			I take on a limited number of specialized engineering projects each year. If you have a
+			concept that requires PCB design, embedded firmware development, or a functional prototype,
+			get in touch to discuss the technical scope and timeline.
 		</p>
 		<a href="/contact" class="hire-link">GET IN TOUCH →</a>
 	</div>
@@ -111,35 +130,6 @@
 	.meta b {
 		color: var(--ink);
 		font-weight: 500;
-	}
-	.section-h {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-		padding: 40px 0 12px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.s-num {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		color: var(--ink-faint);
-		letter-spacing: 0.12em;
-	}
-	.s-title {
-		font-weight: 500;
-		font-size: var(--t-h3);
-		letter-spacing: -0.01em;
-	}
-	.s-right {
-		margin-left: auto;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		color: var(--ink-dim);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
 	}
 	.grid {
 		display: grid;

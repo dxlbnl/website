@@ -20,17 +20,17 @@
 			<div class="col-label">// 0x01 · THE PERSON</div>
 			<h2>Dexter.</h2>
 			<p>
-				Alexander "Dexter" Esselink. Software engineer by day, maker by night. I sign the notes. I
-				write the rants. I do the soldering.
+				Alexander "Dexter" Esselink. Software engineer. Hardware designer. I draft the schematics,
+				write the firmware, and solder the boards.
 			</p>
-			<p class="dim">Based in Delft. Coffee before electronics. Electronics before bedtime.</p>
+			<p class="dim">Based in Delft. Building tools for the studio and the web.</p>
 		</div>
 		<div class="col">
 			<div class="col-label">// 0x02 · THE LAB</div>
 			<h2>Dexterlabs.</h2>
 			<p>
-				One-person lab in Delft. No fixed brief — hardware, software, whatever's worth building.
-				Some of it ships. The rest ends up here.
+				A one-person engineering lab. No fixed brief — hardware, software, whatever needs building.
+				This site serves as the showcase for completed products and the logbook for the process.
 			</p>
 			<p class="dim">Est. 2019. Still small on purpose.</p>
 		</div>
@@ -42,18 +42,17 @@
 		<div>
 			<div class="is-label ok">// IS</div>
 			<ul>
-				<li>A workshop window — what's on the bench right now.</li>
-				<li>A catalogue — the modules that are actually for sale.</li>
-				<li>A feed — short posts, when something interesting happens.</li>
-				<li>A notebook — longer pieces, when something took long enough to explain.</li>
+				<li>A showcase — the modules and hardware that are ready for the rack.</li>
+				<li>A logbook — notes on experiments, schematics, and side-projects.</li>
+				<li>A feed — brief updates when something ships or breaks.</li>
 			</ul>
 		</div>
 		<div>
 			<div class="is-label faint">// ISN'T</div>
 			<ul class="isnt">
-				<li>A portfolio for client work — that's my day job, not this.</li>
-				<li>A content factory — no schedule, no SEO pressure.</li>
-				<li>A startup pitch — this is a bench, not a company.</li>
+				<li>A client portfolio — that's my day job, not this.</li>
+				<li>A content mill — no publishing schedules, no SEO pressure.</li>
+				<li>A startup pitch — this is an engineering lab, not a tech company.</li>
 			</ul>
 		</div>
 	</div>
@@ -156,7 +155,7 @@
 		color: var(--ok);
 	}
 	.is-label.faint {
-		color: var(--ink-faint);
+		color: var(--danger);
 	}
 	ul {
 		padding-left: 18px;

@@ -6,7 +6,6 @@ description: Bridge Eurorack and studio - USB interface, standalone recorder, ze
 status: coming-soon
 category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
-# tindieUrl: https://www.tindie.com/stores/dexterlabs/
 stripeProduct: prod_UPMuXHezrWyNpN
 image: media/distrans-dune.png
 images:
@@ -18,38 +17,43 @@ priceIncl: 250
 priceExcl: 220
 specs:
   Width: 6 HP
-  Audio Resolution: 48kHz / 24-bit PCM
-  Architecture: Dual-Core System
-  Recording: WAV (RIFF), Stereo
-  Storage: MicroSD/SDHC (FAT32)
-  USB: Class Compliant UAC 1.0
+  Depth: 28mm (Skiff Friendly)
+  +12V: 95 mA
+  -12V: 25 mA
+  I/O: 2-In / 2-Out
+  Resolution: 48kHz / 24-bit
+  USB: Class Compliant (UAC 1.0)
 ---
 
 The **Distrans AR-1** is a high-performance 6HP bridge designed to seamlessly integrate Eurorack systems with studio environments. It functions as a simultaneous 48kHz/24-bit standalone MicroSD recorder, a class-compliant USB audio interface, and a balanced I/O hub for professional studio gear.
 
 ## No more "lost" patches
 
-You just hit the button and it records. It writes 48kHz/24-bit WAVs straight to MicroSD. I went with a dual-core design specifically to keep the audio process isolated from the file writing. SD cards can be flaky and slow, but one core keeps the audio pristine while the other handles the "dirty" work of writing to the card. It's about capturing those one-off improvisations before you unpatch everything.
+The AR-1 records at 48kHz/24-bit resolution directly to MicroSD. A dual-core architecture ensures the audio process remains isolated from file system operations, maintaining signal integrity even with slow or volatile media. It is designed to capture improvisations and studio takes before a patch is lost.
 
 ## Routing
 
-The AR-1 is effectively a hub between your Eurorack and everything else.
+The AR-1 serves as a high-fidelity hub between the rack and the studio.
 
-- **Eurorack Out:** 3.5mm signals go to the balanced XLR/TRS (no latency), the USB-C port, and the SD card simultaneously.
-- **Studio In:** You can bring XLR/TRS signals into your rack to run vocals through a filter or process DAW tracks through your effects chain.
-- **Mixing:** The USB audio and balanced inputs get mixed together with a bit of automatic headroom (-6dB) so you aren't constantly fighting clipping.
+- **Eurorack Out:** Eurorack signals are routed to balanced XLR/TRS (zero-latency analog path), the USB-C interface, and the SD card simultaneously.
+- **Studio In:** Signals from balanced XLR/TRS inputs or the USB-C interface can be routed into the rack for processing vocals, DAW tracks, or external instruments.
+- **Mixing:** USB audio and balanced inputs are mixed with automatic headroom management (-6dB) to prevent clipping in complex routing scenarios.
 
-## The "one button" problem
+## Zero Menu-Diving
 
-I hate menu diving, so everything is on one button. Short press to mute (the "panic" switch), long press to record, and a double-click to turn it into a USB disk so you can grab your files.
+The AR-1 is designed for immediate, tactile operation with zero menu-diving. Every primary function is mapped to a single multi-function button, eliminating the need for screens or complex navigation. The interface is optimized for speed and muscle memory:
 
-The RGB meter handles the rest. White means it's on, amber is muted, pulsing red is recording. It's simple enough to read from across the room. The outer LEDs give you standard VU feedback with RMS bars and peak indicators.
+- **Short press:** Toggles the mute (panic) switch.
+- **Long press:** Starts or stops recording.
+- **Double-click:** Mounts the device as a USB disk for file retrieval.
 
-## Stability
+The high-visibility RGB indicator provides immediate status feedback. White indicates power-on, amber indicates mute, and pulsing red indicates an active recording. Integrated LEDs provide VU metering with RMS and peak level feedback.
 
-Hardware fails, power gets bumped, and cards get pulled. The AR-1 handles this. If you pull the card mid-recording, it terminates the file safely. If the power cuts out, the data is still there because it writes a "dirty" header the second you hit record.
+## Stability & Protection
 
-It's class-compliant, so you don't need drivers for anything. Just plug in the USB-C cable and it shows up as a 2-in/2-out interface on Windows, macOS, Linux, or iOS.
+Engineered for field and studio reliability, the AR-1 handles unexpected power loss and card removal gracefully. Files are safely terminated if media is disconnected mid-recording, and a pre-allocated header system protects data during power interruptions.
+
+The module is fully class-compliant, requiring no drivers. It functions as a 2-in/2-out interface across Windows, macOS, Linux, and iOS via USB-C.
 
 ## Technical specifications
 
@@ -57,7 +61,7 @@ It's class-compliant, so you don't need drivers for anything. Just plug in the U
 
 - Resolution: 48kHz / 24-bit PCM (all paths)
 - Format: Stereo WAV (RIFF)
-- Eurorack I/O: AC coupled, ±10V headroom
+- Eurorack I/O: AC coupled, ±10V signal range
 - Balanced I/O: +4dBu nominal
 
 **Recording**

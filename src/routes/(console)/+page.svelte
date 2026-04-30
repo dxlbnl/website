@@ -22,14 +22,14 @@
 		<div class="eyebrow">// DEXTERLABS · WORKBENCH · 2026</div>
 		<h1>Dexter.<br /><em>Things built</em><br />in the lab.</h1>
 		<p class="sub">
-			Full-time software engineer. Evenings on the bench — Eurorack hardware, small web experiments,
-			notes from in-between. Some of it's for sale. Most of it's just to see if it works.
+			Software engineer by day; hardware builder by night. Documenting Eurorack designs, web
+			experiments, and bench notes. The fails stay in the log, the wins ship to your rack.
 		</p>
 
 		{#if data.latestFeed}
 			<a href="/feed" class="status">
 				<div class="status-head">
-					<span>// STATUS · LATEST FROM THE FEED</span>
+					<span>// LATEST ENTRY</span>
 					<span>{fmtDate(data.latestFeed.date)} →</span>
 				</div>
 				<div class="status-line">
@@ -40,8 +40,21 @@
 		{/if}
 	</section>
 
+	{#if data.products.length > 0}
+		<SectionH num="// 0x01" title="Catalogue" sub="PRODUCTION-READY HARDWARE" />
+		<div class="cat-grid">
+			{#each data.products as product}
+				<ProductCard {product} region={data.region} />
+			{/each}
+		</div>
+		<div class="cat-foot">
+			<a href="/catalogue" class="all-link">VIEW ALL HARDWARE →</a>
+			<span class="faint">SHIPPED BY DEXTERLABS · DELFT, NL</span>
+		</div>
+	{/if}
+
 	{#if data.notes.length > 0}
-		<SectionH num="// 0x01" title="Notes" sub="{data.notes.length} ENTRIES" />
+		<SectionH num="// 0x02" title="Notes" sub="ENGINEERING NOTES & EXPERIMENTS" />
 		<div class="note-grid">
 			{#each data.notes as note, i}
 				<a href="/notes/{note.slug}" class="note-card">
@@ -57,19 +70,6 @@
 					</div>
 				</a>
 			{/each}
-		</div>
-	{/if}
-
-	{#if data.products.length > 0}
-		<SectionH num="// 0x02" title="Catalogue" sub="EURORACK HARDWARE" />
-		<div class="cat-grid">
-			{#each data.products as product}
-				<ProductCard {product} region={data.region} />
-			{/each}
-		</div>
-		<div class="cat-foot">
-			<a href="/catalogue" class="all-link">BROWSE THE FULL CATALOGUE →</a>
-			<span class="faint">SHIPPED BY DEXTERLABS · DELFT, NL</span>
 		</div>
 	{/if}
 

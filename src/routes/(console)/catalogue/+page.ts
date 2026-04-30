@@ -10,7 +10,10 @@ type MarkdownModule = {
 const modules = import.meta.glob<MarkdownModule>('/content/products/*.md', { eager: true });
 
 export const load: PageLoad = async () => {
-	const products: ProductFrontmatter[] = Object.values(modules).map((module) => module.metadata);
+	const statusOrder: Record<string, number> = { available: 0, 'coming-soon': 1, 'sold-out': 2 };
+	const products: ProductFrontmatter[] = Object.values(modules)
+		.map((module) => module.metadata)
+		.sort((a, b) => (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99));
 
 	return {
 		products
