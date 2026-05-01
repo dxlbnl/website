@@ -5,18 +5,20 @@
 
 <header class="wrap">
 	{#if num}<span class="num">{num}</span>{/if}
-	<span class="title">{title}</span>
-	<div class="right">
-		{#if sub}<span class="sub">{sub}</span>{/if}
-		{#if children}{@render children()}{/if}
+	<div class="row">
+		<h2 class="title">{title}</h2>
+		<div class="right">
+			{#if sub}<span class="sub">{sub}</span>{/if}
+			{#if children}{@render children()}{/if}
+		</div>
 	</div>
 </header>
 
 <style>
 	.wrap {
 		display: flex;
-		align-items: baseline;
-		gap: 16px;
+		flex-direction: column;
+		gap: 6px;
 		padding: 40px 0 12px;
 		border-bottom: 1px solid var(--rule);
 	}
@@ -26,10 +28,16 @@
 		color: var(--ink-faint);
 		letter-spacing: 0.12em;
 	}
+	.row {
+		display: flex;
+		align-items: baseline;
+		gap: 16px;
+	}
 	.title {
 		font-weight: 500;
 		font-size: var(--t-h3);
 		letter-spacing: -0.01em;
+		margin: 0;
 	}
 	.right {
 		margin-left: auto;

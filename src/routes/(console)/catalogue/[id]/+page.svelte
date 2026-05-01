@@ -46,6 +46,8 @@
 							<button
 								class="thumb"
 								class:active={i === activeIndex}
+								aria-label="View image {i + 1} of {galleryImages.length}"
+								aria-pressed={i === activeIndex}
 								onclick={() => (activeIndex = i)}
 							>
 								<img {src} alt="" />

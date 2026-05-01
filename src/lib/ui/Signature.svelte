@@ -17,6 +17,10 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 32px;
+
+		@media (max-width: 720px) {
+			grid-template-columns: 1fr;
+		}
 		font-family: var(--mono);
 		font-size: var(--t-micro);
 		color: var(--ink-faint);

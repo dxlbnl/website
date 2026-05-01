@@ -34,6 +34,16 @@
 		page.url.pathname;
 		menuEl?.removeAttribute('open');
 	});
+
+	$effect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			if (menuEl?.hasAttribute('open') && !menuEl.contains(e.target as Node)) {
+				menuEl.removeAttribute('open');
+			}
+		}
+		document.addEventListener('click', handleClickOutside);
+		return () => document.removeEventListener('click', handleClickOutside);
+	});
 </script>
 
 {#snippet paletteBtn()}

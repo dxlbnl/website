@@ -4,17 +4,17 @@
 
 <footer class="footer">
 	<div class="mail-col">
-		<h4>// MAIL</h4>
+		<h2>// MAIL</h2>
 		<div class="faint tagline">Receive updates from the lab.</div>
 		<SubscribeForm />
 	</div>
 	<div>
-		<h4>// DEXTERLABS</h4>
+		<h2>// DEXTERLABS</h2>
 		<div>Dexter / maker</div>
 		<div class="faint">Est. 2019 · Delft, NL</div>
 	</div>
 	<div>
-		<h4>// LEGAL</h4>
+		<h2>// LEGAL</h2>
 		<ul>
 			<li><a href="/legal/privacy">Privacy</a></li>
 			<li><a href="/legal/terms">Terms</a></li>
@@ -23,7 +23,7 @@
 		</ul>
 	</div>
 	<div>
-		<h4>// NET</h4>
+		<h2>// NET</h2>
 		<ul>
 			<li>
 				<a href="https://github.com/dxlbnl/" target="_blank" rel="noopener">[NET.GH] github</a>
@@ -43,7 +43,7 @@
 		</ul>
 	</div>
 	<div>
-		<h4>// SYS</h4>
+		<h2>// SYS</h2>
 		<div>© 2026 DEXTERLABS</div>
 		<div class="faint">ALL SYSTEMS OPERATIONAL</div>
 	</div>
@@ -72,7 +72,7 @@
 			grid-column: 1 / -1;
 		}
 	}
-	h4 {
+	h2 {
 		font-size: var(--t-micro);
 		color: var(--ink-faint);
 		margin: 0 0 8px;
@@ -85,7 +85,11 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: 0;
+	}
+	a {
+		display: block;
+		padding: 6px 0;
 	}
 	a:hover {
 		color: var(--amber);
