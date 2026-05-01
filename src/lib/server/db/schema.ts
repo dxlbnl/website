@@ -1,4 +1,21 @@
-import { integer, json, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+	boolean,
+	integer,
+	json,
+	pgEnum,
+	pgTable,
+	serial,
+	text,
+	timestamp
+} from 'drizzle-orm/pg-core';
+
+export const paymentStatusEnum = pgEnum('payment_status', ['pending', 'paid', 'failed']);
+export const fulfillmentStatusEnum = pgEnum('fulfillment_status', [
+	'unfulfilled',
+	'shipped',
+	'delivered',
+	'cancelled'
+]);
 
 export const emailOpens = pgTable('email_opens', {
 	id: serial('id').primaryKey(),
@@ -38,7 +55,7 @@ export const orders = pgTable('orders', {
 	customerEmail: text('customer_email'),
 	amountTotal: integer('amount_total'),
 	currency: text('currency'),
-	status: text('status').notNull().default('pending'),
+	status: paymentStatusEnum('status').notNull().default('pending'),
 	shippingName: text('shipping_name'),
 	shippingAddress: json('shipping_address').$type<{
 		line1: string;
@@ -48,6 +65,8 @@ export const orders = pgTable('orders', {
 		postal_code: string;
 		country: string;
 	}>(),
+	isPreorder: boolean('is_preorder').notNull().default(false),
+	fulfillmentStatus: fulfillmentStatusEnum('fulfillment_status').notNull().default('unfulfilled'),
 	resendEmailId: text('resend_email_id'),
 	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });

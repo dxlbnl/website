@@ -73,10 +73,13 @@ export const POST: RequestHandler = async ({ request, url }) => {
 				}
 			}
 		],
-		success_url: `${url.origin}/order/success/`,
+		success_url: `${url.origin}/order/success/?product=${product.id}`,
 		cancel_url: `${url.origin}/catalogue/${product.id}/`,
 		shipping_options: [{ shipping_rate: SHIPPING_RATES_MAP[region] }],
-		metadata: { productId: product.id }
+		metadata: {
+			productId: product.id,
+			isPreorder: String(product.status === 'coming-soon')
+		}
 	});
 
 	return json({ url: session.url });

@@ -58,7 +58,8 @@ export const POST: RequestHandler = async ({ request }) => {
 									postal_code: addr.postal_code ?? '',
 									country: addr.country ?? ''
 								}
-							: null
+							: null,
+						isPreorder: session.metadata?.isPreorder === 'true'
 					})
 					.onConflictDoNothing();
 
@@ -69,7 +70,8 @@ export const POST: RequestHandler = async ({ request }) => {
 							productId: session.metadata?.productId ?? '',
 							amountTotal: session.amount_total ?? 0,
 							currency: session.currency ?? 'eur',
-							customerName: session.customer_details.name ?? undefined
+							customerName: session.customer_details.name ?? undefined,
+							isPreorder: session.metadata?.isPreorder === 'true'
 						});
 						const { data: emailData } = await resend.emails.send({
 							from: RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',

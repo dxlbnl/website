@@ -6,10 +6,26 @@
 	let { data }: { data: PageData } = $props();
 
 	function statusTone(status: string): 'ok' | 'amber' | 'danger' {
-		if (status === 'paid') return 'ok';
-		if (status === 'failed') return 'danger';
+		if (status === 'paid' || status === 'shipped' || status === 'delivered') return 'ok';
+		if (status === 'failed' || status === 'cancelled') return 'danger';
 		return 'amber';
 	}
+
+	let filterPayment = $state('all');
+	let filterFulfillment = $state('all');
+	let filterPreorder = $state('all');
+
+	const filteredOrders = $derived(
+		data.orders.filter((o) => {
+			if (filterPayment !== 'all' && o.status !== filterPayment) return false;
+			if (filterFulfillment !== 'all' && o.fulfillmentStatus !== filterFulfillment) return false;
+			if (filterPreorder !== 'all') {
+				const isPre = filterPreorder === 'yes';
+				if (o.isPreorder !== isPre) return false;
+			}
+			return true;
+		})
+	);
 
 	function fmtAddress(
 		name: string | null,
@@ -46,16 +62,54 @@
 		<h1>Orders.</h1>
 		<div class="meta">
 			<span><b>{data.orders.length}</b> RECORDS</span>
+			{#if filteredOrders.length !== data.orders.length}
+				<span><b>{filteredOrders.length}</b> FILTERED</span>
+			{/if}
+		</div>
+	</section>
+
+	<section class="filters">
+		<div class="filter-group">
+			<label for="payment">Payment</label>
+			<select id="payment" bind:value={filterPayment}>
+				<option value="all">All</option>
+				<option value="paid">Paid</option>
+				<option value="pending">Pending</option>
+				<option value="failed">Failed</option>
+			</select>
+		</div>
+		<div class="filter-group">
+			<label for="fulfillment">Fulfillment</label>
+			<select id="fulfillment" bind:value={filterFulfillment}>
+				<option value="all">All</option>
+				<option value="unfulfilled">Unfulfilled</option>
+				<option value="shipped">Shipped</option>
+				<option value="delivered">Delivered</option>
+				<option value="cancelled">Cancelled</option>
+			</select>
+		</div>
+		<div class="filter-group">
+			<label for="preorder">Pre-order</label>
+			<select id="preorder" bind:value={filterPreorder}>
+				<option value="all">All</option>
+				<option value="yes">Yes</option>
+				<option value="no">No</option>
+			</select>
 		</div>
 	</section>
 
 	<section class="log">
 		<div class="section-label">// LOG</div>
-		{#each data.orders as order}
+		{#each filteredOrders as order}
 			<div class="entry">
 				<span class="date">{fmtDateTime(order.createdAt)}</span>
 				<div class="entry-body">
-					<span class="product">{order.productId}</span>
+					<span class="product">
+						{order.productId}
+						{#if order.isPreorder}
+							<span class="tag">PREORDER</span>
+						{/if}
+					</span>
 					{#if order.customerEmail}
 						<span class="email">{order.customerEmail}</span>
 					{/if}
@@ -64,13 +118,19 @@
 					{/if}
 				</div>
 				<span class="amount">{fmtCents(order.amountTotal, order.currency)}</span>
-				<span class="status">
-					<Led tone={statusTone(order.status)} />
-					{order.status.toUpperCase()}
-				</span>
+				<div class="statuses">
+					<span class="status">
+						<Led tone={statusTone(order.status)} />
+						{order.status.toUpperCase()}
+					</span>
+					<span class="status">
+						<Led tone={statusTone(order.fulfillmentStatus)} />
+						{order.fulfillmentStatus.toUpperCase()}
+					</span>
+				</div>
 			</div>
 		{:else}
-			<p class="empty">// NO RECORDS</p>
+			<p class="empty">// NO RECORDS FOUND</p>
 		{/each}
 	</section>
 {/if}
@@ -114,6 +174,38 @@
 		font-size: var(--t-lede);
 		color: var(--ink-dim);
 	}
+	.filters {
+		display: flex;
+		gap: 32px;
+		padding: 24px 0;
+		border-bottom: 1px solid var(--rule);
+		flex-wrap: wrap;
+	}
+	.filter-group {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.filter-group label {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+	}
+	.filter-group select {
+		background: var(--paper);
+		border: 1px solid var(--rule);
+		color: var(--ink);
+		padding: 6px 12px;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		border-radius: 4px;
+		outline: none;
+	}
+	.filter-group select:focus {
+		border-color: var(--amber);
+	}
 	.section-label {
 		font-family: var(--mono);
 		font-size: var(--t-micro);
@@ -128,6 +220,12 @@
 		align-items: center;
 		padding: 14px 0;
 		border-bottom: 1px solid var(--rule);
+	}
+	.statuses {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		min-width: 120px;
 	}
 	.date {
 		font-family: var(--mono);
@@ -146,6 +244,18 @@
 		font-size: var(--t-mono);
 		color: var(--ink);
 		letter-spacing: 0.04em;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+	.tag {
+		font-size: 10px;
+		background: var(--amber);
+		color: var(--paper);
+		padding: 2px 6px;
+		border-radius: 2px;
+		letter-spacing: 0.08em;
+		font-weight: 600;
 	}
 	.email {
 		font-size: var(--t-mono);

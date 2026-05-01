@@ -6,16 +6,24 @@
 		amountTotal: number;
 		currency: string;
 		customerName?: string;
+		isPreorder: boolean;
 	};
-	let { productId, amountTotal, currency, customerName }: Props = $props();
+	let { productId, amountTotal, currency, customerName, isPreorder }: Props = $props();
 
 	const amount = $derived((amountTotal / 100).toFixed(2));
 	const symbol = $derived(currency.toLowerCase() === 'eur' ? '€' : currency.toUpperCase());
 	const greeting = $derived(customerName ? `Hey ${customerName}, your` : 'Your');
+
+	const subjectPrefix = $derived(isPreorder ? 'Pre-order received' : 'Order received');
+	const mainText = $derived(
+		isPreorder
+			? "Thanks for the support. I'm working hard to get it ready, and I'll make sure to keep you updated as development and assembly progress."
+			: "Thanks for the order. I'm getting everything ready for shipment. You'll receive an email with tracking as soon as it leaves the lab."
+	);
 </script>
 
 <Html lang="en">
-	<Head><title>Order received — DEXTERLABS</title></Head>
+	<Head><title>{subjectPrefix} — DEXTERLABS</title></Head>
 	<Body
 		style={{
 			margin: '0',
@@ -34,7 +42,7 @@
 					margin: '0 0 24px'
 				}}
 			>
-				DEXTERLABS · ORDER CONFIRMATION
+				DEXTERLABS · {subjectPrefix.toUpperCase()}
 			</Text>
 
 			<Heading
@@ -48,11 +56,11 @@
 					lineHeight: '1.1'
 				}}
 			>
-				Order received.
+				{subjectPrefix}.
 			</Heading>
 
 			<Text style={{ fontSize: '16px', lineHeight: '1.6', color: '#444', margin: '0 0 32px' }}>
-				{greeting} payment went through. We'll be in touch when your batch ships.
+				{greeting} payment went through. {mainText}
 			</Text>
 
 			<Hr style={{ borderTop: '1px solid #e0e0e0', margin: '0 0 24px' }} />

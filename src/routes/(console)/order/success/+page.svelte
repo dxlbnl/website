@@ -2,20 +2,35 @@
 	import Signature from '$lib/ui/Signature.svelte';
 	import Led from '$lib/ui/Led.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
+	const isPreorder = $derived(data.product?.status === 'coming-soon');
+	const productName = $derived(data.product?.name ?? 'your module');
+
+	const headline = $derived(isPreorder ? 'Pre-order received.' : 'Order received.');
+	const label = $derived(isPreorder ? 'PRE-ORDER RECEIVED' : 'ORDER CONFIRMED');
 </script>
 
 <SEO
-	title="Order Confirmed"
-	description="Your order is in. We'll be in touch when your batch ships."
+	title={isPreorder ? 'Pre-order Confirmed' : 'Order Confirmed'}
+	description={isPreorder
+		? "Thanks for the support. We'll be in touch as development progresses."
+		: "Your order is in. We'll be in touch when your batch ships."}
 />
 
 <div class="wrap">
 	<div class="box">
-		<div class="label"><Led tone="ok" /> ORDER CONFIRMED</div>
-		<h1>Order received.</h1>
+		<div class="label"><Led tone="ok" /> {label}</div>
+		<h1>{headline}</h1>
 		<p>
-			Your payment went through. You'll get a receipt from Stripe shortly. We'll be in touch when
-			your batch ships.
+			{#if isPreorder}
+				Thanks for the support. I'm working hard to get {productName} ready for you. I'll make sure
+				to keep you updated on the progress.
+			{:else}
+				Thanks for the order. I'll be shipping {productName} soon! You'll get an email with tracking
+				as soon as it's on its way.
+			{/if}
 		</p>
 		<a href="/catalogue/" class="back">← RETURN TO CATALOGUE</a>
 	</div>
