@@ -1,5 +1,6 @@
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
+import sharp from 'sharp';
 
 const height = 630;
 const width = 1200;
@@ -23,19 +24,19 @@ export const GET = async ({ url, fetch }) => {
 	const [bgImageBase64, logoBase64] = await Promise.all([
 		imageUrl
 			? (async () => {
-					try {
-						const fetchUrl = imageUrl.startsWith(url.origin)
-							? imageUrl.replace(url.origin, '')
-							: imageUrl;
-						const res = await fetch(fetchUrl);
-						if (!res.ok) return '';
-						const buffer = await res.arrayBuffer();
-						const contentType = res.headers.get('content-type') || 'image/jpeg';
-						return `data:${contentType};base64,${Buffer.from(buffer).toString('base64')}`;
-					} catch {
-						return '';
-					}
-				})()
+				try {
+					const fetchUrl = imageUrl.startsWith(url.origin)
+						? imageUrl.replace(url.origin, '')
+						: imageUrl;
+					const res = await fetch(fetchUrl);
+					if (!res.ok) return '';
+					const buffer = await res.arrayBuffer();
+					const contentType = res.headers.get('content-type') || 'image/jpeg';
+					return `data:${contentType};base64,${Buffer.from(buffer).toString('base64')}`;
+				} catch {
+					return '';
+				}
+			})()
 			: Promise.resolve(''),
 		(async () => {
 			try {
@@ -51,10 +52,10 @@ export const GET = async ({ url, fetch }) => {
 
 	const backgroundStyle = bgImageBase64
 		? {
-				backgroundImage: `linear-gradient(to top, rgba(11, 13, 12, 1) 0%, rgba(11, 13, 12, 0.3) 100%), url(${bgImageBase64})`,
-				backgroundSize: 'cover',
-				backgroundPosition: 'center'
-			}
+			backgroundImage: `linear-gradient(to top, rgba(11, 13, 12, 1) 0%, rgba(11, 13, 12, 0.3) 100%), url(${bgImageBase64})`,
+			backgroundSize: 'cover',
+			backgroundPosition: 'center'
+		}
 		: { backgroundColor: '#0b0d0c' };
 
 	// Native satori object tree — no satori-html, no React
@@ -77,21 +78,21 @@ export const GET = async ({ url, fetch }) => {
 			children: [
 				...(logoBase64
 					? [
-							{
-								type: 'img',
-								props: {
-									src: logoBase64,
-									style: {
-										position: 'absolute',
-										top: '40px',
-										left: '40px',
-										width: '80px',
-										height: '80px',
-										objectFit: 'contain'
-									}
+						{
+							type: 'img',
+							props: {
+								src: logoBase64,
+								style: {
+									position: 'absolute',
+									top: '40px',
+									left: '40px',
+									width: '80px',
+									height: '80px',
+									objectFit: 'contain'
 								}
 							}
-						]
+						}
+					]
 					: []),
 				{
 					type: 'div',
@@ -159,12 +160,17 @@ export const GET = async ({ url, fetch }) => {
 	});
 
 	const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: width } });
-	const image = resvg.render();
+	const imageData = resvg.render();
+	const pngBuffer = imageData.asPng();
 
-	return new Response(new Uint8Array(image.asPng()), {
+	// Compress with sharp as JPEG for much smaller file size
+	const compressedBuffer = await sharp(pngBuffer).jpeg({ quality: 80, progressive: true }).toBuffer();
+
+	return new Response(Buffer.from(compressedBuffer), {
 		headers: {
-			'content-type': 'image/png',
+			'content-type': 'image/jpeg',
 			'cache-control': 'public, immutable, no-transform, max-age=31536000'
 		}
 	});
 };
+
