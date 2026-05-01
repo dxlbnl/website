@@ -1,6 +1,8 @@
 import type { ProductFrontmatter } from '$lib/types';
 import type { PageServerLoad } from './$types';
 
+export const prerender = false;
+
 type ProductModule = { metadata: ProductFrontmatter };
 const productModules = import.meta.glob<ProductModule>('/content/products/*.md');
 
