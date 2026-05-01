@@ -37,7 +37,7 @@
 
 	{#each data.entries as entry, i (entry.slug)}
 		<a href={resolve(`/notes/${entry.slug}/`)} class="idx-row">
-			<div class="idx-n">{String(i + 1).padStart(2, '0')}</div>
+			<div class="idx-n">{String(entry.idx).padStart(2, '0')}</div>
 			<div class="idx-t">
 				{entry.title}
 				<small

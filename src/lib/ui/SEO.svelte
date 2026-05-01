@@ -29,15 +29,19 @@
 	let url = $derived(origin + page.url.pathname);
 	let relativeImage = $derived(image?.replace(page.url.origin, ''));
 	let fullTitle = $derived(title === 'Dexterlabs' ? title : `${title} | Dexterlabs`);
-	let cta = $derived(
-		product
-			? product.status === 'available'
+	let cta = $derived.by(() => {
+		if (product) {
+			return product.status === 'available'
 				? 'Buy Now'
 				: product.status === 'coming-soon'
 					? 'Preorder Now'
-					: 'Sold Out'
-			: ''
-	);
+					: 'Sold Out';
+		}
+		if (type === 'article') {
+			return 'Read Now';
+		}
+		return '';
+	});
 	let ogImage = $derived.by(() => {
 		const params = new SvelteURLSearchParams({
 			title,

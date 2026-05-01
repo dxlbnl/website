@@ -18,7 +18,11 @@ export const load: PageServerLoad = async () => {
 	const latestFeed = latestPost ? { ...latestPost, date: latestPost.date.toISOString() } : null;
 
 	const notes = Object.entries(notesMods)
-		.map(([path, mod]) => ({ slug: path.split('/').at(-2)!, ...mod.metadata }))
+		.map(([path, mod]) => {
+			const slug = path.split('/').at(-2)!;
+			const idx = parseInt(slug.split('-')[0]) || 0;
+			return { slug, idx, ...mod.metadata };
+		})
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 		.slice(0, 4);
 

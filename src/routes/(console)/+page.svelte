@@ -11,8 +11,8 @@
 	type Props = { data: PageData };
 	let { data }: Props = $props();
 
-	function hexIdx(i: number) {
-		return '0x' + (i + 1).toString(16).padStart(2, '0').toUpperCase();
+	function hexIdx(n: number) {
+		return '0x' + n.toString(16).padStart(2, '0').toUpperCase();
 	}
 </script>
 
@@ -60,7 +60,7 @@
 			{#each data.notes as note, i (note.slug)}
 				<a href={resolve(`/notes/${note.slug}/`)} class="note-card">
 					<div class="card-head">
-						<span class="card-idx">{hexIdx(i)}</span>
+						<span class="card-idx">{hexIdx(note.idx)}</span>
 						<span class="card-kind">{note.kind ?? 'LOG'}</span>
 					</div>
 					<h3 class="card-title">{note.title}</h3>
