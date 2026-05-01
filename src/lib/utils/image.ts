@@ -4,13 +4,10 @@
  */
 export function resolveLogImage(path: string, slug: string): string {
 	if (!path || !slug) return path;
+	if (path.startsWith('http') || path.startsWith('/')) return path;
 
-	if (path.startsWith('media/') || path.startsWith('./media/')) {
-		const filename = path.split('/').pop()?.split('.')[0];
-		return `/images/notes/${slug}/${filename}.webp`;
-	}
-
-	return path;
+	const filename = path.split('/').pop()?.split('.')[0];
+	return `/images/notes/${slug}/${filename}.webp`;
 }
 
 /**

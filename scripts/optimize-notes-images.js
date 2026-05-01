@@ -66,29 +66,22 @@ async function optimizeDir(contentDir, staticDir) {
 					await optimizeFile(path.join(fullPath, image), staticDir, baseName, `media/${image}`);
 				}
 			} else {
-				// Nested structure (slug/media)
+				// Slug directory (e.g. content/notes/001-...)
 				const slug = entry.name;
-				const mediaDir = path.join(fullPath, 'media');
 				const targetDir = path.join(staticDir, slug);
-
-				try {
-					await fs.access(mediaDir);
-				} catch {
-					continue;
-				}
-
 				await fs.mkdir(targetDir, { recursive: true });
-				const images = await fs.readdir(mediaDir);
-				for (const image of images) {
-					const ext = path.extname(image).toLowerCase();
+
+				const files = await fs.readdir(fullPath);
+				for (const file of files) {
+					const ext = path.extname(file).toLowerCase();
 					if (!validExts.includes(ext)) continue;
 
-					const baseName = path.parse(image).name;
+					const baseName = path.parse(file).name;
 					await optimizeFile(
-						path.join(mediaDir, image),
+						path.join(fullPath, file),
 						targetDir,
 						baseName,
-						`${slug}/media/${image}`
+						`${slug}/${file}`
 					);
 				}
 			}

@@ -4,7 +4,7 @@ title: 'Lists v2 — Offline-First Architecture'
 date: 2026-04-25
 kind: BUILD
 tags: [SvelteKit, Supabase, Offline-First, Real-time]
-images: [media/hero.png]
+images: [hero.png]
 lede: 'Rebuilding the lists app with full offline support, seamless sharing, and passwordless authentication.'
 ---
 

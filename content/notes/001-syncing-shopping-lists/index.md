@@ -4,7 +4,7 @@ title: 'Syncing Shopping Lists'
 date: 2023-03-01
 kind: BUILD
 tags: [SvelteKit, SSE, Real-time, Security]
-images: [media/hero.png]
+images: [hero.png]
 lede: 'A real-time shared grocery list using Server-Sent Events — no polling, no WebSockets, no list left behind.'
 ---
 

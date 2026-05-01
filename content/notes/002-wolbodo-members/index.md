@@ -4,7 +4,7 @@ title: 'Members, SSO, and Sub-requests'
 date: 2023-06-20
 kind: BUILD
 tags: [SvelteKit, Hasura, GraphQL, Houdini, SSO, Nginx]
-images: [media/hero.png]
+images: [hero.png]
 lede: "How to manage a society's membership and access control without becoming a full-time sysadmin — using Nginx sub-requests."
 ---
 

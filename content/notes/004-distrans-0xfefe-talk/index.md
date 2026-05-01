@@ -4,7 +4,7 @@ title: 'Building Distrans AR-1 with AI (0xFEFE)'
 date: 2026-04-17
 kind: TALK
 tags: [Hardware, Distrans AR-1, AI, Talk]
-images: [media/distrans.jpg, media/circuit.png]
+images: [distrans.jpg, circuit.png]
 lede: 'A talk at 0xFEFE about using AI to design hardware — what actually worked, what exploded, and why structure beat cleverness.'
 productId: distrans-ar1
 ---
