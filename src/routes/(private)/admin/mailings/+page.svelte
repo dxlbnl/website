@@ -1,14 +1,10 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { enhance } from '$app/forms';
-	import Led from '$lib/ui/Led.svelte';
 	import { fmtDate } from '$lib/utils/fmt';
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
 
-	type Props = { data: PageData; form: ActionData };
-	let { data, form }: Props = $props();
-
-	let sending = $state<string | null>(null);
+	type Props = { data: PageData };
+	let { data }: Props = $props();
 </script>
 
 {#if !data.authed}
@@ -21,9 +17,7 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · MAILINGS</div>
 		<h1>Mailings.</h1>
-		<p class="sub">
-			Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo.
-		</p>
+		<p class="sub">Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo.</p>
 		<div class="meta">
 			<span><b>{data.mailings.length}</b> MAILINGS</span>
 		</div>
@@ -34,22 +28,14 @@
 		{#each data.mailings as m (m.slug)}
 			{@const stats = data.opensMap[m.slug]}
 			{@const broadcast = data.broadcastsMap[m.slug]}
-			<div class="row">
+			<a class="row" href={resolve(`/admin/mailings/${m.slug}/`)}>
 				<div class="row-meta">
 					<span class="date">{fmtDate(m.date)}</span>
 					<span class="published" class:live={!!broadcast}>{broadcast ? 'SENT' : 'DRAFT'}</span>
 				</div>
 				<div class="row-title">
-					<a href={resolve(`/mailings/${m.slug}/`)} target="_blank">{m.title}</a>
+					{m.title}
 					<small>{m.subject}</small>
-					{#if form?.slug === m.slug && form?.error}
-						<span class="row-err"><Led tone="danger" />{form.error}</span>
-					{/if}
-					{#if form?.slug === m.slug && form?.broadcastId}
-						<span class="row-ok"
-							><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span
-						>
-					{/if}
 				</div>
 				<div class="row-stats">
 					{#if broadcast}
@@ -57,24 +43,8 @@
 						<span class="stat-opens">{stats?.opens ?? 0} / {broadcast.recipientCount} OPENED</span>
 					{/if}
 				</div>
-				<form
-					method="POST"
-					action="?/send"
-					use:enhance={() => {
-						sending = m.slug;
-						return async ({ update }) => {
-							await update();
-							sending = null;
-						};
-					}}
-					class="row-action"
-				>
-					<input type="hidden" name="slug" value={m.slug} />
-					<button type="submit" class="send-btn" disabled={sending === m.slug || !!broadcast}>
-						{sending === m.slug ? 'SENDING...' : broadcast ? 'SENT ✓' : 'SEND TO LIST →'}
-					</button>
-				</form>
-			</div>
+				<span class="row-arrow">→</span>
+			</a>
 		{/each}
 	</section>
 {/if}
@@ -130,16 +100,25 @@
 	}
 	.row {
 		display: grid;
-		grid-template-columns: 120px 1fr 100px auto;
+		grid-template-columns: 120px 1fr 120px auto;
 		gap: 24px;
 		align-items: center;
 		padding: 16px 0;
 		border-bottom: 1px solid var(--rule);
+		text-decoration: none;
+		color: inherit;
+		transition: background 0.1s;
 
 		@media (max-width: 600px) {
 			grid-template-columns: 1fr;
 			gap: 8px;
 		}
+	}
+	.row:hover .row-title {
+		color: var(--amber);
+	}
+	.row:hover .row-arrow {
+		color: var(--amber);
 	}
 	.row-meta {
 		display: flex;
@@ -180,13 +159,8 @@
 		font-size: 17px;
 		font-weight: 500;
 		letter-spacing: -0.01em;
-	}
-	.row-title a {
 		color: var(--ink);
 		transition: color 0.15s;
-	}
-	.row-title a:hover {
-		color: var(--amber);
 	}
 	.row-title small {
 		display: block;
@@ -197,50 +171,11 @@
 		letter-spacing: 0.04em;
 		margin-top: 4px;
 	}
-	.send-btn {
+	.row-arrow {
 		font-family: var(--mono);
 		font-size: var(--t-mono);
-		letter-spacing: 0.08em;
-		padding: 8px 14px;
-		border: 1px solid var(--rule);
-		color: var(--ink-dim);
-		background: none;
-		text-transform: uppercase;
-		cursor: pointer;
-		white-space: nowrap;
-		transition:
-			border-color 0.15s,
-			color 0.15s;
-	}
-	.send-btn:hover:not(:disabled) {
-		border-color: var(--amber);
-		color: var(--amber);
-	}
-	.send-btn:disabled {
-		opacity: 0.5;
-		cursor: default;
-	}
-	.row-err,
-	.row-ok {
-		display: flex;
-		align-items: center;
-		gap: 6px;
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.06em;
-		margin-top: 6px;
-	}
-	.row-err {
-		color: var(--danger);
-	}
-	.row-ok {
-		color: var(--ok);
-	}
-	code {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		background: var(--bg-elev);
-		padding: 2px 6px;
-		border: 1px solid var(--rule);
+		color: var(--ink-faint);
+		transition: color 0.15s;
+		text-align: right;
 	}
 </style>

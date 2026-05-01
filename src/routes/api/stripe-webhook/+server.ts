@@ -76,7 +76,7 @@ export const POST: RequestHandler = async ({ request }) => {
 						const { data: emailData } = await resend.emails.send({
 							from: RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
 							to: session.customer_details.email,
-							subject: 'Order received — DEXTERLABS',
+							subject: 'Order received - DEXTERLABS',
 							html
 						});
 						if (emailData?.id) {
