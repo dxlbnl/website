@@ -112,10 +112,6 @@
 		line-height: 1.55;
 		max-width: 62ch;
 	}
-	.contact-link {
-		color: var(--amber);
-		border-bottom: 1px solid var(--amber);
-	}
 	.meta {
 		margin-top: 32px;
 		display: flex;

@@ -25,11 +25,11 @@
 		<h1>{headline}</h1>
 		<p>
 			{#if isPreorder}
-				Thanks for the support. I'm working hard to get {productName} ready for you. I'll make sure
-				to keep you updated on the progress.
+				Thanks for the support. I'm working hard to get {productName} ready for you. I'll make sure to
+				keep you updated on the progress.
 			{:else}
-				Thanks for the order. I'll be shipping {productName} soon! You'll get an email with tracking
-				as soon as it's on its way.
+				Thanks for the order. I'll be shipping {productName} soon! You'll get an email with tracking as
+				soon as it's on its way.
 			{/if}
 		</p>
 		<a href="/catalogue/" class="back">← RETURN TO CATALOGUE</a>

@@ -11,3 +11,4 @@ content/
 wiki/
 .obsidian/
 **/templates/*.md
+.agent/
