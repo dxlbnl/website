@@ -41,7 +41,7 @@
 					<img
 						src={galleryImages[activeIndex]}
 						srcset={vercelSrcset(galleryImages[activeIndex], [512, 768, 960, 1280, 1920])}
-						sizes="(max-width: 960px) calc(100vw - 32px), calc(53vw - 60px)"
+						sizes="(max-width: 1000px) calc(100vw - 32px), calc(53vw - 60px)"
 						alt={data.product.name}
 						loading="eager"
 						fetchpriority="high"
@@ -172,6 +172,7 @@
 	}
 	.side-bottom {
 		@container (max-width: 900px) {
+			max-width: 500px;
 			order: 3;
 		}
 	}
