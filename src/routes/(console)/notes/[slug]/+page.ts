@@ -23,3 +23,11 @@ export const load: PageLoad = async ({ params }) => {
 
 	return { component, metadata, product };
 };
+
+export const entries = () => {
+	const mods = import.meta.glob('/content/notes/*/index.md');
+	return Object.keys(mods).map((path) => {
+		const slug = path.split('/')[3];
+		return { slug };
+	});
+};

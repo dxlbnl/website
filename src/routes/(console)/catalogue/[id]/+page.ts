@@ -29,3 +29,7 @@ export const load: PageLoad = async ({ params }) => {
 		product: { ...metadata, images }
 	};
 };
+
+export const entries = () => {
+	return Object.values(modules).map((m) => ({ id: m.metadata.id }));
+};

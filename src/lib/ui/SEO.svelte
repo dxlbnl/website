@@ -181,7 +181,7 @@
 	}
 
 	let jsonLd = $derived(JSON.stringify(buildJsonLd()));
-	let jsonLdHtml = $derived(`<script type="application/ld+json">${jsonLd}<${'script'}>`);
+	let jsonLdHtml = $derived(`<script type="application/ld+json">${jsonLd}</${'script'}>`);
 </script>
 
 <svelte:head>

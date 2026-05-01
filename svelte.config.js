@@ -28,7 +28,8 @@ const config = {
 			handleHttpError: ({ path, message }) => {
 				if (path.startsWith('/_vercel/image')) return;
 				throw new Error(message);
-			}
+			},
+			handleUnseenRoutes: 'ignore'
 		}
 	},
 	extensions: ['.svelte', '.svx', '.md']

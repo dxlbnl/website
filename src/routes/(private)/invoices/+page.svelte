@@ -36,7 +36,7 @@
 					{@const calc = calculateInvoice(factuur)}
 					<tr>
 						<td>
-							<a href={resolve('/invoices/[invoicenr]', { invoicenr: factuur.factuurnr })}
+							<a href={resolve('/(private)/invoices/[invoicenr]', { invoicenr: factuur.factuurnr })}
 								>{factuur.factuurnr}</a
 							>
 						</td>

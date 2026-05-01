@@ -17,6 +17,17 @@ export const load: PageLoad = async ({ params }) => {
 
 	const { default: component, metadata } = await modules[path]();
 	if (!metadata.published) throw error(404, `Mailing not found: ${params.slug}`);
-
 	return { component, mailing: metadata };
+};
+
+export const entries = async () => {
+	const mods = import.meta.glob<MailingModule>('/content/mailings/*.md', { eager: true });
+	return Object.entries(mods)
+		.filter(([, m]) => m.metadata.published)
+		.map(([path, m]) => {
+			if (m.metadata.slug) return { slug: m.metadata.slug };
+			const filename = path.split('/').pop()?.replace('.md', '') ?? '';
+			const match = filename.match(/^\d{4}-\d{2}-\d{2}-(.+)$/);
+			return { slug: match ? match[1] : filename };
+		});
 };

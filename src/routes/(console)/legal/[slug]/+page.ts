@@ -14,3 +14,11 @@ export const load: PageLoad = async ({ params }) => {
 	const { default: component, metadata } = await loadModule();
 	return { component, metadata };
 };
+
+export const entries = () => {
+	const mods = import.meta.glob('/content/legal/*.md');
+	return Object.keys(mods).map((path) => {
+		const slug = path.split('/').pop()?.replace('.md', '') ?? '';
+		return { slug };
+	});
+};
