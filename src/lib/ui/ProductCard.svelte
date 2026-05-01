@@ -18,12 +18,15 @@
 	<div class="img">
 		{#if product.image}
 			<img
-					src={resolveProductImage(product.image, product.id)}
-					srcset={vercelSrcset(resolveProductImage(product.image, product.id), [256, 384, 512, 768, 960])}
-					sizes="(max-width: 820px) calc(100vw - 32px), (max-width: 1000px) calc(50vw - 40px), calc(33.33vw - 32px)"
-					alt={product.name}
-					loading="lazy"
-				/>
+				src={resolveProductImage(product.image, product.id)}
+				srcset={vercelSrcset(
+					resolveProductImage(product.image, product.id),
+					[256, 384, 512, 768, 960]
+				)}
+				sizes="(max-width: 820px) calc(100vw - 32px), (max-width: 1000px) calc(50vw - 40px), calc(33.33vw - 32px)"
+				alt={product.name}
+				loading="lazy"
+			/>
 		{:else}
 			{product.id.toUpperCase()} · PRODUCT SHOT
 		{/if}
@@ -60,7 +63,7 @@
 		overflow: hidden;
 	}
 	.img {
-		aspect-ratio: 1;
+		aspect-ratio: 14/9;
 		background: repeating-linear-gradient(
 			135deg,
 			var(--bg-sunken) 0 10px,
