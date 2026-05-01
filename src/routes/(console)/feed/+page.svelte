@@ -14,7 +14,7 @@
 
 <SEO
 	title="Feed"
-	description="Live updates from the lab — builds in progress, links, and notes from the bench."
+	description="Live updates from the lab - builds in progress, links, and notes from the bench."
 />
 
 <div class="wrap">
@@ -22,7 +22,7 @@
 		<div class="eyebrow">// FEED · THE LIVE BENCH</div>
 		<h1>Feed.</h1>
 		<p class="sub">
-			Short posts from the bench. What I'm building, breaking, or shipping right now — the kind of
+			Short posts from the bench. What I'm building, breaking, or shipping right now - the kind of
 			thing I'd otherwise lose in a chat thread. Longer writeups live in <a
 				href={resolve('/notes/')}>notes</a
 			>.

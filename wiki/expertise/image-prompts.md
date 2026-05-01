@@ -8,7 +8,7 @@ Focuses on the brutalist aesthetic, recording features, and signal transmission.
 
 ### The Spice-Signal Recorder
 
-> **Prompt:** 16:9 landscape. A brutalist-inspired product shot of a [Module/Hardware] floating in an orbit above a desert planet. The background is a hazy, orange spice-cloud nebula with faint, massive industrial silhouettes. The hardware is perfectly upright and proportional. Focus on the primary [Interaction Point, e.g., Red Button]—now a pulsing 'active' light—and the [Feature, e.g., MicroSD slot]. Subtle, glowing signal-transmission lines flow out from the hardware into the void. Matte black metal, industrial wear, low-glow, --ar 16:9
+> **Prompt:** 16:9 landscape. A brutalist-inspired product shot of a [Module/Hardware] floating in an orbit above a desert planet. The background is a hazy, orange spice-cloud nebula with faint, massive industrial silhouettes. The hardware is perfectly upright and proportional. Focus on the primary [Interaction Point, e.g., Red Button]-now a pulsing 'active' light-and the [Feature, e.g., MicroSD slot]. Subtle, glowing signal-transmission lines flow out from the hardware into the void. Matte black metal, industrial wear, low-glow, --ar 16:9
 
 ### The Heighliner Bridge
 

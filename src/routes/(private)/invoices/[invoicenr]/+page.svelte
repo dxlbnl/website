@@ -131,7 +131,7 @@
 
 				{#if invoice.btw_verlegd}
 					<div class="calc-line">
-						<span>BTW (0% — verlegd)</span>
+						<span>BTW (0% - verlegd)</span>
 						<span>{fmtCurrency(0, invoice.valuta, invoice.taal)}</span>
 					</div>
 				{:else if calculations.hasMultipleRates}

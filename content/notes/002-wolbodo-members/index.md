@@ -5,12 +5,12 @@ date: 2023-06-20
 kind: BUILD
 tags: [SvelteKit, Hasura, GraphQL, Houdini, SSO, Nginx]
 images: [hero.png]
-lede: "How to manage a society's membership and access control without becoming a full-time sysadmin — using Nginx sub-requests."
+lede: "How to manage a society's membership and access control without becoming a full-time sysadmin - using Nginx sub-requests."
 ---
 
 I’ve been iterating on the members system for Wolbodo for a while now, and I’m finally happy with how it turned out. It’s one of those projects that looks simple on the surface but solves a very specific, annoying problem: how do you manage a society's membership and access control without becoming a full-time sysadmin?
 
-The stack is a personal favorite: SvelteKit, Hasura, and Houdini. I’ve tried a few GraphQL clients, but Houdini is the first one that actually feels like it belongs in Svelte. It generates stores directly from your `.gql` files, so you get full type safety and reactive updates without the usual boilerplate. It’s been a joy to build with—it honestly makes the frontend logic feel like it’s just an extension of the database.
+The stack is a personal favorite: SvelteKit, Hasura, and Houdini. I’ve tried a few GraphQL clients, but Houdini is the first one that actually feels like it belongs in Svelte. It generates stores directly from your `.gql` files, so you get full type safety and reactive updates without the usual boilerplate. It’s been a joy to build with-it honestly makes the frontend logic feel like it’s just an extension of the database.
 
 But the thing I’m most proud of is the SSO setup. I really didn't want to deal with the complexity of OIDC or SAML just to secure a private wiki. So I went with something much simpler: Nginx sub-requests.
 

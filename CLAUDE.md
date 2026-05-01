@@ -19,7 +19,7 @@ pnpm optimize     # Convert /content/repository/*/media images to WebP in /stati
 ## Stack
 
 - **SvelteKit 2 + Svelte 5** (uses runes: `$props()`, `{@render}`)
-- **mdsvex** — Markdown files are processed as Svelte components; `.md` and `.svx` extensions are both valid
+- **mdsvex** - Markdown files are processed as Svelte components; `.md` and `.svx` extensions are both valid
 - **Adapter**: `adapter-vercel` with prerender/static output
 - **TypeScript** strict mode, `bundler` module resolution
 
@@ -29,16 +29,16 @@ pnpm optimize     # Convert /content/repository/*/media images to WebP in /stati
 
 All dynamic content lives in `/content/` as Markdown files with YAML frontmatter. TypeScript interfaces for all frontmatter types are in [src/lib/types.ts](src/lib/types.ts): `ProductFrontmatter`, `NoteFrontmatter`, `FeedFrontmatter`, `MailingFrontmatter`, `LegalFrontmatter`, `InvoiceFrontmatter`.
 
-Content is loaded at build time via `import.meta.glob(..., { eager: true })` — this is how SvelteKit generates static pages from markdown.
+Content is loaded at build time via `import.meta.glob(..., { eager: true })` - this is how SvelteKit generates static pages from markdown.
 
 ### Routing
 
 File-based routes under `src/routes/`:
 
-- `/(console)/` — main public section (catalogue, repository)
-- `/(console)/catalogue/[id]` — individual product pages, data from `/content/products/`
-- `/(console)/repository/[slug]` — project showcase pages, data from `/content/repository/*/index.md`
-- `/(private)/invoices/[invoicenr]` — invoice view/export, data from `/content/invoices/`
+- `/(console)/` - main public section (catalogue, repository)
+- `/(console)/catalogue/[id]` - individual product pages, data from `/content/products/`
+- `/(console)/repository/[slug]` - project showcase pages, data from `/content/repository/*/index.md`
+- `/(private)/invoices/[invoicenr]` - invoice view/export, data from `/content/invoices/`
 
 Each dynamic route has a `+page.ts` loader that reads the matching markdown file and returns typed frontmatter.
 

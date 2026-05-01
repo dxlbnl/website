@@ -17,7 +17,7 @@ If you are a consumer within the European Union you have a **14-day right of wit
 1. Contact us via our [contact page](/contact) within 14 days of receiving your order. Include your order number and a brief description.
 2. We will confirm the return and provide the return address.
 3. Pack the item securely and ship it back within 14 days of your notification.
-4. Return shipping costs are at your expense (unless the item is faulty — see below).
+4. Return shipping costs are at your expense (unless the item is faulty - see below).
 
 **Condition:** Returned items must be unused and in their original condition. Items that are damaged due to use, modification, or improper handling may be subject to a partial refund.
 

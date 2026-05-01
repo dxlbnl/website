@@ -20,7 +20,7 @@ For questions, visit our [contact page](/contact).
 
 Dexterlabs sells handmade and small-batch electronic hardware modules. Product pages describe each item's current status: _available_, _coming soon_, or _sold out_.
 
-Pre-order products are listed with an estimated lead time. The current standard pre-order lead time is approximately **2 months** from the date of purchase. Lead times are estimates, not guarantees — production of small-batch hardware can be delayed by component availability, manufacturing, or testing issues. We will notify you by email of any significant delay.
+Pre-order products are listed with an estimated lead time. The current standard pre-order lead time is approximately **2 months** from the date of purchase. Lead times are estimates, not guarantees - production of small-batch hardware can be delayed by component availability, manufacturing, or testing issues. We will notify you by email of any significant delay.
 
 ## Prices and payment
 

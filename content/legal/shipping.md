@@ -16,13 +16,13 @@ All orders are shipped from Delft, the Netherlands.
 | EU            | 3–7 business days  |
 | Rest of world | 7–21 business days |
 
-These are estimates from the moment of dispatch, not from the order date. Pre-orders ship approximately 2 months after purchase — see your order confirmation for the expected dispatch window.
+These are estimates from the moment of dispatch, not from the order date. Pre-orders ship approximately 2 months after purchase - see your order confirmation for the expected dispatch window.
 
 ## Shipping carriers
 
 We ship using PostNL or a comparable tracked carrier. A tracking link is sent to you by email once your order has been dispatched.
 
-## Non-EU buyers — customs and import duties
+## Non-EU buyers - customs and import duties
 
 Shipments to countries outside the European Union are sent on **DDU/DAP** (Delivered Duty Unpaid / Delivered At Place) terms. This means:
 

@@ -10,7 +10,7 @@ export type OrderConfirmProps = {
 	isPreorder: boolean;
 };
 
-// Strip Svelte 5 SSR hydration comment anchors — harmless in browsers but noise in email clients
+// Strip Svelte 5 SSR hydration comment anchors - harmless in browsers but noise in email clients
 function clean(html: string): string {
 	return html.replace(/<!--\[!?-->|<!--]-->/g, '');
 }

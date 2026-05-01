@@ -9,17 +9,17 @@ Decisions that aren't enforced by any linter but are non-negotiable. Read this b
 
 ## Always
 
-- **Svelte 5 runes only** — `$state`, `$derived`, `$props()`, `$effect`, `{@render}`. No legacy `$:`, `on:event`, or `<slot>`.
+- **Svelte 5 runes only** - `$state`, `$derived`, `$props()`, `$effect`, `{@render}`. No legacy `$:`, `on:event`, or `<slot>`.
 - **`type` over `interface`** in TypeScript
-- **`pnpm`** for all package management — no npm or yarn
+- **`pnpm`** for all package management - no npm or yarn
 - **Tabs** for indentation, **single quotes**, print width 100, no trailing commas (Prettier enforces this)
-- **`+page.ts`** for loaders (not `+page.server.ts`) — all content is static, prerendered at build time via `import.meta.glob`
+- **`+page.ts`** for loaders (not `+page.server.ts`) - all content is static, prerendered at build time via `import.meta.glob`
 
 ## Never
 
-- SSR — no server-side rendering, no server routes, no `+page.server.ts`
-- Utility class frameworks (Tailwind etc.) — semantic CSS with CSS variables
-- `adapter-static` in `svelte.config.js` — the adapter is `adapter-vercel` (which handles prerender correctly for Vercel deployment)
+- SSR - no server-side rendering, no server routes, no `+page.server.ts`
+- Utility class frameworks (Tailwind etc.) - semantic CSS with CSS variables
+- `adapter-static` in `svelte.config.js` - the adapter is `adapter-vercel` (which handles prerender correctly for Vercel deployment)
 
 ## Content types
 

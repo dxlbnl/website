@@ -21,7 +21,7 @@
 		<div class="eyebrow">// ADMIN · FEED CONTROL</div>
 		<h1>Feed.</h1>
 		<p class="sub">
-			Post directly to the feed — no commit, no redeploy. Wipe anything that ages badly.
+			Post directly to the feed - no commit, no redeploy. Wipe anything that ages badly.
 		</p>
 		<div class="meta">
 			<span><b>{data.posts.length}</b> RECORDS</span>

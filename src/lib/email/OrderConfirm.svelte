@@ -23,7 +23,7 @@
 </script>
 
 <Html lang="en">
-	<Head><title>{subjectPrefix} — DEXTERLABS</title></Head>
+	<Head><title>{subjectPrefix} - DEXTERLABS</title></Head>
 	<Body
 		style={{
 			margin: '0',

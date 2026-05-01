@@ -20,7 +20,7 @@ This document defines the tone and direction for specific content types across t
 
 - **The Fails & Wins:** Document failures, half-finished prototypes, and dead ends alongside the successes. The "rough edges" are the proof of the work.
 - **Narrative Arc:** Explain *why* a decision was made. Share the thinking, not just the result.
-- **Visuals:** Use process photos—PCB revisions, oscilloscope traces, breadboard mess.
+- **Visuals:** Use process photos-PCB revisions, oscilloscope traces, breadboard mess.
 - **Goal:** To document a project's evolution for a technical peer.
 
 ## Feed: Status & Real-time

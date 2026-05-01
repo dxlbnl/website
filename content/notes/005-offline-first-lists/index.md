@@ -1,6 +1,6 @@
 ---
 pageType: note
-title: 'Lists v2 — Offline-First Architecture'
+title: 'Lists v2 - Offline-First Architecture'
 date: 2026-04-25
 kind: BUILD
 tags: [SvelteKit, Supabase, Offline-First, Real-time]
@@ -10,7 +10,7 @@ lede: 'Rebuilding the lists app with full offline support, seamless sharing, and
 
 When I first built the syncing shopping list app, it was about one thing: making sure the grocery list actually lived on both our phones. It used Server-Sent Events (SSE) and worked well enough, even with some semi-offline support, but it was brittle. There was no real authentication, and relying on "security by obscurity" with secret URLs isn't really a long-term plan.
 
-Over the last few days, I’ve ripped out the plumbing and rebuilt it. The goal was to keep that instant, real-time feel but make the whole thing "Lab-Bench" solid—offline-first, actually secure, and zero friction.
+Over the last few days, I’ve ripped out the plumbing and rebuilt it. The goal was to keep that instant, real-time feel but make the whole thing "Lab-Bench" solid-offline-first, actually secure, and zero friction.
 
 ## The Stack
 
@@ -26,7 +26,7 @@ The app is now properly offline-first. You can check items off in a basement or 
 
 ### 2. Anonymous & Registered Users
 
-I hate forced sign-ups. You can start a list the second you open the app—no account needed. If you want to share that list or see it on your laptop, you can register later. Your local data just merges into your new account. It’s seamless.
+I hate forced sign-ups. You can start a list the second you open the app-no account needed. If you want to share that list or see it on your laptop, you can register later. Your local data just merges into your new account. It’s seamless.
 
 ### 3. Custom Passwordless Auth
 
@@ -38,7 +38,7 @@ No more "secret" public URLs. Sharing is now explicit and secure. I’m using Po
 
 ### 5. The Overview
 
-Since I’m using this for more than just groceries now—project notes, hardware to-dos, random ideas—the UI needed to scale. The new dashboard gives a high-contrast, technical overview of every list you own or follow.
+Since I’m using this for more than just groceries now-project notes, hardware to-dos, random ideas-the UI needed to scale. The new dashboard gives a high-contrast, technical overview of every list you own or follow.
 
 The result is an app that finally feels like a professional tool. It’s as fast as a local notepad but syncs like a cloud app.
 

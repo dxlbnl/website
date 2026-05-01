@@ -123,7 +123,7 @@
 		line-height: 1.55;
 	}
 
-	/* Status — now a link inside the hero */
+	/* Status - now a link inside the hero */
 	.status {
 		display: block;
 		margin-top: 32px;

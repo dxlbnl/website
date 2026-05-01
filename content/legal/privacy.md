@@ -18,7 +18,7 @@ For questions, visit our [contact page](/contact).
 ## What data we collect and why
 
 **Orders**
-When you place an order we collect your name, shipping address, email address, and order details. Payment is processed by Stripe — we never see or store your card number. We need this data to fulfil and ship your order and to comply with Dutch tax law (7-year retention).
+When you place an order we collect your name, shipping address, email address, and order details. Payment is processed by Stripe - we never see or store your card number. We need this data to fulfil and ship your order and to comply with Dutch tax law (7-year retention).
 
 **Newsletter**
 If you subscribe to our mailing list we store your email address. We use Resend to send emails. You can unsubscribe at any time using the link in any email.
@@ -33,9 +33,9 @@ Our hosting provider (Vercel) logs standard server data (IP address, request tim
 
 We share data only with the following processors, under contracts that protect your data:
 
-- **Stripe** (payments) — [stripe.com/privacy](https://stripe.com/privacy)
-- **Resend** (transactional email) — [resend.com/legal/privacy-policy](https://resend.com/legal/privacy-policy)
-- **Vercel** (hosting) — [vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy)
+- **Stripe** (payments) - [stripe.com/privacy](https://stripe.com/privacy)
+- **Resend** (transactional email) - [resend.com/legal/privacy-policy](https://resend.com/legal/privacy-policy)
+- **Vercel** (hosting) - [vercel.com/legal/privacy-policy](https://vercel.com/legal/privacy-policy)
 
 We do not sell your data or share it with third parties for marketing purposes.
 
@@ -43,12 +43,12 @@ We do not sell your data or share it with third parties for marketing purposes.
 
 Under the General Data Protection Regulation you have the right to:
 
-- **Access** — request a copy of the personal data we hold about you
-- **Rectification** — ask us to correct inaccurate data
-- **Erasure** — ask us to delete your data (subject to legal retention obligations)
-- **Portability** — receive your data in a structured, machine-readable format
-- **Restriction** — ask us to limit how we process your data
-- **Objection** — object to processing based on our legitimate interests
+- **Access** - request a copy of the personal data we hold about you
+- **Rectification** - ask us to correct inaccurate data
+- **Erasure** - ask us to delete your data (subject to legal retention obligations)
+- **Portability** - receive your data in a structured, machine-readable format
+- **Restriction** - ask us to limit how we process your data
+- **Objection** - object to processing based on our legitimate interests
 
 To exercise any of these rights, use our [contact page](/contact). We will respond within one month.
 

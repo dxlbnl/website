@@ -15,13 +15,13 @@ Core ideas from Karpathy:
 
 Three layers, all under the user's project root:
 
-**raw/** — Immutable source material. You read, never modify. Organized by topic subdirectories (e.g., `raw/machine-learning/`).
+**raw/** - Immutable source material. You read, never modify. Organized by topic subdirectories (e.g., `raw/machine-learning/`).
 
-**wiki/** — Compiled knowledge articles. You have full ownership. Organized by topic subdirectories, one level only: `wiki/<topic>/<article>.md`. Contains two special files:
-- `wiki/index.md` — Global index. One row per article, grouped by topic, with link + summary + Updated date.
-- `wiki/log.md` — Append-only operation log.
+**wiki/** - Compiled knowledge articles. You have full ownership. Organized by topic subdirectories, one level only: `wiki/<topic>/<article>.md`. Contains two special files:
+- `wiki/index.md` - Global index. One row per article, grouped by topic, with link + summary + Updated date.
+- `wiki/log.md` - Append-only operation log.
 
-**SKILL.md** (this file) — Schema layer. Defines structure and workflow rules.
+**SKILL.md** (this file) - Schema layer. Defines structure and workflow rules.
 
 Templates live in `references/` relative to this file. Read them when you need the exact format for raw files, articles, archive pages, or the index.
 
@@ -31,8 +31,8 @@ Triggers only on the first Ingest. Check whether `raw/` and `wiki/` exist. Creat
 
 - `raw/` directory (with `.gitkeep`)
 - `wiki/` directory (with `.gitkeep`)
-- `wiki/index.md` — heading `# Knowledge Base Index`, empty body
-- `wiki/log.md` — heading `# Wiki Log`, empty body
+- `wiki/index.md` - heading `# Knowledge Base Index`, empty body
+- `wiki/log.md` - heading `# Wiki Log`, empty body
 
 If Query or Lint cannot find the wiki structure, tell the user: "Run an ingest first to initialize the wiki." Do not auto-create.
 
@@ -138,21 +138,21 @@ Quality checks on the wiki. Two categories with different authority levels.
 
 Fix these automatically:
 
-**Index consistency** — compare `wiki/index.md` against actual wiki/ files (excluding index.md and log.md):
+**Index consistency** - compare `wiki/index.md` against actual wiki/ files (excluding index.md and log.md):
 - File exists but missing from index → add entry with `(no summary)` placeholder. For Updated, use the article's metadata Updated date if present; otherwise fall back to file's last modified date.
 - Index entry points to nonexistent file → mark as `[MISSING]` in the index. Do not delete the entry; let the user decide.
 
-**Internal links** — for every markdown link in wiki/ article files (body text and Sources metadata), excluding Raw field links (validated by Raw references below) and excluding index.md/log.md (handled above):
+**Internal links** - for every markdown link in wiki/ article files (body text and Sources metadata), excluding Raw field links (validated by Raw references below) and excluding index.md/log.md (handled above):
 - Target does not exist → search wiki/ for a file with the same name elsewhere.
   - Exactly one match → fix the path.
   - Zero or multiple matches → report to the user.
 
-**Raw references** — every link in a Raw field must point to an existing raw/ file:
+**Raw references** - every link in a Raw field must point to an existing raw/ file:
 - Target does not exist → search raw/ for a file with the same name elsewhere.
   - Exactly one match → fix the path.
   - Zero or multiple matches → report to the user.
 
-**See Also** — within each topic directory:
+**See Also** - within each topic directory:
 - Add obviously missing cross-references between related articles.
 - Remove links to deleted files.
 

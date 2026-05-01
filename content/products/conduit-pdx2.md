@@ -23,7 +23,7 @@ specs:
   Protection: Short Circuit, Thermal, Reverse Voltage, TVS
 ---
 
-The **Conduit PDX-2** transforms your modular system into a mobile powerhouse. Power an entire case from a single USB-C laptop charger—delivering massive, studio-grade current with zero weight penalty and zero setup friction.
+The **Conduit PDX-2** transforms your modular system into a mobile powerhouse. Power an entire case from a single USB-C laptop charger-delivering massive, studio-grade current with zero weight penalty and zero setup friction.
 
 At just 15mm deep and 4HP wide, it provides enough current (3.0A on +12V, 1.5A on -12V) to drive 15 to 20 modules. It’s the end of heavy wall-warts and bulky external power bricks.
 
@@ -31,7 +31,7 @@ At just 15mm deep and 4HP wide, it provides enough current (3.0A on +12V, 1.5A o
 
 The "Reactor Core" display gives you instant visibility into your case's load. Dual 5-segment bar graphs monitor +12V and -12V rails independently, allowing you to balance your system and catch power-hungry modules or transient spikes before they become issues.
 
-The interface is designed for immediate, at-a-glance diagnostics—no meters or external tools required.
+The interface is designed for immediate, at-a-glance diagnostics-no meters or external tools required.
 
 ## Studio-Grade Performance
 

@@ -6,7 +6,7 @@
 
 <SEO
 	title="About"
-	description="Dexter — hardware and software engineer, Eurorack builder, based in Delft. The story behind Dexterlabs."
+	description="Dexter - hardware and software engineer, Eurorack builder, based in Delft. The story behind Dexterlabs."
 />
 
 <div class="wrap">
@@ -29,7 +29,7 @@
 			<div class="col-label">// 0x02 · THE LAB</div>
 			<h2>Dexterlabs.</h2>
 			<p>
-				A one-person engineering lab. No fixed brief — hardware, software, whatever needs building.
+				A one-person engineering lab. No fixed brief - hardware, software, whatever needs building.
 				This site serves as the showcase for completed products and the logbook for the process.
 			</p>
 			<p class="dim">Est. 2019. Still small on purpose.</p>
@@ -42,17 +42,17 @@
 		<div>
 			<div class="is-label ok">// IS</div>
 			<ul>
-				<li>A showcase — the modules and hardware that are ready for the rack.</li>
-				<li>A logbook — notes on experiments, schematics, and side-projects.</li>
-				<li>A feed — brief updates when something ships or breaks.</li>
+				<li>A showcase - the modules and hardware that are ready for the rack.</li>
+				<li>A logbook - notes on experiments, schematics, and side-projects.</li>
+				<li>A feed - brief updates when something ships or breaks.</li>
 			</ul>
 		</div>
 		<div>
 			<div class="is-label faint">// ISN'T</div>
 			<ul class="isnt">
-				<li>A client portfolio — that's my day job, not this.</li>
-				<li>A content mill — no publishing schedules, no SEO pressure.</li>
-				<li>A startup pitch — this is an engineering lab, not a tech company.</li>
+				<li>A client portfolio - that's my day job, not this.</li>
+				<li>A content mill - no publishing schedules, no SEO pressure.</li>
+				<li>A startup pitch - this is an engineering lab, not a tech company.</li>
 			</ul>
 		</div>
 	</div>

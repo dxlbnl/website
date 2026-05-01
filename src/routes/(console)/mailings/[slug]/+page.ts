@@ -8,7 +8,7 @@ type MailingModule = { default: Component<SvelteComponent>; metadata: MailingFro
 const modules = import.meta.glob<MailingModule>('/content/mailings/*.md');
 
 export const load: PageLoad = async ({ params }) => {
-	// file naming: YYYY-MM-DD-<slug>.md — match by slug suffix
+	// file naming: YYYY-MM-DD-<slug>.md - match by slug suffix
 	const path = Object.keys(modules).find(
 		(p) => p.endsWith(`-${params.slug}.md`) || p.endsWith(`/${params.slug}.md`)
 	);

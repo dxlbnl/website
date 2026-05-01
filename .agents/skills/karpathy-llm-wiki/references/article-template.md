@@ -11,10 +11,11 @@
 
 {Synthesize a coherent structure from the source material. Do not copy source text verbatim; distill and reorganize. Use blockquotes sparingly for particularly important original phrasing.}
 
-{OPTIONAL — include this section only when cross-references exist:}
+{OPTIONAL - include this section only when cross-references exist:}
 
 ## See Also
 
 {Cross-references to related wiki articles. Maintained during lint. Use relative links:
+
 - Same topic: [Other Article](other-article.md)
 - Different topic: [Other Article](../other-topic/other-article.md)}

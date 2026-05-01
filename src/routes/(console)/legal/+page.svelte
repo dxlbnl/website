@@ -5,7 +5,7 @@
 
 <SEO
 	title="Legal"
-	description="Legal information for Dexterlabs — privacy policy, terms and conditions, shipping and returns."
+	description="Legal information for Dexterlabs - privacy policy, terms and conditions, shipping and returns."
 />
 
 <div class="wrap">

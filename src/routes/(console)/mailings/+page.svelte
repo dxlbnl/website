@@ -9,14 +9,14 @@
 
 <SEO
 	title="Mailings"
-	description="Occasional updates from the lab — new builds, availability, notes from the bench."
+	description="Occasional updates from the lab - new builds, availability, notes from the bench."
 />
 
 <div class="wrap">
 	<section class="hero">
 		<div class="eyebrow">// MAILINGS · FROM THE LAB</div>
 		<h1>Mailings.</h1>
-		<p class="sub">Occasional updates — new builds, availability, notes from the bench.</p>
+		<p class="sub">Occasional updates - new builds, availability, notes from the lab.</p>
 		<div class="meta">
 			<span><b>{data.entries.length}</b> ISSUES</span>
 			{#if data.entries[0]}

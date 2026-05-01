@@ -5,7 +5,7 @@
 
 ## Overview
 
-The site looks like instrument firmware, not a portfolio. The aesthetic reference is a phosphor display or oscilloscope panel — functional readouts, status indicators, nothing decorative. The voice is engineer-to-engineer.
+The site looks like instrument firmware, not a portfolio. The aesthetic reference is a phosphor display or oscilloscope panel - functional readouts, status indicators, nothing decorative. The voice is engineer-to-engineer.
 
 ## Visual language
 
@@ -16,11 +16,11 @@ The site looks like instrument firmware, not a portfolio. The aesthetic referenc
 
 **Motifs in the current design:**
 
-- LED dot indicators with glow — used for genuine status (PWR, NET OK). Glow is earned by meaning.
-- Live oscilloscope waveform in the status bar — animated sine, renders in cyan.
+- LED dot indicators with glow - used for genuine status (PWR, NET OK). Glow is earned by meaning.
+- Live oscilloscope waveform in the status bar - animated sine, renders in cyan.
 - All-caps monospace for nav items, labels, status text.
-- Amber (`#ffb347`) for active/interactive state — like a high-visibility indicator lamp.
-- `[ PATH ]` bracket notation in the breadcrumb — specific to that component.
+- Amber (`#ffb347`) for active/interactive state - like a high-visibility indicator lamp.
+- `[ PATH ]` bracket notation in the breadcrumb - specific to that component.
 - Section headers with a bottom rule and an optional monospace index number.
 
 The test for adding something new: would this element exist on a real instrument panel?
@@ -33,9 +33,9 @@ Write for someone who already knows what they're looking at. No hand-holding, no
 - **The Wins/Fails Philosophy**: "The fails stay in the log, the wins ship to your rack."
 - **Spec-Led Benefit**: Sell the impact (e.g., "Power an entire case") backed by the technical reality (e.g., "3.0A output").
 - **Direct Technicality**: Technical terms without apology.
-- **Translucent Process**: Document failures and half-finished things alongside successes—the rough edges prove the engineering.
+- **Translucent Process**: Document failures and half-finished things alongside successes-the rough edges prove the engineering.
 
 ## What the site is not
 
-Not a portfolio trying to get hired. Not a generic product marketing site. It is a **Public Lab Bench**—a hybrid of a working engineer's repository, a professional storefront, and a showcase of thinking.
+Not a portfolio trying to get hired. Not a generic product marketing site. It is a **Public Lab Bench**-a hybrid of a working engineer's repository, a professional storefront, and a showcase of thinking.
 

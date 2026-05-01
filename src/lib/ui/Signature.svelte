@@ -1,7 +1,7 @@
 <div class="sig">
 	<div>
 		<div class="label">// SIGNED</div>
-		<div class="hand">— Dexter, at the bench</div>
+		<div class="hand">— Dexter, in the lab</div>
 	</div>
 	<div>
 		<div class="label">// SHIPPED BY</div>

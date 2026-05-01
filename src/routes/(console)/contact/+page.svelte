@@ -12,7 +12,7 @@
 
 <SEO
 	title="Contact"
-	description="Get in touch — hardware commissions, prototype work, or just to say hello."
+	description="Get in touch - hardware commissions, prototype work, or just to say hello."
 />
 
 <div class="wrap">
@@ -41,7 +41,7 @@
 
 	<section class="mail">
 		<div class="eyebrow">// MAILING LIST</div>
-		<p class="sub">Occasional updates from the lab — new builds, availability, notes.</p>
+		<p class="sub">Occasional updates from the lab - new builds, availability, notes.</p>
 		<SubscribeForm />
 	</section>
 
