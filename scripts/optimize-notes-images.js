@@ -14,11 +14,15 @@ async function optimizeFile(inputPath, outDir, baseName, logInfo) {
 	try {
 		await fs.access(webpPath);
 		doWebp = false;
-	} catch {}
+	} catch {
+		// Nothing
+	}
 	try {
 		await fs.access(jpgPath);
 		doJpg = false;
-	} catch {}
+	} catch {
+		// Nothing
+	}
 
 	if (!doWebp && !doJpg) {
 		console.log(`[SKIP] ${logInfo} (already exists)`);

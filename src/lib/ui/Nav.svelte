@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { getPalette, togglePalette } from '$lib/theme.svelte';
 	import Led from '$lib/ui/Led.svelte';
@@ -24,13 +25,14 @@
 			.filter(Boolean)
 			.map((s: string, i: number, arr: string[]) => ({
 				label: s.toUpperCase(),
-				href: '/' + arr.slice(0, i + 1).join('/')
+				href: '/' + arr.slice(0, i + 1).join('/') + '/'
 			}))
 	);
 
 	let menuEl: HTMLDetailsElement | undefined = $state();
 
 	$effect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		page.url.pathname;
 		menuEl?.removeAttribute('open');
 	});
@@ -55,18 +57,18 @@
 <nav class="nav">
 	<div class="brand">
 		<Led tone="ok" />
-		<a href="/" class="wordmark">DEXTERLABS</a>
+		<a href={resolve('/')} class="wordmark">DEXTERLABS</a>
 		<span class="path">
 			<span class="sep">//</span>
-			<a href="/" class="crumb-home">~</a>
-			{#each crumbs as crumb}
+			<a href={resolve('/')} class="crumb-home">~</a>
+			{#each crumbs as crumb (crumb.href)}
 				<span class="sep">/</span><a href={crumb.href} class="crumb">{crumb.label}</a>
 			{/each}
 		</span>
 	</div>
 
 	<ul>
-		{#each items as { label, href }}
+		{#each items as { label, href } (href)}
 			<li><a {href} class:active={isActive(href)}>{label}</a></li>
 		{/each}
 		<li>{@render paletteBtn()}</li>
@@ -78,7 +80,7 @@
 			<span class="icon-close">×</span>
 		</summary>
 		<div class="dropdown">
-			{#each items as { label, href }}
+			{#each items as { label, href } (href)}
 				<a {href} class:active={isActive(href)}>{label}</a>
 			{/each}
 			{@render paletteBtn()}

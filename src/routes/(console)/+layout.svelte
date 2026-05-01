@@ -1,9 +1,8 @@
 <script lang="ts">
 	import Nav from '$lib/ui/Nav.svelte';
 	import Footer from '$lib/ui/Footer.svelte';
-	import { onMount } from 'svelte';
 
-	let { children, data } = $props();
+	let { children } = $props();
 </script>
 
 <div class="page">

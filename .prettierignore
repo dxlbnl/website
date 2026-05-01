@@ -11,4 +11,6 @@ content/
 wiki/
 .obsidian/
 **/templates/*.md
-.agent/
+.agents/
+skills-lock.json
+.antigravity/

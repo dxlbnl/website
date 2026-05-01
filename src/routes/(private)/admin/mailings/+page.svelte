@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { enhance } from '$app/forms';
 	import Led from '$lib/ui/Led.svelte';
 	import { fmtDate } from '$lib/utils/fmt';
@@ -14,7 +15,7 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
 		<h1>Authenticate.</h1>
-		<p class="sub">Go to <a href="/admin/">/admin</a> to log in first.</p>
+		<p class="sub">Go to <a href={resolve('/admin/')}>/admin</a> to log in first.</p>
 	</section>
 {:else}
 	<section class="hero">
@@ -30,7 +31,7 @@
 
 	<section class="list">
 		<div class="section-label">// ALL MAILINGS</div>
-		{#each data.mailings as m}
+		{#each data.mailings as m (m.slug)}
 			{@const stats = data.opensMap[m.slug]}
 			{@const broadcast = data.broadcastsMap[m.slug]}
 			<div class="row">
@@ -39,7 +40,7 @@
 					<span class="published" class:live={!!broadcast}>{broadcast ? 'SENT' : 'DRAFT'}</span>
 				</div>
 				<div class="row-title">
-					<a href="/mailings/{m.slug}/" target="_blank">{m.title}</a>
+					<a href={resolve(`/mailings/${m.slug}/`)} target="_blank">{m.title}</a>
 					<small>{m.subject}</small>
 					{#if form?.slug === m.slug && form?.error}
 						<span class="row-err"><Led tone="danger" />{form.error}</span>

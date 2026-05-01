@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 </script>
 
@@ -15,10 +16,10 @@
 		</div>
 
 		<div class="actions">
-			<a href="/" class="btn">
+			<a href={resolve('/')} class="btn">
 				<span class="btn-label">[ RETURN TO ROOT ]</span>
 			</a>
-			<a href="/catalogue/" class="btn">
+			<a href={resolve('/(console)/catalogue')} class="btn">
 				<span class="btn-label">[ VIEW CATALOGUE ]</span>
 			</a>
 		</div>

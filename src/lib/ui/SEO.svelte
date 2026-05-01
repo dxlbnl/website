@@ -180,7 +180,8 @@
 		return { ...base, '@type': 'WebSite' };
 	}
 
-	let jsonLd = $derived(buildJsonLd());
+	let jsonLd = $derived(JSON.stringify(buildJsonLd()));
+	let jsonLdHtml = $derived(`<script type="application/ld+json">${jsonLd}<${'script'}>`);
 </script>
 
 <svelte:head>
@@ -212,5 +213,6 @@
 	<meta name="twitter:image" content={ogImage} />
 
 	<!-- Structured Data -->
-	{@html `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`}
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html jsonLdHtml}
 </svelte:head>

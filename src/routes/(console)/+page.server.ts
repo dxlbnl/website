@@ -1,14 +1,9 @@
-import type { ConsoleFrontmatter, NoteFrontmatter, ProductFrontmatter } from '$lib/types';
+import type { NoteFrontmatter, ProductFrontmatter } from '$lib/types';
 import type { PageServerLoad } from './$types';
-import type { Component, SvelteComponent } from 'svelte';
 import { db } from '$lib/server/db';
 import { feedPosts } from '$lib/server/db/schema';
 import { desc } from 'drizzle-orm';
 
-const consoleMods = import.meta.glob<{
-	default: Component<SvelteComponent>;
-	metadata: ConsoleFrontmatter;
-}>('/content/*.md', { eager: true });
 const notesMods = import.meta.glob<{ metadata: NoteFrontmatter }>('/content/notes/*/index.md', {
 	eager: true
 });

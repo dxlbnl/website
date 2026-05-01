@@ -6,6 +6,7 @@
 	import SEO from '$lib/ui/SEO.svelte';
 	import Pricebox from './Pricebox.svelte';
 	import type { Region } from '$lib/utils/location';
+	import { resolve } from '$app/paths';
 
 	type Props = { data: { component: Component; product: ProductFrontmatter; region: Region } };
 	let { data }: Props = $props();
@@ -31,7 +32,7 @@
 
 <div class="wrap">
 	<div class="back-row">
-		<a href="/catalogue/" class="back">← RETURN TO CATALOGUE</a>
+		<a href={resolve('/catalogue/')} class="back">← RETURN TO CATALOGUE</a>
 	</div>
 
 	<div class="grid" class:no-image={!galleryImages.length}>
@@ -49,7 +50,7 @@
 				</div>
 				{#if galleryImages.length > 1}
 					<div class="thumbs">
-						{#each galleryImages as src, i}
+						{#each galleryImages as src, i (src)}
 							<button
 								class="thumb"
 								class:active={i === activeIndex}
@@ -76,7 +77,7 @@
 				<h1>{data.product.name}</h1>
 				{#if data.product.tags?.length}
 					<div class="tags">
-						{#each data.product.tags as tag}
+						{#each data.product.tags as tag (tag)}
 							<span class="tag">{tag}</span>
 						{/each}
 					</div>
@@ -89,7 +90,7 @@
 					<div class="specs-label">// QUICK SPECS</div>
 					<table class="specs">
 						<tbody>
-							{#each Object.entries(data.product.specs) as [key, val]}
+							{#each Object.entries(data.product.specs) as [key, val] (key)}
 								<tr><td>{key}</td><td>{val}</td></tr>
 							{/each}
 						</tbody>

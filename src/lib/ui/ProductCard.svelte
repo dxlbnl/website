@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { ProductFrontmatter } from '$lib/types';
 	import { resolveProductImage, vercelSrcset } from '$lib/utils/image';
 	import { type Region } from '$lib/utils/location';
@@ -14,7 +15,7 @@
 	);
 </script>
 
-<a href="/catalogue/{product.id}/" class="card">
+<a href={resolve(`/catalogue/${product.id}/`)} class="card">
 	<div class="img">
 		{#if product.image}
 			<img

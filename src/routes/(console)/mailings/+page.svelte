@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { MailingFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
+	import { resolve } from '$app/paths';
 
 	type Props = { data: { entries: MailingFrontmatter[] } };
 	let { data }: Props = $props();
@@ -24,8 +25,8 @@
 		</div>
 	</section>
 
-	{#each data.entries as entry, i}
-		<a href="/mailings/{entry.slug}/" class="row">
+	{#each data.entries as entry, i (entry.slug)}
+		<a href={resolve(`/mailings/${entry.slug}/`)} class="row">
 			<div class="num">{String(i + 1).padStart(2, '0')}</div>
 			<div class="body">
 				{entry.title}

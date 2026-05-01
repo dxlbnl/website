@@ -29,7 +29,7 @@ Use for: things you're actually selling. Eurorack modules, cables, etc. Hardware
 
 ## Console (`/`, index page)
 
-The landing page. Not a content section — it's the entry point. Configured via its own frontmatter (`ConsoleFrontmatter`). Tagline and SEO description live there.
+The landing page. Not a content section — it's the entry point. Tagline and SEO description live there.
 
 ## What doesn't have a section yet
 

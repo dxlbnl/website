@@ -3,6 +3,7 @@
 	import Led from '$lib/ui/Led.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
 	import type { PageData } from './$types';
+	import { resolve } from '$app/paths';
 
 	let { data }: { data: PageData } = $props();
 	const isPreorder = $derived(data.product?.status === 'coming-soon');
@@ -32,7 +33,7 @@
 				soon as it's on its way.
 			{/if}
 		</p>
-		<a href="/catalogue/" class="back">← RETURN TO CATALOGUE</a>
+		<a href={resolve('/catalogue/')} class="back">← RETURN TO CATALOGUE</a>
 	</div>
 	<Signature />
 </div>

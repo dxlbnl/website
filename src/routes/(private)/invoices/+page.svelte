@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
-	import { calculateInvoice, formatDate, formatCurrencyWithLocale } from '$lib/invoice';
+	import { calculateInvoice, fmtDate, fmtCurrency } from '$lib/invoice';
 
 	let { data }: { data: PageData } = $props();
 	let invoices = $derived(data.invoices);
@@ -31,28 +32,30 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each invoices as factuur}
+				{#each invoices as factuur (factuur.factuurnr)}
 					{@const calc = calculateInvoice(factuur)}
 					<tr>
 						<td>
-							<a href="/invoices/{factuur.factuurnr}/">{factuur.factuurnr}</a>
+							<a href={resolve('/invoices/[invoicenr]', { invoicenr: factuur.factuurnr })}
+								>{factuur.factuurnr}</a
+							>
 						</td>
 						<td>{factuur.klant.naam}</td>
-						<td>{formatDate(factuur.datum)}</td>
-						<td>{formatDate(factuur.vervaldatum)}</td>
-						<td>{formatCurrencyWithLocale(calc.subtotal)}</td>
+						<td>{fmtDate(factuur.datum)}</td>
+						<td>{fmtDate(factuur.vervaldatum)}</td>
+						<td>{fmtCurrency(calc.subtotal)}</td>
 						<td>
 							{#if calc.hasMultipleRates}
 								<span
 									title={calc.vatBreakdown.map(([r, a]) => `${r}%: €${a.toFixed(2)}`).join('\n')}
 								>
-									{formatCurrencyWithLocale(calc.vatAmount)} *
+									{fmtCurrency(calc.vatAmount)} *
 								</span>
 							{:else}
-								{formatCurrencyWithLocale(calc.vatAmount)}
+								{fmtCurrency(calc.vatAmount)}
 							{/if}
 						</td>
-						<td>{formatCurrencyWithLocale(calc.total)}</td>
+						<td>{fmtCurrency(calc.total)}</td>
 						<td>
 							{getStatus(factuur.vervaldatum)}
 						</td>

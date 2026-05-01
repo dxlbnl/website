@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import SubscribeForm from './SubscribeForm.svelte';
 </script>
 
@@ -16,10 +17,10 @@
 	<div>
 		<h2>// LEGAL</h2>
 		<ul>
-			<li><a href="/legal/privacy/">Privacy</a></li>
-			<li><a href="/legal/terms/">Terms</a></li>
-			<li><a href="/legal/shipping/">Shipping</a></li>
-			<li><a href="/legal/returns/">Returns</a></li>
+			<li><a href={resolve('/legal/privacy/')}>Privacy</a></li>
+			<li><a href={resolve('/legal/terms/')}>Terms</a></li>
+			<li><a href={resolve('/legal/shipping/')}>Shipping</a></li>
+			<li><a href={resolve('/legal/returns/')}>Returns</a></li>
 		</ul>
 	</div>
 	<div>

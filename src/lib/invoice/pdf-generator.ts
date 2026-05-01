@@ -40,7 +40,7 @@ function findOverflowingItem(container: HTMLElement, pdfHeight: number): number 
 	const pxToMmRatio = pdfWidth / elementWidthPx;
 
 	// Check if everything fits
-	container.offsetHeight; // Trigger reflow
+	void container.offsetHeight; // Trigger reflow
 	const fullRect = container.getBoundingClientRect();
 	const fullHeightMm = fullRect.height * pxToMmRatio;
 
@@ -61,7 +61,7 @@ function findOverflowingItem(container: HTMLElement, pdfHeight: number): number 
 		}
 
 		// Measure height
-		container.offsetHeight; // Trigger reflow
+		void container.offsetHeight; // Trigger reflow
 		const rect = container.getBoundingClientRect();
 		const heightMm = rect.height * pxToMmRatio;
 

@@ -4,6 +4,7 @@
 	import SEO from '$lib/ui/SEO.svelte';
 	import type { Component } from 'svelte';
 	import type { MailingFrontmatter } from '$lib/types';
+	import { resolve } from '$app/paths';
 
 	type Props = { data: { component: Component; mailing: MailingFrontmatter } };
 	let { data }: Props = $props();
@@ -26,7 +27,7 @@
 	</article>
 
 	<div class="post-foot">
-		<a href="/mailings/" class="back">← BACK TO MAILINGS</a>
+		<a href={resolve('/mailings/')} class="back">← BACK TO MAILINGS</a>
 	</div>
 
 	<section class="subscribe">

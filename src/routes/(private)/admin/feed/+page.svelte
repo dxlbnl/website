@@ -4,6 +4,7 @@
 	import Led from '$lib/ui/Led.svelte';
 	import { fmtDate } from '$lib/utils/fmt';
 	import type { PageData, ActionData } from './$types';
+	import { resolve } from '$app/paths';
 
 	type Props = { data: PageData; form: ActionData };
 	let { data, form }: Props = $props();
@@ -13,7 +14,7 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
 		<h1>Authenticate.</h1>
-		<p class="sub">Go to <a href="/admin/">/admin</a> to log in first.</p>
+		<p class="sub">Go to <a href={resolve('/admin/')}>/admin</a> to log in first.</p>
 	</section>
 {:else}
 	<section class="hero">
@@ -44,14 +45,14 @@
 
 	<section class="log">
 		<div class="section-label">// LOG</div>
-		{#each data.posts as post}
+		{#each data.posts as post (post.id)}
 			<div class="entry">
 				<span class="date">{fmtDate(post.date)}</span>
 				<div class="entry-body">
 					<p class="body">{post.body}</p>
 					{#if post.tags.length}
 						<div class="tags">
-							{#each post.tags as tag}<TagPill>{tag}</TagPill>{/each}
+							{#each post.tags as tag (tag)}<TagPill>{tag}</TagPill>{/each}
 						</div>
 					{/if}
 				</div>

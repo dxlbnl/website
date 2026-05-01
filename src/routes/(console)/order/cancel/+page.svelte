@@ -2,6 +2,7 @@
 	import Signature from '$lib/ui/Signature.svelte';
 	import Led from '$lib/ui/Led.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import { resolve } from '$app/paths';
 </script>
 
 <SEO title="Order Cancelled" description="Your order was not completed. No charge was made." />
@@ -14,7 +15,7 @@
 			You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to
 			try again.
 		</p>
-		<a href="/catalogue/" class="back">← RETURN TO CATALOGUE</a>
+		<a href={resolve('/catalogue/')} class="back">← RETURN TO CATALOGUE</a>
 	</div>
 	<Signature />
 </div>

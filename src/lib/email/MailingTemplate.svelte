@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Html, Head, Body, Container, Heading, Text, Hr, Link } from 'svelte-email';
+	import type { Component } from 'svelte';
 
-	type Props = { title: string; body: string; date: string };
-	let { title, body, date }: Props = $props();
+	type Props = { title: string; BodyComponent: Component; date: string };
+	let { title, BodyComponent, date }: Props = $props();
 
 	// Resend replaces this placeholder with the real unsubscribe URL before delivery
 	const unsubUrl = 'RESEND_UNSUBSCRIBE_PLACEHOLDER';
@@ -47,7 +48,9 @@
 
 			<Hr style={{ borderTop: '1px solid #e0e0e0', margin: '0 0 32px' }} />
 
-			<div style="font-size:16px;line-height:1.65;color:#444;">{@html body}</div>
+			<div style="font-size:16px;line-height:1.65;color:#444;">
+				<BodyComponent />
+			</div>
 
 			<Hr style={{ borderTop: '1px solid #e0e0e0', margin: '40px 0 24px' }} />
 

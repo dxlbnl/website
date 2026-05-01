@@ -1,7 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import { RESEND_API_KEY, RESEND_SEGMENT_ID, RESEND_FROM } from '$env/static/private';
 import { Resend } from 'resend';
-import { render } from 'svelte/server';
 import { renderMailingEmail } from '$lib/email/render';
 import { db } from '$lib/server/db';
 import { emailOpens, mailingBroadcasts } from '$lib/server/db/schema';
@@ -78,8 +77,7 @@ export const actions: Actions = {
 		if (!entry) return fail(404, { error: `Mailing not found: ${slug}`, slug });
 
 		const [, mod] = entry;
-		const { body: bodyHtml } = render(mod.default, {});
-		const emailHtml = renderMailingEmail(mod.metadata.title, bodyHtml, mod.metadata.date);
+		const emailHtml = renderMailingEmail(mod.metadata.title, mod.default, mod.metadata.date);
 
 		const resend = new Resend(RESEND_API_KEY);
 

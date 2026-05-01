@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
@@ -41,7 +42,7 @@
 		</SectionH>
 
 		<div class="grid">
-			{#each production as product}
+			{#each production as product (product.id)}
 				<ProductCard {product} region={data.region} />
 			{/each}
 		</div>
@@ -55,7 +56,7 @@
 		/>
 
 		<div class="grid">
-			{#each archive as product}
+			{#each archive as product (product.id)}
 				<ProductCard {product} region={data.region} />
 			{/each}
 		</div>
@@ -69,7 +70,7 @@
 			concept that requires PCB design, embedded firmware development, or a functional prototype,
 			get in touch to discuss the technical scope and timeline.
 		</p>
-		<a href="/contact/" class="hire-link">GET IN TOUCH →</a>
+		<a href={resolve('/contact/')} class="hire-link">GET IN TOUCH →</a>
 	</div>
 
 	<Signature />

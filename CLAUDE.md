@@ -27,7 +27,7 @@ pnpm optimize     # Convert /content/repository/*/media images to WebP in /stati
 
 ### Content System
 
-All dynamic content lives in `/content/` as Markdown files with YAML frontmatter. TypeScript interfaces for all frontmatter types are in [src/lib/types.ts](src/lib/types.ts): `ConsoleFrontmatter`, `ProductFrontmatter`, `RepositoryFrontmatter`, `InvoiceFrontmatter`.
+All dynamic content lives in `/content/` as Markdown files with YAML frontmatter. TypeScript interfaces for all frontmatter types are in [src/lib/types.ts](src/lib/types.ts): `ProductFrontmatter`, `NoteFrontmatter`, `FeedFrontmatter`, `MailingFrontmatter`, `LegalFrontmatter`, `InvoiceFrontmatter`.
 
 Content is loaded at build time via `import.meta.glob(..., { eager: true })` — this is how SvelteKit generates static pages from markdown.
 

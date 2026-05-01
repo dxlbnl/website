@@ -12,7 +12,9 @@ if (browser) {
 		} else {
 			initial = 'paper';
 		}
-	} catch (e) {}
+	} catch {
+		// empty block
+	}
 }
 
 let palette = $state(initial);

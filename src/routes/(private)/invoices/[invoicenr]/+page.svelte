@@ -3,8 +3,8 @@
 	import QRCode from 'qrcode';
 	import {
 		calculateInvoice,
-		formatCurrency,
-		formatDate,
+		fmtCurrency,
+		fmtDate,
 		generatePaymentUrl,
 		generateInvoicePDF
 	} from '$lib/invoice';
@@ -14,8 +14,6 @@
 
 	let calculations = $derived(calculateInvoice(invoice));
 	let paymentUrl = $derived(generatePaymentUrl(calculations.total, invoice.factuurnr));
-
-	const fmt = (n: number) => formatCurrency(n, invoice);
 
 	let qrCanvas: HTMLCanvasElement;
 
@@ -53,7 +51,7 @@
 				</div>
 				<div class="meta-field">
 					<span class="field-label">DATUM</span>
-					<span class="field-val">{formatDate(invoice.datum)}</span>
+					<span class="field-val">{fmtDate(invoice.datum)}</span>
 				</div>
 			</div>
 		</header>
@@ -63,7 +61,7 @@
 			<div class="address-block">
 				<div class="block-label">// VERZENDER</div>
 				<strong>{invoice.verzender.naam}</strong>
-				{#each invoice.verzender.gegevens as line}<div>{line}</div>{/each}
+				{#each invoice.verzender.gegevens as line (line)}<div>{line}</div>{/each}
 				<div class="reg-row">
 					<span>KVK {invoice.verzender.kvk}</span>
 					<span>BTW {invoice.verzender.btw}</span>
@@ -75,7 +73,7 @@
 			<div class="address-block">
 				<div class="block-label">// ONTVANGER</div>
 				<strong>{invoice.klant.naam}</strong>
-				{#each invoice.klant.adres as line}<div>{line}</div>{/each}
+				{#each invoice.klant.adres as line (line)}<div>{line}</div>{/each}
 			</div>
 		</section>
 
@@ -88,15 +86,17 @@
 				<div class="col-num">TOTAAL</div>
 			</div>
 
-			{#each invoice.regels as regel}
+			{#each invoice.regels as regel (regel.omschrijving)}
 				<div class="item-row">
 					<div class="col-task">
 						<span class="item-title">{regel.omschrijving}</span>
 						{#if regel.toelichting}<span class="item-desc">{regel.toelichting}</span>{/if}
 					</div>
 					<div class="col-num">{regel.aantal}</div>
-					<div class="col-num">{fmt(regel.tarief)}</div>
-					<div class="col-num">{fmt(regel.aantal * regel.tarief)}</div>
+					<div class="col-num">{fmtCurrency(regel.tarief, invoice.valuta, invoice.taal)}</div>
+					<div class="col-num">
+						{fmtCurrency(regel.aantal * regel.tarief, invoice.valuta, invoice.taal)}
+					</div>
 				</div>
 			{/each}
 		</section>
@@ -115,7 +115,7 @@
 					<a
 						href={paymentUrl}
 						target="_blank"
-						rel="noopener noreferrer"
+						rel="external noopener noreferrer"
 						aria-label="Betaal via QR-code"
 					>
 						<canvas bind:this={qrCanvas} class="qr-canvas"></canvas>
@@ -126,35 +126,37 @@
 			<div class="totals-block">
 				<div class="calc-line">
 					<span>SUBTOTAAL</span>
-					<span>{fmt(calculations.subtotal)}</span>
+					<span>{fmtCurrency(calculations.subtotal, invoice.valuta, invoice.taal)}</span>
 				</div>
 
 				{#if invoice.btw_verlegd}
 					<div class="calc-line">
 						<span>BTW (0% — verlegd)</span>
-						<span>{fmt(0)}</span>
+						<span>{fmtCurrency(0, invoice.valuta, invoice.taal)}</span>
 					</div>
 				{:else if calculations.hasMultipleRates}
-					{#each calculations.vatBreakdown as [rate, amount]}
+					{#each calculations.vatBreakdown as [rate, amount] (rate)}
 						<div class="calc-line indent">
 							<span>BTW ({rate}%)</span>
-							<span>{fmt(amount)}</span>
+							<span>{fmtCurrency(amount, invoice.valuta, invoice.taal)}</span>
 						</div>
 					{/each}
 					<div class="calc-line subtotal">
 						<span>Totaal BTW</span>
-						<span>{fmt(calculations.vatAmount)}</span>
+						<span>{fmtCurrency(calculations.vatAmount, invoice.valuta, invoice.taal)}</span>
 					</div>
 				{:else}
 					<div class="calc-line">
 						<span>BTW ({calculations.vatBreakdown[0]?.[0] ?? 21}%)</span>
-						<span>{fmt(calculations.vatAmount)}</span>
+						<span>{fmtCurrency(calculations.vatAmount, invoice.valuta, invoice.taal)}</span>
 					</div>
 				{/if}
 
 				<div class="total-line">
 					<span>TE BETALEN</span>
-					<span class="total-amount">{fmt(calculations.total)}</span>
+					<span class="total-amount"
+						>{fmtCurrency(calculations.total, invoice.valuta, invoice.taal)}</span
+					>
 				</div>
 			</div>
 		</section>

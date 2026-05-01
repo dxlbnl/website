@@ -1,5 +1,6 @@
 <script>
 	import SEO from '$lib/ui/SEO.svelte';
+	import { resolve } from '$app/paths';
 </script>
 
 <SEO
@@ -11,10 +12,10 @@
 	<div class="eyebrow">// LEGAL · DEXTERLABS</div>
 	<h1>Legal</h1>
 	<ul>
-		<li><a href="/legal/privacy/">Privacy Policy</a></li>
-		<li><a href="/legal/terms/">Terms &amp; Conditions</a></li>
-		<li><a href="/legal/shipping/">Shipping Policy</a></li>
-		<li><a href="/legal/returns/">Returns &amp; Refunds</a></li>
+		<li><a href={resolve('/legal/privacy/')}>Privacy Policy</a></li>
+		<li><a href={resolve('/legal/terms/')}>Terms &amp; Conditions</a></li>
+		<li><a href={resolve('/legal/shipping/')}>Shipping Policy</a></li>
+		<li><a href={resolve('/legal/returns/')}>Returns &amp; Refunds</a></li>
 	</ul>
 </div>
 

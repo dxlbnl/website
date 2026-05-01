@@ -5,6 +5,7 @@
 	import { fmtDate } from '$lib/utils/fmt';
 	import type { NoteFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
+	import { resolve } from '$app/paths';
 
 	type Entry = NoteFrontmatter & { slug: string };
 	type Props = { data: { entries: Entry[] } };
@@ -34,8 +35,8 @@
 
 	<SectionH num="// INDEX" title="All notes" sub="NEWEST FIRST" />
 
-	{#each data.entries as entry, i}
-		<a href="/notes/{entry.slug}/" class="idx-row">
+	{#each data.entries as entry, i (entry.slug)}
+		<a href={resolve(`/notes/${entry.slug}/`)} class="idx-row">
 			<div class="idx-n">{String(i + 1).padStart(2, '0')}</div>
 			<div class="idx-t">
 				{entry.title}

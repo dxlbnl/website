@@ -1,10 +1,3 @@
-export type ConsoleFrontmatter = {
-	pageType: 'console';
-	title: string;
-	seoDescription: string;
-	tagline: string;
-};
-
 export type ProductStatus = 'available' | 'sold-out' | 'coming-soon';
 
 export type ProductFrontmatter = {

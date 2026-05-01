@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import Led from '$lib/ui/Led.svelte';
 	import { fmtDateTime, fmtCents } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
@@ -54,7 +55,7 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
 		<h1>Authenticate.</h1>
-		<p class="sub"><a href="/admin/">Go to login →</a></p>
+		<p class="sub"><a href={resolve('/admin/')}>Go to login →</a></p>
 	</section>
 {:else}
 	<section class="hero">
@@ -100,7 +101,7 @@
 
 	<section class="log">
 		<div class="section-label">// LOG</div>
-		{#each filteredOrders as order}
+		{#each filteredOrders as order (order.id)}
 			<div class="entry">
 				<span class="date">{fmtDateTime(order.createdAt)}</span>
 				<div class="entry-body">

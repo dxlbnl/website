@@ -23,8 +23,6 @@ export function fmtDateTime(d: string | Date): string {
 export function fmtDateShort(d: string | Date): string {
 	return new Date(d).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' });
 }
-const fmtAmount = (cents: number | null, currency: string | null) => fmtCents(cents, currency);
-
 /** "€ 12,50" */
 export function fmtCurrency(amount: number, currency = 'EUR', locale = 'nl-NL'): string {
 	return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(amount);
@@ -34,4 +32,15 @@ export function fmtCurrency(amount: number, currency = 'EUR', locale = 'nl-NL'):
 export function fmtCents(cents: number | null, currency?: string | null): string {
 	if (cents == null) return '—';
 	return fmtCurrency(cents / 100, currency ?? 'EUR');
+}
+
+/** bunq.me/dexterlabs/12.50/Factuur%202026-001 */
+export function generatePaymentUrl(
+	amount: number,
+	invoiceNumber: string,
+	merchantHandle: string = 'dexterlabs'
+): string {
+	const formattedAmount = amount.toFixed(2);
+	const description = encodeURIComponent(`Factuur ${invoiceNumber}`);
+	return `https://bunq.me/${merchantHandle}/${formattedAmount}/${description}`;
 }

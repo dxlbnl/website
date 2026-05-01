@@ -8,6 +8,7 @@
 	import { useProduct } from '$lib/utils/product.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
 	import type { Region } from '$lib/utils/location';
+	import { resolve } from '$app/paths';
 
 	type Props = {
 		data: {
@@ -54,7 +55,7 @@
 				() => data.region
 			)}
 			{@const p = data.product}
-			<a href="/catalogue/{p.id}/" class="product-cta">
+			<a href={resolve(`/catalogue/${p.id}/`)} class="product-cta">
 				<div class="cta-body">
 					<span class="cta-eyebrow">// THE HARDWARE</span>
 					<span class="cta-name">{p.name}</span>
@@ -66,7 +67,7 @@
 	</article>
 
 	<div class="post-foot">
-		<a href="/notes/" class="back">← BACK TO NOTES</a>
+		<a href={resolve('/notes/')} class="back">← BACK TO NOTES</a>
 		<span class="signed">SIGNED / DEXTER</span>
 	</div>
 

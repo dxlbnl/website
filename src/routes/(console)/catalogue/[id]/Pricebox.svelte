@@ -64,7 +64,7 @@
 				<span class="checkout-err">Something went wrong. Please try again.</span>
 			{/if}
 		{:else if product.tindieUrl}
-			<a href={product.tindieUrl} target="_blank" rel="noopener" class="buy">
+			<a href={product.tindieUrl} target="_blank" rel="external noopener" class="buy">
 				{pd.cta} →
 			</a>
 		{:else}

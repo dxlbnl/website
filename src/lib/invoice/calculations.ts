@@ -57,7 +57,7 @@ export function calculateVATAmount(invoice: InvoiceFrontmatter): number {
 	}
 
 	const breakdown = calculateVATBreakdown(invoice);
-	return breakdown.reduce((sum, [_, amount]) => sum + amount, 0);
+	return breakdown.reduce((sum, [, amount]) => sum + amount, 0);
 }
 
 /**
@@ -86,7 +86,7 @@ export function calculateInvoice(invoice: InvoiceFrontmatter): InvoiceCalculatio
 	const vatBreakdown = calculateVATBreakdown(invoice);
 	const vatAmount = invoice.btw_verlegd
 		? 0
-		: vatBreakdown.reduce((sum, [_, amount]) => sum + amount, 0);
+		: vatBreakdown.reduce((sum, [, amount]) => sum + amount, 0);
 	const hasMultipleRates = vatBreakdown.length > 1;
 	const total = subtotal + vatAmount;
 

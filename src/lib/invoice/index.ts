@@ -11,12 +11,7 @@ export {
 } from './calculations';
 
 // Formatting
-export {
-	formatCurrency,
-	formatCurrencyWithLocale,
-	formatDate,
-	generatePaymentUrl
-} from './formatting';
+export { fmtCurrency, fmtDate, generatePaymentUrl } from '$lib/utils/fmt';
 
 // PDF Generation
 export { generateInvoicePDF, type PDFGeneratorConfig } from './pdf-generator';

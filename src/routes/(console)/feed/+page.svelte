@@ -4,6 +4,7 @@
 	import SEO from '$lib/ui/SEO.svelte';
 	import { fmtDateShort } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
+	import { resolve } from '$app/paths';
 
 	type Props = { data: PageData };
 	let { data }: Props = $props();
@@ -22,7 +23,8 @@
 		<h1>Feed.</h1>
 		<p class="sub">
 			Short posts from the bench. What I'm building, breaking, or shipping right now — the kind of
-			thing I'd otherwise lose in a chat thread. Longer writeups live in <a href="/notes/">notes</a
+			thing I'd otherwise lose in a chat thread. Longer writeups live in <a
+				href={resolve('/notes/')}>notes</a
 			>.
 		</p>
 		<div class="meta">
@@ -35,12 +37,12 @@
 	</section>
 
 	<div class="list">
-		{#each data.entries as entry}
+		{#each data.entries as entry (entry.date)}
 			<div class="row">
 				<span class="date">{fmt(entry.date)}</span>
 				<span class="body">{entry.body}</span>
 				<div class="tags">
-					{#each entry.tags as tag}
+					{#each entry.tags as tag (tag)}
 						<TagPill>{tag}</TagPill>
 					{/each}
 				</div>

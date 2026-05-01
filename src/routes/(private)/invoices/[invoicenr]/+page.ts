@@ -19,7 +19,7 @@ export const load: PageLoad = async ({ params }) => {
 	if (!dev) {
 		throw error(404);
 	}
-	const invoiceModule = Object.entries(modules).find(([path, module]) => {
+	const invoiceModule = Object.entries(modules).find(([, module]) => {
 		return module.metadata.factuurnr === params.invoicenr;
 	});
 

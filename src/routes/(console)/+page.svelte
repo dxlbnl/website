@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import Led from '$lib/ui/Led.svelte';
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
@@ -27,7 +28,7 @@
 		</p>
 
 		{#if data.latestFeed}
-			<a href="/feed/" class="status">
+			<a href={resolve('/feed/')} class="status">
 				<div class="status-head">
 					<span>// LATEST ENTRY</span>
 					<span>{fmtDate(data.latestFeed.date)} →</span>
@@ -43,12 +44,12 @@
 	{#if data.products.length > 0}
 		<SectionH num="// 0x01" title="Catalogue" sub="PRODUCTION-READY HARDWARE" />
 		<div class="cat-grid">
-			{#each data.products as product}
+			{#each data.products as product (product.id)}
 				<ProductCard {product} region={data.region} />
 			{/each}
 		</div>
 		<div class="cat-foot">
-			<a href="/catalogue/" class="all-link">VIEW ALL HARDWARE →</a>
+			<a href={resolve('/catalogue/')} class="all-link">VIEW ALL HARDWARE →</a>
 			<span class="faint">SHIPPED BY DEXTERLABS · DELFT, NL</span>
 		</div>
 	{/if}
@@ -56,8 +57,8 @@
 	{#if data.notes.length > 0}
 		<SectionH num="// 0x02" title="Notes" sub="ENGINEERING NOTES & EXPERIMENTS" />
 		<div class="note-grid">
-			{#each data.notes as note, i}
-				<a href="/notes/{note.slug}/" class="note-card">
+			{#each data.notes as note, i (note.slug)}
+				<a href={resolve(`/notes/${note.slug}/`)} class="note-card">
 					<div class="card-head">
 						<span class="card-idx">{hexIdx(i)}</span>
 						<span class="card-kind">{note.kind ?? 'LOG'}</span>

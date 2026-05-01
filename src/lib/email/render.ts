@@ -15,8 +15,14 @@ function clean(html: string): string {
 	return html.replace(/<!--\[!?-->|<!--]-->/g, '');
 }
 
-export function renderMailingEmail(title: string, body: string, date: string): string {
-	const { body: html } = render(MailingTemplate, { props: { title, body, date } });
+export function renderMailingEmail(
+	title: string,
+	bodyComponent: import('svelte').Component,
+	date: string
+): string {
+	const { body: html } = render(MailingTemplate, {
+		props: { title, BodyComponent: bodyComponent, date }
+	});
 	return clean(html).replace('RESEND_UNSUBSCRIBE_PLACEHOLDER', '{{{RESEND_UNSUBSCRIBE_URL}}}');
 }
 
