@@ -7,6 +7,18 @@
       "skillPath": "skills/copywriting/SKILL.md",
       "computedHash": "2e83eda2221e97166172a0798e9b0379e34080595e107e2fc0cf580e9b3bbf7b"
     },
+    "humanizer": {
+      "source": "blader/humanizer",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "b813857f183da05d08d5a80adac671df94c139f855809bd47ab8b7bb245546a2"
+    },
+    "humanizer-zh": {
+      "source": "op7418/humanizer-zh",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "7bd195e3bcdcc24f078dfd4e3b3e37e8ac321c36f410a41241fc4175eab1825a"
+    },
     "karpathy-llm-wiki": {
       "source": "astro-han/karpathy-llm-wiki",
       "sourceType": "github",
