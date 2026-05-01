@@ -99,7 +99,7 @@
 	}
 	.price {
 		font-family: var(--mono);
-		font-size: 28px;
+		font-size: var(--t-h2);
 		color: var(--amber);
 		letter-spacing: 0.02em;
 	}

@@ -158,7 +158,7 @@
 	}
 	.toggle {
 		color: var(--ink-faint);
-		font-size: 14px;
+		font-size: var(--t-body);
 		line-height: 1;
 		padding-bottom: 2px;
 		border-bottom: 1px solid transparent;
@@ -198,7 +198,7 @@
 	summary {
 		list-style: none;
 		cursor: pointer;
-		font-size: 20px;
+		font-size: var(--t-lede);
 		line-height: 1;
 		color: var(--ink-dim);
 		user-select: none;

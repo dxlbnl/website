@@ -45,7 +45,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(36px, 5vw, 56px);
+		font-size: var(--t-title);
 		letter-spacing: -0.02em;
 		line-height: 1.05;
 		margin: 0 0 12px;
@@ -60,20 +60,20 @@
 	}
 	.body {
 		padding-top: 32px;
-		font-size: 17px;
+		font-size: var(--t-body);
 		line-height: 1.65;
 
 		:global {
 			h2 {
 				font-weight: 500;
-				font-size: 22px;
+				font-size: var(--t-h3);
 				letter-spacing: -0.01em;
 				margin: 48px 0 8px;
 				color: var(--ink);
 			}
 			h3 {
 				font-weight: 500;
-				font-size: 17px;
+				font-size: var(--t-body);
 				letter-spacing: -0.01em;
 				margin: 32px 0 6px;
 				color: var(--ink);
@@ -117,7 +117,7 @@
 			}
 			ol li::marker {
 				font-family: var(--mono);
-				font-size: 13px;
+				font-size: var(--t-mono);
 				color: var(--ink-faint);
 			}
 			hr {

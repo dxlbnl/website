@@ -21,14 +21,17 @@
 	--mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 	--sans: 'Inter Tight', 'Inter', ui-sans-serif, system-ui, sans-serif;
 
-	--t-micro: 10px;
-	--t-mono: 12px;
-	--t-body: 15px;
+	--t-micro: 12px;
+	--t-mono: 14px;
+	--t-body: 16px;
 	--t-lede: 19px;
 	--t-h3: 24px;
 	--t-h2: 36px;
 	--t-h1: 72px;
 	--t-display: 140px;
+	--t-hero: clamp(48px, 8vw, 112px);
+	--t-title: clamp(36px, 5vw, 56px);
+	--t-subtitle: clamp(22px, 3.5vw, 40px);
 
 	--u: 8px;
 	--radius: 2px;

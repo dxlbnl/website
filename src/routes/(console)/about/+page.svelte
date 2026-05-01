@@ -84,7 +84,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(48px, 8vw, 112px);
+		font-size: var(--t-hero);
 		line-height: 1;
 		letter-spacing: -0.03em;
 		margin: 0;
@@ -116,19 +116,19 @@
 	}
 	h2 {
 		font-weight: 500;
-		font-size: 32px;
+		font-size: var(--t-h2);
 		letter-spacing: -0.01em;
 		margin: 0 0 16px;
 	}
 	p {
-		font-size: 17px;
+		font-size: var(--t-body);
 		line-height: 1.6;
 		max-width: 52ch;
 		margin-bottom: 12px;
 	}
 	p.dim {
 		color: var(--ink-dim);
-		font-size: 15px;
+		font-size: var(--t-body);
 	}
 
 	/* Is / isn't grid */
@@ -137,7 +137,7 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 24px;
 		padding: 20px 0 8px;
-		font-size: 15px;
+		font-size: var(--t-body);
 		line-height: 1.6;
 
 		@container (max-width: 720px) {

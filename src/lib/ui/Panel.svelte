@@ -40,7 +40,7 @@
 		left: 8px;
 		background: var(--void);
 		padding: 0 4px;
-		font-size: 0.55rem;
+		font-size: var(--t-micro);
 		font-weight: bold;
 		text-transform: uppercase;
 		letter-spacing: 1px;
@@ -49,6 +49,6 @@
 
 	.panel-content {
 		line-height: 1.3;
-		font-size: 0.7rem;
+		font-size: var(--t-mono);
 	}
 </style>

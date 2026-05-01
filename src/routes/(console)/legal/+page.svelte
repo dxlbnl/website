@@ -39,7 +39,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(36px, 5vw, 56px);
+		font-size: var(--t-title);
 		letter-spacing: -0.02em;
 		line-height: 1.05;
 		margin: 0 0 32px;
@@ -53,7 +53,7 @@
 		gap: 12px;
 	}
 	a {
-		font-size: 17px;
+		font-size: var(--t-body);
 		border-bottom: 1px solid var(--rule-strong);
 		transition: border-color 0.15s;
 		&:hover {

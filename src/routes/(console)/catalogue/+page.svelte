@@ -101,7 +101,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(48px, 8vw, 112px);
+		font-size: var(--t-hero);
 		line-height: 0.92;
 		letter-spacing: -0.04em;
 		margin: 0;
@@ -157,7 +157,7 @@
 	}
 	.hire h3 {
 		font-family: var(--sans);
-		font-size: 28px;
+		font-size: var(--t-h3);
 		font-weight: 500;
 		letter-spacing: -0.01em;
 		margin: 0;

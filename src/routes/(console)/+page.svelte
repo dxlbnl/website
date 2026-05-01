@@ -106,7 +106,7 @@
 	}
 	.hero h1 {
 		font-weight: 500;
-		font-size: clamp(48px, 9vw, 120px);
+		font-size: var(--t-hero);
 		line-height: 1;
 		letter-spacing: -0.03em;
 		margin: 0;
@@ -148,7 +148,7 @@
 	}
 	.status-line {
 		margin-top: 10px;
-		font-size: 17px;
+		font-size: var(--t-body);
 		line-height: 1.5;
 		display: flex;
 		gap: 10px;
@@ -203,7 +203,7 @@
 		margin: 4px 0 0;
 	}
 	.card-desc {
-		font-size: 14px;
+		font-size: var(--t-body);
 		color: var(--ink-dim);
 		line-height: 1.5;
 		flex: 1;

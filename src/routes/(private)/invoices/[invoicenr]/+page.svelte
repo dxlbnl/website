@@ -273,7 +273,7 @@
 	.brand {
 		font-family: var(--sans);
 		font-weight: 500;
-		font-size: 32px;
+		font-size: var(--t-h2);
 		letter-spacing: -0.02em;
 		line-height: 1;
 		color: var(--ink);
@@ -344,7 +344,7 @@
 	}
 	.arrow {
 		font-family: var(--mono);
-		font-size: 18px;
+		font-size: var(--t-lede);
 		color: var(--ink-faint);
 		align-self: center;
 		padding: 0 2mm;
@@ -484,7 +484,7 @@
 		text-transform: uppercase;
 	}
 	.total-amount {
-		font-size: 20px;
+		font-size: var(--t-lede);
 		font-weight: 500;
 		color: var(--amber);
 		letter-spacing: 0.02em;

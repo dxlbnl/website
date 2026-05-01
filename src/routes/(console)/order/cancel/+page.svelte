@@ -46,13 +46,13 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(32px, 5vw, 48px);
+		font-size: var(--t-title);
 		letter-spacing: -0.02em;
 		margin: 0 0 16px;
 		line-height: 1;
 	}
 	p {
-		font-size: 17px;
+		font-size: var(--t-body);
 		line-height: 1.6;
 		color: var(--ink-dim);
 		margin: 0 0 32px;

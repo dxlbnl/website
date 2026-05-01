@@ -60,7 +60,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(48px, 8vw, 112px);
+		font-size: var(--t-hero);
 		line-height: 1;
 		letter-spacing: -0.03em;
 		margin: 0 0 16px;
@@ -112,7 +112,7 @@
 		letter-spacing: -0.02em;
 	}
 	.body {
-		font-size: clamp(22px, 3.5vw, 40px);
+		font-size: var(--t-subtitle);
 		font-weight: 500;
 		line-height: 1.1;
 		letter-spacing: -0.02em;

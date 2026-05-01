@@ -77,12 +77,7 @@ async function optimizeDir(contentDir, staticDir) {
 					if (!validExts.includes(ext)) continue;
 
 					const baseName = path.parse(file).name;
-					await optimizeFile(
-						path.join(fullPath, file),
-						targetDir,
-						baseName,
-						`${slug}/${file}`
-					);
+					await optimizeFile(path.join(fullPath, file), targetDir, baseName, `${slug}/${file}`);
 				}
 			}
 		}

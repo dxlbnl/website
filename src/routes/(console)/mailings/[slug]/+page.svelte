@@ -64,19 +64,19 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(32px, 5vw, 56px);
+		font-size: var(--t-title);
 		line-height: 1;
 		letter-spacing: -0.02em;
 		margin: 0 0 32px;
 	}
 	.body {
-		font-size: 17px;
+		font-size: var(--t-body);
 		line-height: 1.65;
 		color: var(--ink-dim);
 
 		:global(h2) {
 			font-weight: 500;
-			font-size: 22px;
+			font-size: var(--t-h3);
 			margin: 32px 0 8px;
 			letter-spacing: -0.01em;
 			color: var(--ink);
@@ -116,7 +116,7 @@
 		margin-bottom: 8px;
 	}
 	.subscribe p {
-		font-size: 17px;
+		font-size: var(--t-body);
 		color: var(--ink-dim);
 		margin: 0 0 16px;
 	}

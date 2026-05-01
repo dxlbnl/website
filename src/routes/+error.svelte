@@ -135,7 +135,7 @@
 		}
 
 		h1 {
-			font-size: 60px;
+			font-size: var(--t-h1);
 		}
 	}
 </style>

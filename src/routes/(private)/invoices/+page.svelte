@@ -79,7 +79,7 @@
 	}
 
 	h1 {
-		font-size: 2rem;
+		font-size: var(--t-h2);
 		font-weight: 900;
 		margin-bottom: 0.5rem;
 		color: #eee;
@@ -88,7 +88,7 @@
 	.warning {
 		color: #ff6b00;
 		font-weight: bold;
-		font-size: 0.9rem;
+		font-size: var(--t-body);
 	}
 
 	.table-wrapper {

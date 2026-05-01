@@ -17,7 +17,9 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · MAILINGS</div>
 		<h1>Mailings.</h1>
-		<p class="sub">Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo.</p>
+		<p class="sub">
+			Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo.
+		</p>
 		<div class="meta">
 			<span><b>{data.mailings.length}</b> MAILINGS</span>
 		</div>
@@ -63,13 +65,13 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(32px, 5vw, 56px);
+		font-size: var(--t-title);
 		line-height: 1;
 		letter-spacing: -0.02em;
 		margin: 0 0 12px;
 	}
 	.sub {
-		font-size: 15px;
+		font-size: var(--t-body);
 		color: var(--ink-dim);
 		line-height: 1.5;
 		max-width: 52ch;
@@ -156,7 +158,7 @@
 		color: var(--amber);
 	}
 	.row-title {
-		font-size: 17px;
+		font-size: var(--t-body);
 		font-weight: 500;
 		letter-spacing: -0.01em;
 		color: var(--ink);

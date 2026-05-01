@@ -225,7 +225,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(36px, 5vw, 56px);
+		font-size: var(--t-title);
 		letter-spacing: -0.02em;
 		margin: 8px 0 6px;
 		line-height: 1;
@@ -247,7 +247,7 @@
 		border: 1px solid var(--rule);
 	}
 	.lede {
-		font-size: 17px;
+		font-size: var(--t-body);
 		line-height: 1.55;
 		color: var(--ink-dim);
 		margin: 24px 0;
@@ -283,14 +283,14 @@
 	.content {
 		max-width: 68ch;
 		padding: 40px 0;
-		font-size: 17px;
+		font-size: var(--t-body);
 		line-height: 1.65;
 		border-top: 1px solid var(--rule);
 
 		:global {
 			h2 {
 				font-weight: 500;
-				font-size: 22px;
+				font-size: var(--t-h3);
 				margin: 32px 0 8px;
 				letter-spacing: -0.01em;
 			}
@@ -319,7 +319,7 @@
 			}
 			code {
 				font-family: var(--mono);
-				font-size: 13px;
+				font-size: var(--t-mono);
 				background: var(--bg-elev);
 				padding: 1px 5px;
 				border: 1px solid var(--rule);

@@ -150,7 +150,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(48px, 8vw, 112px);
+		font-size: var(--t-hero);
 		line-height: 1;
 		letter-spacing: -0.03em;
 		margin: 0;
@@ -250,7 +250,7 @@
 		gap: 8px;
 	}
 	.tag {
-		font-size: 10px;
+		font-size: var(--t-micro);
 		background: var(--amber);
 		color: var(--paper);
 		padding: 2px 6px;

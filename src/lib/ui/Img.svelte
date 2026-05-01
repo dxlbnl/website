@@ -44,7 +44,7 @@
 	figcaption {
 		margin-top: 0.75rem;
 		font-family: var(--font-mono);
-		font-size: 0.7rem;
+		font-size: var(--t-mono);
 		color: var(--text-dim);
 		text-transform: uppercase;
 		letter-spacing: 1px;

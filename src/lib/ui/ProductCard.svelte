@@ -100,12 +100,12 @@
 	}
 	.title {
 		font-weight: 500;
-		font-size: 18px;
+		font-size: var(--t-lede);
 		letter-spacing: -0.01em;
 		line-height: 1.2;
 	}
 	.desc {
-		font-size: 12px;
+		font-size: var(--t-mono);
 		color: var(--ink-dim);
 		line-height: 1.4;
 	}
@@ -121,14 +121,14 @@
 		text-transform: uppercase;
 	}
 	.price {
-		font-size: 15px;
+		font-size: var(--t-body);
 		color: var(--amber);
 		display: flex;
 		align-items: baseline;
 		gap: 5px;
 	}
 	.tax-hint {
-		font-size: 9px;
+		font-size: var(--t-micro);
 		color: var(--ink-faint);
 		letter-spacing: 0.06em;
 		text-transform: lowercase;

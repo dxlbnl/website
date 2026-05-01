@@ -26,7 +26,9 @@
 			<span class="meta-sep">·</span>
 			<span class="meta-item mono">{data.mailing.subject}</span>
 			<span class="meta-sep">·</span>
-			<span class="published" class:live={!!data.broadcast}>{data.broadcast ? 'SENT' : 'DRAFT'}</span>
+			<span class="published" class:live={!!data.broadcast}
+				>{data.broadcast ? 'SENT' : 'DRAFT'}</span
+			>
 		</div>
 	</section>
 
@@ -61,7 +63,9 @@
 				<span class="feedback err"><Led tone="danger" />{form.error}</span>
 			{/if}
 			{#if form?.broadcastId}
-				<span class="feedback ok"><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span>
+				<span class="feedback ok"
+					><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span
+				>
 			{/if}
 		</div>
 	</section>
@@ -69,13 +73,22 @@
 	<section class="preview-section">
 		<div class="section-label">// EMAIL PREVIEW</div>
 		<div class="preview-wrap">
-			<iframe class="preview" srcdoc={data.emailHtml} title="Email preview" sandbox="allow-same-origin"></iframe>
+			<iframe
+				class="preview"
+				srcdoc={data.emailHtml}
+				title="Email preview"
+				sandbox="allow-same-origin"
+			></iframe>
 		</div>
 	</section>
 
 	<div class="back-row">
 		<a href={resolve('/admin/mailings/')} class="back">← BACK TO MAILINGS</a>
-		<a href={resolve(`/mailings/${data.mailing.slug}/`)} target="_blank" class="back">VIEW PUBLIC →</a>
+		{#if data.mailing.published}
+			<a href={resolve(`/mailings/${data.mailing.slug}/`)} target="_blank" class="back"
+				>VIEW PUBLIC →</a
+			>
+		{/if}
 	</div>
 {/if}
 
@@ -93,7 +106,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(28px, 4vw, 48px);
+		font-size: var(--t-title);
 		line-height: 1;
 		letter-spacing: -0.02em;
 		margin: 0 0 16px;

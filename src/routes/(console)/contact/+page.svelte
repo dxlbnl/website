@@ -72,7 +72,7 @@
 	}
 	h1 {
 		font-weight: 500;
-		font-size: clamp(48px, 8vw, 112px);
+		font-size: var(--t-hero);
 		line-height: 1;
 		letter-spacing: -0.03em;
 		margin: 0 0 20px;
@@ -87,7 +87,7 @@
 	.email {
 		margin-top: 40px;
 		font-family: var(--mono);
-		font-size: 22px;
+		font-size: var(--t-h3);
 		letter-spacing: 0.04em;
 	}
 	.email a {

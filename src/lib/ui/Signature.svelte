@@ -29,7 +29,7 @@
 	}
 	.hand {
 		font-family: var(--sans);
-		font-size: 18px;
+		font-size: var(--t-lede);
 		color: var(--ink);
 		letter-spacing: -0.01em;
 		font-weight: 400;
