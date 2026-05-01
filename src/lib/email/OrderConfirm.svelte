@@ -24,7 +24,7 @@
 			fontFamily: 'monospace'
 		}}
 	>
-		<Container style={{ backgroundColor: '#ffffff', padding: '40px' }}>
+		<Container style={{ backgroundColor: '#ffffff', padding: '40px 40px' }}>
 			<Text
 				style={{
 					fontSize: '11px',
