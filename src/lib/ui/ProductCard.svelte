@@ -138,7 +138,7 @@
 		align-items: center;
 		gap: 6px;
 		font-family: var(--mono);
-		font-size: var(--t-micro);
+		font-size: var(--t-mono);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--ink-faint);
@@ -162,7 +162,7 @@
 		display: flex;
 		justify-content: space-between;
 		font-family: var(--mono);
-		font-size: var(--t-micro);
+		font-size: var(--t-mono);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--ink-dim);

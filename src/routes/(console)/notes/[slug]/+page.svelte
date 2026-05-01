@@ -282,7 +282,7 @@
 	}
 	.cta-link {
 		font-family: var(--mono);
-		font-size: var(--t-micro);
+		font-size: var(--t-mono);
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		color: var(--amber);
