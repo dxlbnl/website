@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { vercelSrcset } from '$lib/utils/image';
+
 	type Props = { images: string[] };
 	let { images }: Props = $props();
 
@@ -16,7 +18,13 @@
 {#if images.length > 0}
 	<div class="carousel">
 		<div class="viewport">
-			<img src={images[active]} alt="Image {active + 1} of {images.length}" loading="eager" />
+			<img
+				src={images[active]}
+				srcset={vercelSrcset(images[active], [512, 768, 960, 1280])}
+				sizes="(max-width: 720px) calc(100vw - 32px), min(680px, calc(100vw - 64px))"
+				alt="Image {active + 1} of {images.length}"
+				loading="eager"
+			/>
 			{#if images.length > 1}
 				<div class="regions">
 					<button onclick={prev} class="region" aria-label="Previous image"></button>

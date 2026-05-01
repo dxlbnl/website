@@ -23,7 +23,13 @@ const config = {
 			fallback: '404.html',
 			precompress: false,
 			strict: true
-		})
+		}),
+		prerender: {
+			handleHttpError: ({ path, message }) => {
+				if (path.startsWith('/_vercel/image')) return;
+				throw new Error(message);
+			}
+		}
 	},
 	extensions: ['.svelte', '.svx', '.md']
 };

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { resolveLogImage } from '$lib/utils/image';
+	import { resolveLogImage, vercelSrcset } from '$lib/utils/image';
 
 	let { src, alt, ...rest } = $props();
 
@@ -8,10 +8,18 @@
 
 	// Resolve the source path
 	let resolvedSrc = $derived(resolveLogImage(src, slug || ''));
+	let resolvedSrcset = $derived(vercelSrcset(resolvedSrc, [512, 768, 960, 1280]));
 </script>
 
 <figure class="markdown-image">
-	<img src={resolvedSrc} {alt} {...rest} loading="lazy" />
+	<img
+		src={resolvedSrc}
+		srcset={resolvedSrcset}
+		sizes="(max-width: 720px) calc(100vw - 32px), min(680px, calc(100vw - 64px))"
+		{alt}
+		{...rest}
+		loading="lazy"
+	/>
 	{#if alt}
 		<figcaption>{alt}</figcaption>
 	{/if}

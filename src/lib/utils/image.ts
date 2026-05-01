@@ -27,3 +27,13 @@ export function resolveProductImage(path: string, id: string): string {
 
 	return path;
 }
+
+export function vercelImg(path: string, width: number, quality = 80): string {
+	if (import.meta.env.DEV) return path;
+	return `/_vercel/image?url=${encodeURIComponent(path)}&w=${width}&q=${quality}`;
+}
+
+export function vercelSrcset(path: string, widths: number[], quality = 80): string {
+	if (import.meta.env.DEV) return path;
+	return widths.map((w) => `${vercelImg(path, w, quality)} ${w}w`).join(', ');
+}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Placeholder from '$lib/ui/Placeholder.svelte';
-	import { resolveLogImage } from '$lib/utils/image';
+	import { resolveLogImage, vercelSrcset } from '$lib/utils/image';
 	import { fmtDate } from '$lib/utils/fmt';
 	import type { NoteFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
@@ -47,7 +47,14 @@
 			</div>
 			<div class="idx-i">
 				{#if entry.images?.[0]}
-					<img src={resolveLogImage(entry.images[0], entry.slug)} alt="" />
+					{@const thumbSrc = resolveLogImage(entry.images[0], entry.slug)}
+					<img
+						src={thumbSrc}
+						srcset={vercelSrcset(thumbSrc, [256, 384, 512])}
+						sizes="240px"
+						alt=""
+						loading="lazy"
+					/>
 				{:else}
 					<Placeholder label={entry.kind ?? 'IMG'} />
 				{/if}

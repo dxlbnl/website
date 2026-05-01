@@ -2,7 +2,7 @@
 	import Signature from '$lib/ui/Signature.svelte';
 	import type { Component } from 'svelte';
 	import type { ProductFrontmatter } from '$lib/types';
-	import { resolveProductImage } from '$lib/utils/image';
+	import { resolveProductImage, vercelImg, vercelSrcset } from '$lib/utils/image';
 	import SEO from '$lib/ui/SEO.svelte';
 	import Pricebox from './Pricebox.svelte';
 	import type { Region } from '$lib/utils/location';
@@ -38,7 +38,14 @@
 		<div class="img-col">
 			{#if galleryImages.length}
 				<div class="hero-img">
-					<img src={galleryImages[activeIndex]} alt={data.product.name} />
+					<img
+						src={galleryImages[activeIndex]}
+						srcset={vercelSrcset(galleryImages[activeIndex], [512, 768, 960, 1280, 1920])}
+						sizes="(max-width: 900px) calc(100vw - 64px), calc(52vw - 80px)"
+						alt={data.product.name}
+						loading="eager"
+						fetchpriority="high"
+					/>
 				</div>
 				{#if galleryImages.length > 1}
 					<div class="thumbs">
@@ -50,7 +57,7 @@
 								aria-pressed={i === activeIndex}
 								onclick={() => (activeIndex = i)}
 							>
-								<img {src} alt="" />
+								<img src={vercelImg(src, 128)} alt="" />
 							</button>
 						{/each}
 					</div>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ProductFrontmatter } from '$lib/types';
-	import { resolveProductImage } from '$lib/utils/image';
+	import { resolveProductImage, vercelSrcset } from '$lib/utils/image';
 	import { type Region } from '$lib/utils/location';
 	import { useProduct } from '$lib/utils/product.svelte';
 	import Led from './Led.svelte';
@@ -17,7 +17,13 @@
 <a href="/catalogue/{product.id}" class="card">
 	<div class="img">
 		{#if product.image}
-			<img src={resolveProductImage(product.image, product.id)} alt={product.name} />
+			<img
+					src={resolveProductImage(product.image, product.id)}
+					srcset={vercelSrcset(resolveProductImage(product.image, product.id), [256, 384, 512, 768, 960])}
+					sizes="(max-width: 720px) 100vw, (max-width: 900px) calc(50vw - 48px), calc(33vw - 48px)"
+					alt={product.name}
+					loading="lazy"
+				/>
 		{:else}
 			{product.id.toUpperCase()} · PRODUCT SHOT
 		{/if}
