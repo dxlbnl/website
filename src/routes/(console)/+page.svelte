@@ -27,7 +27,7 @@
 		</p>
 
 		{#if data.latestFeed}
-			<a href="/feed" class="status">
+			<a href="/feed/" class="status">
 				<div class="status-head">
 					<span>// LATEST ENTRY</span>
 					<span>{fmtDate(data.latestFeed.date)} →</span>
@@ -48,7 +48,7 @@
 			{/each}
 		</div>
 		<div class="cat-foot">
-			<a href="/catalogue" class="all-link">VIEW ALL HARDWARE →</a>
+			<a href="/catalogue/" class="all-link">VIEW ALL HARDWARE →</a>
 			<span class="faint">SHIPPED BY DEXTERLABS · DELFT, NL</span>
 		</div>
 	{/if}
@@ -57,7 +57,7 @@
 		<SectionH num="// 0x02" title="Notes" sub="ENGINEERING NOTES & EXPERIMENTS" />
 		<div class="note-grid">
 			{#each data.notes as note, i}
-				<a href="/notes/{note.slug}" class="note-card">
+				<a href="/notes/{note.slug}/" class="note-card">
 					<div class="card-head">
 						<span class="card-idx">{hexIdx(i)}</span>
 						<span class="card-kind">{note.kind ?? 'LOG'}</span>

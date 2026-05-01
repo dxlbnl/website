@@ -22,7 +22,7 @@
 		<h1>Feed.</h1>
 		<p class="sub">
 			Short posts from the bench. What I'm building, breaking, or shipping right now — the kind of
-			thing I'd otherwise lose in a chat thread. Longer writeups live in <a href="/notes">notes</a>.
+			thing I'd otherwise lose in a chat thread. Longer writeups live in <a href="/notes/">notes</a>.
 		</p>
 		<div class="meta">
 			<span><b>{data.entries.length}</b> POSTS</span>

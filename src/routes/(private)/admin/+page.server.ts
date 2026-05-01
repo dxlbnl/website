@@ -6,7 +6,7 @@ import type { Actions, PageServerLoad } from './$types';
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ cookies }) => {
-	if (await verifyAdminSession(cookies.get('admin_session'))) redirect(303, '/admin/feed');
+	if (await verifyAdminSession(cookies.get('admin_session'))) redirect(303, '/admin/feed/');
 	return { authed: false as const };
 };
 
@@ -22,6 +22,6 @@ export const actions: Actions = {
 			sameSite: 'strict',
 			maxAge: 60 * 60 * 24 * 365
 		});
-		redirect(303, '/admin/feed');
+		redirect(303, '/admin/feed/');
 	}
 };

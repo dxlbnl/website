@@ -25,7 +25,7 @@
 	</section>
 
 	{#each data.entries as entry, i}
-		<a href="/mailings/{entry.slug}" class="row">
+		<a href="/mailings/{entry.slug}/" class="row">
 			<div class="num">{String(i + 1).padStart(2, '0')}</div>
 			<div class="body">
 				{entry.title}

@@ -73,8 +73,8 @@ export const POST: RequestHandler = async ({ request, url }) => {
 				}
 			}
 		],
-		success_url: `${url.origin}/order/success`,
-		cancel_url: `${url.origin}/catalogue/${product.id}`,
+		success_url: `${url.origin}/order/success/`,
+		cancel_url: `${url.origin}/catalogue/${product.id}/`,
 		shipping_options: [{ shipping_rate: SHIPPING_RATES_MAP[region] }],
 		metadata: { productId: product.id }
 	});

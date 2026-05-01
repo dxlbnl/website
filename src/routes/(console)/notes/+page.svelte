@@ -35,7 +35,7 @@
 	<SectionH num="// INDEX" title="All notes" sub="NEWEST FIRST" />
 
 	{#each data.entries as entry, i}
-		<a href="/notes/{entry.slug}" class="idx-row">
+		<a href="/notes/{entry.slug}/" class="idx-row">
 			<div class="idx-n">{String(i + 1).padStart(2, '0')}</div>
 			<div class="idx-t">
 				{entry.title}

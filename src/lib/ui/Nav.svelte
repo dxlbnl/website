@@ -6,11 +6,11 @@
 	type NavItem = { label: string; href: string };
 	const {
 		items = [
-			{ label: 'FEED', href: '/feed' },
-			{ label: 'NOTES', href: '/notes' },
-			{ label: 'CATALOGUE', href: '/catalogue' },
-			{ label: 'ABOUT', href: '/about' },
-			{ label: 'CONTACT', href: '/contact' }
+			{ label: 'FEED', href: '/feed/' },
+			{ label: 'NOTES', href: '/notes/' },
+			{ label: 'CATALOGUE', href: '/catalogue/' },
+			{ label: 'ABOUT', href: '/about/' },
+			{ label: 'CONTACT', href: '/contact/' }
 		]
 	}: { items?: NavItem[] } = $props();
 

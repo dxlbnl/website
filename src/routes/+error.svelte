@@ -18,7 +18,7 @@
 			<a href="/" class="btn">
 				<span class="btn-label">[ RETURN TO ROOT ]</span>
 			</a>
-			<a href="/catalogue" class="btn">
+			<a href="/catalogue/" class="btn">
 				<span class="btn-label">[ VIEW CATALOGUE ]</span>
 			</a>
 		</div>

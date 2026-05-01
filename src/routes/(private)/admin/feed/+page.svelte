@@ -13,7 +13,7 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
 		<h1>Authenticate.</h1>
-		<p class="sub">Go to <a href="/admin">/admin</a> to log in first.</p>
+		<p class="sub">Go to <a href="/admin/">/admin</a> to log in first.</p>
 	</section>
 {:else}
 	<section class="hero">

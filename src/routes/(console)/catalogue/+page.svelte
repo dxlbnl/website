@@ -69,7 +69,7 @@
 			concept that requires PCB design, embedded firmware development, or a functional prototype,
 			get in touch to discuss the technical scope and timeline.
 		</p>
-		<a href="/contact" class="hire-link">GET IN TOUCH →</a>
+		<a href="/contact/" class="hire-link">GET IN TOUCH →</a>
 	</div>
 
 	<Signature />

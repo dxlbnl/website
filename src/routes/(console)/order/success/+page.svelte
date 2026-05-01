@@ -17,7 +17,7 @@
 			Your payment went through. You'll get a receipt from Stripe shortly. We'll be in touch when
 			your batch ships.
 		</p>
-		<a href="/catalogue" class="back">← RETURN TO CATALOGUE</a>
+		<a href="/catalogue/" class="back">← RETURN TO CATALOGUE</a>
 	</div>
 	<Signature />
 </div>

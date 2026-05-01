@@ -14,7 +14,7 @@
 	);
 </script>
 
-<a href="/catalogue/{product.id}" class="card">
+<a href="/catalogue/{product.id}/" class="card">
 	<div class="img">
 		{#if product.image}
 			<img

@@ -35,7 +35,7 @@
 					{@const calc = calculateInvoice(factuur)}
 					<tr>
 						<td>
-							<a href="/invoices/{factuur.factuurnr}">{factuur.factuurnr}</a>
+							<a href="/invoices/{factuur.factuurnr}/">{factuur.factuurnr}</a>
 						</td>
 						<td>{factuur.klant.naam}</td>
 						<td>{formatDate(factuur.datum)}</td>

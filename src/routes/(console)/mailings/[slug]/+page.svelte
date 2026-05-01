@@ -26,7 +26,7 @@
 	</article>
 
 	<div class="post-foot">
-		<a href="/mailings" class="back">← BACK TO MAILINGS</a>
+		<a href="/mailings/" class="back">← BACK TO MAILINGS</a>
 	</div>
 
 	<section class="subscribe">

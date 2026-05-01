@@ -14,7 +14,7 @@
 	<section class="hero">
 		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
 		<h1>Authenticate.</h1>
-		<p class="sub">Go to <a href="/admin">/admin</a> to log in first.</p>
+		<p class="sub">Go to <a href="/admin/">/admin</a> to log in first.</p>
 	</section>
 {:else}
 	<section class="hero">
@@ -39,7 +39,7 @@
 					<span class="published" class:live={!!broadcast}>{broadcast ? 'SENT' : 'DRAFT'}</span>
 				</div>
 				<div class="row-title">
-					<a href="/mailings/{m.slug}" target="_blank">{m.title}</a>
+					<a href="/mailings/{m.slug}/" target="_blank">{m.title}</a>
 					<small>{m.subject}</small>
 					{#if form?.slug === m.slug && form?.error}
 						<span class="row-err"><Led tone="danger" />{form.error}</span>

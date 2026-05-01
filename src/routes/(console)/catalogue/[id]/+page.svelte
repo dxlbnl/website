@@ -31,7 +31,7 @@
 
 <div class="wrap">
 	<div class="back-row">
-		<a href="/catalogue" class="back">← RETURN TO CATALOGUE</a>
+		<a href="/catalogue/" class="back">← RETURN TO CATALOGUE</a>
 	</div>
 
 	<div class="grid" class:no-image={!galleryImages.length}>
