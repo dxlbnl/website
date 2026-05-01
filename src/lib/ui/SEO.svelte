@@ -2,6 +2,7 @@
 	import { PUBLIC_SITE_URL, PUBLIC_COUNTRIES_EU, PUBLIC_COUNTRIES_WORLD } from '$env/static/public';
 	import { page } from '$app/state';
 	import type { ProductFrontmatter } from '$lib/types';
+	import { SvelteURLSearchParams } from 'svelte/reactivity';
 
 	let {
 		title = 'Dexterlabs',
@@ -28,9 +29,24 @@
 	let url = $derived(origin + page.url.pathname);
 	let relativeImage = $derived(image?.replace(page.url.origin, ''));
 	let fullTitle = $derived(title === 'Dexterlabs' ? title : `${title} | Dexterlabs`);
-	let ogImage = $derived(
-		`${origin}/api/og?title=${encodeURIComponent(title)}&subtitle=${encodeURIComponent(description)}${relativeImage ? `&image=${relativeImage}` : ''}`
+	let cta = $derived(
+		product
+			? product.status === 'available'
+				? 'Buy Now'
+				: product.status === 'coming-soon'
+					? 'Preorder Now'
+					: 'Sold Out'
+			: ''
 	);
+	let ogImage = $derived.by(() => {
+		const params = new SvelteURLSearchParams({
+			title,
+			subtitle: description
+		});
+		if (relativeImage) params.set('image', relativeImage);
+		if (cta) params.set('cta', cta);
+		return `${origin}/api/og?${params}`;
+	});
 
 	// Structured Data (JSON-LD)
 	function buildJsonLd() {
