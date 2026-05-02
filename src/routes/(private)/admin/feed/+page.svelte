@@ -2,96 +2,68 @@
 	import { enhance } from '$app/forms';
 	import TagPill from '$lib/ui/TagPill.svelte';
 	import Led from '$lib/ui/Led.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import { fmtDate } from '$lib/utils/fmt';
 	import type { PageData, ActionData } from './$types';
-	import { resolve } from '$app/paths';
 
 	type Props = { data: PageData; form: ActionData };
 	let { data, form }: Props = $props();
 </script>
 
-{#if !data.authed}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
-		<h1>Authenticate.</h1>
-		<p class="sub">Go to <a href={resolve('/admin/')}>/admin</a> to log in first.</p>
-	</section>
-{:else}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · FEED CONTROL</div>
-		<h1>Feed.</h1>
-		<p class="sub">
-			Post directly to the feed - no commit, no redeploy. Wipe anything that ages badly.
-		</p>
-		<div class="meta">
-			<span><b>{data.posts.length}</b> RECORDS</span>
-			<form method="POST" action="?/logout" use:enhance>
-				<button type="submit" class="logout">DISCONNECT</button>
+<PageHero
+	eyebrow="// ADMIN · FEED CONTROL"
+	title="Feed."
+	sub="Post directly to the feed - no commit, no redeploy. Wipe anything that ages badly."
+>
+	<div class="meta">
+		<span><b>{data.posts.length}</b> RECORDS</span>
+		<form method="POST" action="?/logout" use:enhance>
+			<button type="submit" class="logout">DISCONNECT</button>
+		</form>
+	</div>
+</PageHero>
+
+<section class="compose">
+	<div class="section-label">// NEW POST</div>
+	<form method="POST" action="?/create" use:enhance>
+		<textarea name="body" placeholder="What's on the bench..." rows="4" required></textarea>
+		<div class="compose-footer">
+			<input type="text" name="tags" placeholder="tags, comma separated" />
+			<button type="submit" class="btn-ghost">POST</button>
+		</div>
+		{#if form?.error}<p class="error"><Led tone="danger" />{form.error}</p>{/if}
+	</form>
+</section>
+
+<section class="log">
+	<div class="section-label">// LOG</div>
+	{#each data.posts as post (post.id)}
+		<div class="entry">
+			<span class="date">{fmtDate(post.date)}</span>
+			<div class="entry-body">
+				<p class="body">{post.body}</p>
+				{#if post.tags.length}
+					<div class="tags">
+						{#each post.tags as tag (tag)}<TagPill>{tag}</TagPill>{/each}
+					</div>
+				{/if}
+			</div>
+			<form method="POST" action="?/delete" use:enhance>
+				<input type="hidden" name="id" value={post.id} />
+				<button type="submit" class="btn-del">DEL</button>
 			</form>
 		</div>
-	</section>
-
-	<section class="compose">
-		<div class="section-label">// NEW POST</div>
-		<form method="POST" action="?/create" use:enhance>
-			<textarea name="body" placeholder="What's on the bench..." rows="4" required></textarea>
-			<div class="compose-footer">
-				<input type="text" name="tags" placeholder="tags, comma separated" />
-				<button type="submit">POST</button>
-			</div>
-			{#if form?.error}<p class="error"><Led tone="danger" />{form.error}</p>{/if}
-		</form>
-	</section>
-
-	<section class="log">
-		<div class="section-label">// LOG</div>
-		{#each data.posts as post (post.id)}
-			<div class="entry">
-				<span class="date">{fmtDate(post.date)}</span>
-				<div class="entry-body">
-					<p class="body">{post.body}</p>
-					{#if post.tags.length}
-						<div class="tags">
-							{#each post.tags as tag (tag)}<TagPill>{tag}</TagPill>{/each}
-						</div>
-					{/if}
-				</div>
-				<form method="POST" action="?/delete" use:enhance>
-					<input type="hidden" name="id" value={post.id} />
-					<button type="submit" class="del">DEL</button>
-				</form>
-			</div>
-		{:else}
-			<p class="empty">// NO RECORDS</p>
-		{/each}
-	</section>
-{/if}
+	{:else}
+		<p class="empty">// NO RECORDS</p>
+	{/each}
+</section>
 
 <style>
-	/* hero */
-	.hero {
-		padding: 32px 0;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-hero);
-		line-height: 1;
-		letter-spacing: -0.03em;
-		margin: 0;
-	}
 	.meta {
 		display: flex;
 		align-items: center;
 		gap: 24px;
-		margin-top: 20px;
+		margin-top: 16px;
 		font-family: var(--mono);
 		font-size: var(--t-mono);
 		letter-spacing: 0.06em;
@@ -101,16 +73,6 @@
 	.meta b {
 		color: var(--ink);
 		font-weight: 500;
-	}
-	.sub {
-		margin-top: 20px;
-		font-size: var(--t-lede);
-		color: var(--ink-dim);
-		max-width: 52ch;
-		line-height: 1.55;
-	}
-	.sub a {
-		color: var(--amber);
 	}
 
 	/* sections */
@@ -192,40 +154,6 @@
 		border-color: var(--amber);
 	}
 
-	/* buttons */
-	button[type='submit']:not(.del):not(.logout) {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--amber);
-		border: 1px solid var(--amber);
-		padding: 9px 20px;
-		border-radius: var(--radius);
-		background: none;
-		cursor: pointer;
-		white-space: nowrap;
-	}
-	button[type='submit']:not(.del):not(.logout):hover {
-		background: var(--amber);
-		color: var(--bg);
-	}
-	.del {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.1em;
-		color: var(--ink-faint);
-		border: 1px solid var(--rule-strong);
-		background: none;
-		cursor: pointer;
-		padding: 3px 7px;
-		border-radius: var(--radius);
-		margin-top: 2px;
-	}
-	.del:hover {
-		color: var(--danger);
-		border-color: var(--danger);
-	}
 	.logout {
 		font-family: var(--mono);
 		font-size: var(--t-mono);

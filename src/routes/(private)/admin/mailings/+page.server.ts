@@ -1,7 +1,6 @@
 import { db } from '$lib/server/db';
 import { emailOpens, mailingBroadcasts } from '$lib/server/db/schema';
 import { count } from 'drizzle-orm';
-import { verifyAdminSession } from '$lib/utils/auth';
 import type { Component } from 'svelte';
 import type { MailingFrontmatter } from '$lib/types';
 import type { PageServerLoad } from './$types';
@@ -15,10 +14,7 @@ type MailingModule = {
 
 const modules = import.meta.glob<MailingModule>('/content/mailings/*.md', { eager: true });
 
-export const load: PageServerLoad = async ({ cookies }) => {
-	const authed = await verifyAdminSession(cookies.get('admin_session'));
-	if (!authed) return { authed: false as const, mailings: [], opensMap: {}, broadcastsMap: {} };
-
+export const load: PageServerLoad = async () => {
 	const mailings = Object.entries(modules)
 		.map(([path, mod]) => ({ path, ...mod.metadata }))
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -57,5 +53,5 @@ export const load: PageServerLoad = async ({ cookies }) => {
 		}
 	}
 
-	return { authed: true as const, mailings, opensMap, broadcastsMap };
+	return { mailings, opensMap, broadcastsMap };
 };

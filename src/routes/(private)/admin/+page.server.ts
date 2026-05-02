@@ -7,7 +7,7 @@ export const prerender = false;
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	if (await verifyAdminSession(cookies.get('admin_session'))) redirect(303, '/admin/feed/');
-	return { authed: false as const };
+	return {};
 };
 
 export const actions: Actions = {

@@ -7,13 +7,9 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ cookies }) => {
-	const authed = await verifyAdminSession(cookies.get('admin_session'));
-	if (!authed) return { authed: false as const, posts: [] };
-
+export const load: PageServerLoad = async () => {
 	const rows = await db.select().from(feedPosts).orderBy(desc(feedPosts.date));
 	return {
-		authed: true as const,
 		posts: rows.map((r) => ({ ...r, date: r.date.toISOString() }))
 	};
 };

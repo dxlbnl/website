@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import Led from '$lib/ui/Led.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import { fmtDateTime, fmtCents } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
 
@@ -51,25 +51,16 @@
 	}
 </script>
 
-{#if !data.authed}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
-		<h1>Authenticate.</h1>
-		<p class="sub"><a href={resolve('/admin/')}>Go to login →</a></p>
-	</section>
-{:else}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · ORDERS</div>
-		<h1>Orders.</h1>
-		<div class="meta">
-			<span><b>{data.orders.length}</b> RECORDS</span>
-			{#if filteredOrders.length !== data.orders.length}
-				<span><b>{filteredOrders.length}</b> FILTERED</span>
-			{/if}
-		</div>
-	</section>
+<PageHero eyebrow="// ADMIN · ORDERS" title="Orders.">
+	<div class="meta">
+		<span><b>{data.orders.length}</b> RECORDS</span>
+		{#if filteredOrders.length !== data.orders.length}
+			<span><b>{filteredOrders.length}</b> FILTERED</span>
+		{/if}
+	</div>
+</PageHero>
 
-	<section class="filters">
+<section class="filters">
 		<div class="filter-group">
 			<label for="payment">Payment</label>
 			<select id="payment" bind:value={filterPayment}>
@@ -133,28 +124,9 @@
 		{:else}
 			<p class="empty">// NO RECORDS FOUND</p>
 		{/each}
-	</section>
-{/if}
+</section>
 
 <style>
-	.hero {
-		padding: 32px 0;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-hero);
-		line-height: 1;
-		letter-spacing: -0.03em;
-		margin: 0;
-	}
 	.meta {
 		display: flex;
 		align-items: center;
@@ -169,11 +141,6 @@
 	.meta b {
 		color: var(--ink);
 		font-weight: 500;
-	}
-	.sub {
-		margin-top: 20px;
-		font-size: var(--t-lede);
-		color: var(--ink-dim);
 	}
 	.filters {
 		display: flex;

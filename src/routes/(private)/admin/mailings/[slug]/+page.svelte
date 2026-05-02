@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { enhance } from '$app/forms';
 	import Led from '$lib/ui/Led.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import { fmtDate } from '$lib/utils/fmt';
 	import type { PageData, ActionData } from './$types';
 
@@ -11,106 +12,78 @@
 	let sending = $state(false);
 </script>
 
-{#if !data.authed}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
-		<h1>Authenticate.</h1>
-		<p class="sub">Go to <a href={resolve('/admin/')}>/admin</a> to log in first.</p>
-	</section>
-{:else}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · MAILINGS · {data.mailing.slug}</div>
-		<h1>{data.mailing.title}</h1>
-		<div class="meta-row">
-			<span class="meta-item">{fmtDate(data.mailing.date)}</span>
-			<span class="meta-sep">·</span>
-			<span class="meta-item mono">{data.mailing.subject}</span>
-			<span class="meta-sep">·</span>
-			<span class="published" class:live={!!data.broadcast}
-				>{data.broadcast ? 'SENT' : 'DRAFT'}</span
-			>
-		</div>
-	</section>
+<PageHero eyebrow="// ADMIN · MAILINGS · {data.mailing.slug}" title={data.mailing.title}>
+	<div class="meta-row">
+		<span class="meta-item">{fmtDate(data.mailing.date)}</span>
+		<span class="meta-sep">·</span>
+		<span class="meta-item mono">{data.mailing.subject}</span>
+		<span class="meta-sep">·</span>
+		<span class="published" class:live={!!data.broadcast}
+			>{data.broadcast ? 'SENT' : 'DRAFT'}</span
+		>
+	</div>
+</PageHero>
 
-	<section class="actions">
-		<div class="section-label">// ACTIONS</div>
-		<div class="action-row">
-			{#if data.broadcast}
-				<div class="stats">
-					<span class="stat">{data.broadcast.recipientCount} SENT</span>
-					<span class="stat amber">{data.opens} / {data.broadcast.recipientCount} OPENED</span>
-					<span class="stat dim">SENT {fmtDate(data.broadcast.sentAt)}</span>
-				</div>
-			{/if}
+<section class="actions">
+	<div class="section-label">// ACTIONS</div>
+	<div class="action-row">
+		{#if data.broadcast}
+			<div class="stats">
+				<span class="stat">{data.broadcast.recipientCount} SENT</span>
+				<span class="stat amber">{data.opens} / {data.broadcast.recipientCount} OPENED</span>
+				<span class="stat dim">SENT {fmtDate(data.broadcast.sentAt)}</span>
+			</div>
+		{/if}
 
-			<form
-				method="POST"
-				action="?/send"
-				use:enhance={() => {
-					sending = true;
-					return async ({ update }) => {
-						await update();
-						sending = false;
-					};
-				}}
-			>
-				<button type="submit" class="send-btn" disabled={sending || !!data.broadcast}>
-					{sending ? 'SENDING...' : data.broadcast ? 'SENT ✓' : 'SEND TO LIST →'}
-				</button>
-			</form>
+		<form
+			method="POST"
+			action="?/send"
+			use:enhance={() => {
+				sending = true;
+				return async ({ update }) => {
+					await update();
+					sending = false;
+				};
+			}}
+		>
+			<button type="submit" class="send-btn" disabled={sending || !!data.broadcast}>
+				{sending ? 'SENDING...' : data.broadcast ? 'SENT ✓' : 'SEND TO LIST →'}
+			</button>
+		</form>
 
-			{#if form?.error}
-				<span class="feedback err"><Led tone="danger" />{form.error}</span>
-			{/if}
-			{#if form?.broadcastId}
-				<span class="feedback ok"
-					><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span
-				>
-			{/if}
-		</div>
-	</section>
-
-	<section class="preview-section">
-		<div class="section-label">// EMAIL PREVIEW</div>
-		<div class="preview-wrap">
-			<iframe
-				class="preview"
-				srcdoc={data.emailHtml}
-				title="Email preview"
-				sandbox="allow-same-origin"
-			></iframe>
-		</div>
-	</section>
-
-	<div class="back-row">
-		<a href={resolve('/admin/mailings/')} class="back">← BACK TO MAILINGS</a>
-		{#if data.mailing.published}
-			<a href={resolve(`/mailings/${data.mailing.slug}/`)} target="_blank" class="back"
-				>VIEW PUBLIC →</a
+		{#if form?.error}
+			<span class="feedback err"><Led tone="danger" />{form.error}</span>
+		{/if}
+		{#if form?.broadcastId}
+			<span class="feedback ok"
+				><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span
 			>
 		{/if}
 	</div>
-{/if}
+</section>
+
+<section class="preview-section">
+	<div class="section-label">// EMAIL PREVIEW</div>
+	<div class="preview-wrap">
+		<iframe
+			class="preview"
+			srcdoc={data.emailHtml}
+			title="Email preview"
+			sandbox="allow-same-origin"
+		></iframe>
+	</div>
+</section>
+
+<div class="back-row">
+	<a href={resolve('/admin/mailings/')} class="btn-back">← BACK TO MAILINGS</a>
+	{#if data.mailing.published}
+		<a href={resolve(`/mailings/${data.mailing.slug}/`)} target="_blank" class="btn-back"
+			>VIEW PUBLIC →</a
+		>
+	{/if}
+</div>
 
 <style>
-	.hero {
-		padding: 40px 0 32px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-title);
-		line-height: 1;
-		letter-spacing: -0.02em;
-		margin: 0 0 16px;
-	}
 	.meta-row {
 		display: flex;
 		align-items: center;
@@ -236,16 +209,5 @@
 		display: flex;
 		gap: 24px;
 		padding: 24px 0;
-	}
-	.back {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-		transition: color 0.15s;
-	}
-	.back:hover {
-		color: var(--amber);
 	}
 </style>

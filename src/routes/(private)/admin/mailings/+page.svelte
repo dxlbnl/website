@@ -1,85 +1,45 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { fmtDate } from '$lib/utils/fmt';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
 	let { data }: Props = $props();
 </script>
 
-{#if !data.authed}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · ACCESS CONTROL</div>
-		<h1>Authenticate.</h1>
-		<p class="sub">Go to <a href={resolve('/admin/')}>/admin</a> to log in first.</p>
-	</section>
-{:else}
-	<section class="hero">
-		<div class="eyebrow">// ADMIN · MAILINGS</div>
-		<h1>Mailings.</h1>
-		<p class="sub">
-			Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo.
-		</p>
-		<div class="meta">
-			<span><b>{data.mailings.length}</b> MAILINGS</span>
-		</div>
-	</section>
+<PageHero eyebrow="// ADMIN · MAILINGS" title="Mailings." sub="Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo.">
+	<div class="meta">
+		<span><b>{data.mailings.length}</b> MAILINGS</span>
+	</div>
+</PageHero>
 
-	<section class="list">
-		<div class="section-label">// ALL MAILINGS</div>
-		{#each data.mailings as m (m.slug)}
-			{@const stats = data.opensMap[m.slug]}
-			{@const broadcast = data.broadcastsMap[m.slug]}
-			<a class="row" href={resolve(`/admin/mailings/${m.slug}/`)}>
-				<div class="row-meta">
-					<span class="date">{fmtDate(m.date)}</span>
-					<span class="published" class:live={!!broadcast}>{broadcast ? 'SENT' : 'DRAFT'}</span>
-				</div>
-				<div class="row-title">
-					{m.title}
-					<small>{m.subject}</small>
-				</div>
-				<div class="row-stats">
-					{#if broadcast}
-						<span class="stat-sent">{broadcast.recipientCount} SENT</span>
-						<span class="stat-opens">{stats?.opens ?? 0} / {broadcast.recipientCount} OPENED</span>
-					{/if}
-				</div>
-				<span class="row-arrow">→</span>
-			</a>
-		{/each}
-	</section>
-{/if}
+<section class="list">
+	<div class="section-label">// ALL MAILINGS</div>
+	{#each data.mailings as m (m.slug)}
+		{@const stats = data.opensMap[m.slug]}
+		{@const broadcast = data.broadcastsMap[m.slug]}
+		<a class="row" href={resolve(`/admin/mailings/${m.slug}/`)}>
+			<div class="row-meta">
+				<span class="date">{fmtDate(m.date)}</span>
+				<span class="published" class:live={!!broadcast}>{broadcast ? 'SENT' : 'DRAFT'}</span>
+			</div>
+			<div class="row-title">
+				{m.title}
+				<small>{m.subject}</small>
+			</div>
+			<div class="row-stats">
+				{#if broadcast}
+					<span class="stat-sent">{broadcast.recipientCount} SENT</span>
+					<span class="stat-opens">{stats?.opens ?? 0} / {broadcast.recipientCount} OPENED</span>
+				{/if}
+			</div>
+			<span class="row-arrow">→</span>
+		</a>
+	{/each}
+</section>
 
 <style>
-	.hero {
-		padding: 40px 0 32px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-title);
-		line-height: 1;
-		letter-spacing: -0.02em;
-		margin: 0 0 12px;
-	}
-	.sub {
-		font-size: var(--t-body);
-		color: var(--ink-dim);
-		line-height: 1.5;
-		max-width: 52ch;
-		margin: 0 0 12px;
-	}
-	.sub a {
-		color: var(--amber);
-	}
 	.meta {
 		font-family: var(--mono);
 		font-size: var(--t-mono);

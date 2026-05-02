@@ -19,10 +19,7 @@ type MailingModule = {
 
 const modules = import.meta.glob<MailingModule>('/content/mailings/*.md', { eager: true });
 
-export const load: PageServerLoad = async ({ params, cookies }) => {
-	const authed = await verifyAdminSession(cookies.get('admin_session'));
-	if (!authed) return { authed: false as const };
-
+export const load: PageServerLoad = async ({ params }) => {
 	const entry = Object.entries(modules).find(([, mod]) => mod.metadata.slug === params.slug);
 	if (!entry) throw error(404, `Mailing not found: ${params.slug}`);
 
@@ -42,7 +39,6 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
 	}
 
 	return {
-		authed: true as const,
 		mailing: mod.metadata,
 		emailHtml,
 		broadcast: broadcast
