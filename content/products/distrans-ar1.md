@@ -9,6 +9,7 @@ tags: [Audio Interface, Recorder, USB, Utility]
 stripeProduct: prod_UPliTmeI7Z57hB
 image: media/distrans-dune.png
 images:
+  - media/distrans-dune.png
   - media/distrans-glitch.png
   - media/distrans-space-1.png
   - media/distrans-space.png

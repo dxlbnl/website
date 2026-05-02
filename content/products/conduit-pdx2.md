@@ -6,6 +6,7 @@ description: Power your entire Eurorack from a laptop charger - studio-grade sil
 status: coming-soon
 category: Power
 tags: [Power Supply, USB-C, PD, Utility]
+stripeProduct: prod_URehddAUUGWEn3
 image: media/conduit-galaxy.webp
 images:
   - media/conduit-galaxy.webp

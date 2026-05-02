@@ -10,8 +10,6 @@
 	let { data, form }: Props = $props();
 
 	let sending = $state(false);
-
-	const previewHtml = $derived(data.emailHtml.replace('<head>', '<head><base target="_blank">'));
 </script>
 
 <PageHero eyebrow="// ADMIN · MAILINGS · {data.mailing.slug}" title={data.mailing.title}>
@@ -67,9 +65,9 @@
 	<div class="preview-wrap">
 		<iframe
 			class="preview"
-			srcdoc={previewHtml}
+			srcdoc={data.emailHtml}
 			title="Email preview"
-			sandbox="allow-same-origin allow-popups"
+			sandbox="allow-same-origin"
 		></iframe>
 	</div>
 </section>
@@ -87,6 +85,8 @@
 	.meta-row {
 		display: flex;
 		align-items: center;
+		padding-block: 1rem;
+		padding-inline-start: 0.5rem;
 		gap: 8px;
 		font-family: var(--mono);
 		font-size: var(--t-mono);
@@ -194,7 +194,7 @@
 	}
 	.preview-wrap {
 		border: 1px solid var(--rule);
-		background: #f5f5f0;
+		background: var(--bg-sunken);
 		padding: 24px;
 		border-radius: 2px;
 	}

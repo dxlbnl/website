@@ -58,7 +58,7 @@
 			}
 		</style>
 	</Head>
-	<Body style={{ margin: '0', padding: '40px 0', backgroundColor: c.bg, fontFamily: sans }}>
+	<Body style={{ margin: '0', padding: '40px 40px', backgroundColor: c.bg, fontFamily: sans }}>
 		<Container style={{ backgroundColor: c.surface, padding: '40px' }}>
 			<Text
 				style={{
@@ -110,7 +110,8 @@
 				<Link href="https://dxlb.nl" style={{ color: c.inkFaint, textDecoration: 'none' }}
 					>dxlb.nl</Link
 				>.
-				<Link href={unsubUrl} style={{ color: c.inkFaint, textDecoration: 'none' }}>Unsubscribe</Link
+				<Link href={unsubUrl} style={{ color: c.inkFaint, textDecoration: 'none' }}
+					>Unsubscribe</Link
 				>.
 			</Text>
 		</Container>
