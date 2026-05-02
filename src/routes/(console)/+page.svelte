@@ -57,7 +57,7 @@
 	{#if data.notes.length > 0}
 		<SectionH num="// 0x02" title="Notes" sub="ENGINEERING NOTES & EXPERIMENTS" />
 		<div class="note-grid">
-			{#each data.notes as note, i (note.slug)}
+			{#each data.notes as note (note.slug)}
 				<a href={resolve(`/notes/${note.slug}/`)} class="note-card">
 					<div class="card-head">
 						<span class="card-idx">{hexIdx(note.idx)}</span>

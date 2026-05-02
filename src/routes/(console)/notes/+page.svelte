@@ -7,7 +7,7 @@
 	import SEO from '$lib/ui/SEO.svelte';
 	import { resolve } from '$app/paths';
 
-	type Entry = NoteFrontmatter & { slug: string };
+	type Entry = NoteFrontmatter & { slug: string; idx: number };
 	type Props = { data: { entries: Entry[] } };
 	let { data }: Props = $props();
 </script>
@@ -35,7 +35,7 @@
 
 	<SectionH num="// INDEX" title="All notes" sub="NEWEST FIRST" />
 
-	{#each data.entries as entry, i (entry.slug)}
+	{#each data.entries as entry (entry.slug)}
 		<a href={resolve(`/notes/${entry.slug}/`)} class="idx-row">
 			<div class="idx-n">{String(entry.idx).padStart(2, '0')}</div>
 			<div class="idx-t">
