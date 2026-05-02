@@ -3,6 +3,7 @@
 	import Signature from '$lib/ui/Signature.svelte';
 	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 
 	let email = $state('');
 	onMount(() => {
@@ -16,13 +17,11 @@
 />
 
 <div class="wrap">
-	<section class="hero">
-		<div class="eyebrow">// CONTACT · ONE CHANNEL</div>
-		<h1>Say hello.</h1>
-		<p class="sub">
-			Best way: email. For prototype-for-hire, include what you're trying to test and a rough
-			timeline. For everything else, just write.
-		</p>
+	<PageHero
+		eyebrow="// CONTACT · ONE CHANNEL"
+		title="Say hello."
+		sub="Best way: email. For prototype-for-hire, include what you're trying to test and a rough timeline. For everything else, just write."
+	>
 		<div class="email">
 			{#if email}<a href="mailto:{email}">{email}</a>{/if}
 		</div>
@@ -37,7 +36,7 @@
 				><b>IG</b> @dexterotti</a
 			>
 		</div>
-	</section>
+	</PageHero>
 
 	<section class="mail">
 		<div class="eyebrow">// MAILING LIST</div>
@@ -58,31 +57,6 @@
 		@media (max-width: 720px) {
 			padding: 0 16px 56px;
 		}
-	}
-	.hero {
-		padding: 48px 0 56px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-hero);
-		line-height: 1;
-		letter-spacing: -0.03em;
-		margin: 0 0 20px;
-	}
-	.sub {
-		font-size: var(--t-lede);
-		color: var(--ink-dim);
-		line-height: 1.55;
-		max-width: 52ch;
-		margin-bottom: 0;
 	}
 	.email {
 		margin-top: 40px;
@@ -123,6 +97,7 @@
 	.mail {
 		padding: 48px 0 56px;
 	}
+
 	.mail .sub {
 		font-size: var(--t-lede);
 		color: var(--ink-dim);

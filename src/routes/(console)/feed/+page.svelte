@@ -2,6 +2,7 @@
 	import TagPill from '$lib/ui/TagPill.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import { fmtDateShort } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
 	import { resolve } from '$app/paths';
@@ -18,23 +19,23 @@
 />
 
 <div class="wrap">
-	<section class="hero">
-		<div class="eyebrow">// FEED · THE LIVE BENCH</div>
-		<h1>Feed.</h1>
-		<p class="sub">
-			Short posts from the bench. What I'm building, breaking, or shipping right now - the kind of
-			thing I'd otherwise lose in a chat thread. Longer writeups live in <a
-				href={resolve('/notes/')}>notes</a
-			>.
-		</p>
-		<div class="meta">
-			<span><b>{data.entries.length}</b> POSTS</span>
-			{#if data.entries[0]}
-				<span><b>LATEST</b> {fmt(data.entries[0].date)}</span>
-			{/if}
-			<span><b>CADENCE</b> WHEN IT'S INTERESTING</span>
-		</div>
-	</section>
+	<PageHero eyebrow="// FEED · THE LIVE BENCH" title="Feed.">
+		{#snippet children()}
+			<p class="sub">
+				Short posts from the bench. What I'm building, breaking, or shipping right now - the kind of
+				thing I'd otherwise lose in a chat thread. Longer writeups live in <a
+					href={resolve('/notes/')}>notes</a
+				>.
+			</p>
+			<div class="meta">
+				<span><b>{data.entries.length}</b> POSTS</span>
+				{#if data.entries[0]}
+					<span><b>LATEST</b> {fmt(data.entries[0].date)}</span>
+				{/if}
+				<span><b>CADENCE</b> WHEN IT'S INTERESTING</span>
+			</div>
+		{/snippet}
+	</PageHero>
 
 	<div class="list">
 		{#each data.entries as entry (entry.date)}
@@ -65,24 +66,6 @@
 		@media (max-width: 720px) {
 			padding: 0 16px 56px;
 		}
-	}
-	.hero {
-		padding: 32px 0;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	.hero h1 {
-		font-weight: 500;
-		font-size: var(--t-hero);
-		line-height: 1;
-		letter-spacing: -0.03em;
-		margin: 0;
 	}
 	.sub {
 		margin-top: 20px;

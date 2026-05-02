@@ -15,7 +15,7 @@
 			You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to
 			try again.
 		</p>
-		<a href={resolve('/catalogue/')} class="back">← RETURN TO CATALOGUE</a>
+		<a href={resolve('/catalogue/')} class="btn-back">← RETURN TO CATALOGUE</a>
 	</div>
 	<Signature />
 </div>
@@ -56,15 +56,5 @@
 		line-height: 1.6;
 		color: var(--ink-dim);
 		margin: 0 0 32px;
-	}
-	.back {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-	}
-	.back:hover {
-		color: var(--amber);
 	}
 </style>

@@ -33,7 +33,7 @@
 				soon as it's on its way.
 			{/if}
 		</p>
-		<a href={resolve('/catalogue/')} class="back">← RETURN TO CATALOGUE</a>
+		<a href={resolve('/catalogue/')} class="btn-back">← RETURN TO CATALOGUE</a>
 	</div>
 	<Signature />
 </div>
@@ -74,15 +74,5 @@
 		line-height: 1.6;
 		color: var(--ink-dim);
 		margin: 0 0 32px;
-	}
-	.back {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-	}
-	.back:hover {
-		color: var(--amber);
 	}
 </style>

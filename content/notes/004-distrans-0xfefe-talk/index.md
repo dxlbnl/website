@@ -19,4 +19,3 @@ The Distrans AR-1 is the result of that workflow. It bridges Eurorack and the st
 
 It isn't magic. It's just a different kind of compilation step. You still have to know what you want to build.
 
-_(This is a summarized log of the 0xFEFE presentation. Full schematics and firmware notes for Distrans are in the Catalogue.)_

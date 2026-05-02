@@ -4,6 +4,7 @@
 	import Signature from '$lib/ui/Signature.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
 	import Led from '$lib/ui/Led.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import type { ProductFrontmatter } from '$lib/types';
 	import SEO from '$lib/ui/SEO.svelte';
 	import type { Region } from '$lib/utils/location';
@@ -20,20 +21,17 @@
 />
 
 <div class="wrap">
-	<section class="hero">
-		<div class="eyebrow">// CATALOGUE · HARDWARE · FOR SALE</div>
-		<h1>Catalogue.</h1>
-		<p class="sub">
-			Professional-grade Eurorack modules and studio tools. Engineered for stability and
-			performance. Built in Delft, shipped worldwide. For custom engineering or prototype
-			development, use the link below.
-		</p>
+	<PageHero
+		eyebrow="// CATALOGUE · HARDWARE · FOR SALE"
+		title="Catalogue."
+		sub="Professional-grade Eurorack modules and studio tools. Engineered for stability and performance. Built in Delft, shipped worldwide. For custom engineering or prototype development, use the link below."
+	>
 		<div class="meta">
 			<span><b>{data.products.length}</b> MODULES LIVE</span>
 			<span><b>BATCH</b> 2026-Q2</span>
 			<span><b>SHIPS FROM</b> DELFT, NL</span>
 		</div>
-	</section>
+	</PageHero>
 
 	{#if production.length > 0}
 		<SectionH num="// 0x01" title="In development">
@@ -41,7 +39,7 @@
 			<span>ACTIVE PROTOTYPING</span>
 		</SectionH>
 
-		<div class="grid">
+		<div class="card-grid">
 			{#each production as product (product.id)}
 				<ProductCard {product} region={data.region} />
 			{/each}
@@ -55,7 +53,7 @@
 			sub="SOLD OUT / DISCONTINUED"
 		/>
 
-		<div class="grid">
+		<div class="card-grid">
 			{#each archive as product (product.id)}
 				<ProductCard {product} region={data.region} />
 			{/each}
@@ -70,7 +68,7 @@
 			concept that requires PCB design, embedded firmware development, or a functional prototype,
 			get in touch to discuss the technical scope and timeline.
 		</p>
-		<a href={resolve('/contact/')} class="hire-link">GET IN TOUCH →</a>
+		<a href={resolve('/contact/')} class="btn-cta hire-link">GET IN TOUCH →</a>
 	</div>
 
 	<Signature />
@@ -87,32 +85,6 @@
 			padding: 0 16px 56px;
 		}
 	}
-	.hero {
-		padding: 32px 0 40px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-		text-transform: uppercase;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-hero);
-		line-height: 0.92;
-		letter-spacing: -0.04em;
-		margin: 0;
-	}
-	.sub {
-		margin-top: 20px;
-		font-size: var(--t-lede);
-		color: var(--ink-dim);
-		line-height: 1.55;
-		max-width: 62ch;
-	}
 	.meta {
 		margin-top: 32px;
 		display: flex;
@@ -127,19 +99,6 @@
 	.meta b {
 		color: var(--ink);
 		font-weight: 500;
-	}
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 16px;
-		margin-top: 24px;
-
-		@container (max-width: 900px) {
-			grid-template-columns: 1fr 1fr;
-		}
-		@container (max-width: 720px) {
-			grid-template-columns: 1fr;
-		}
 	}
 	.hire {
 		margin-top: 56px;
@@ -170,15 +129,7 @@
 		line-height: 1.6;
 	}
 	.hire-link {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--amber);
 		margin-top: 12px;
 		display: inline-block;
-	}
-	.hire-link:hover {
-		color: var(--ink);
 	}
 </style>

@@ -32,7 +32,7 @@
 
 <div class="wrap">
 	<div class="back-row">
-		<a href={resolve('/catalogue/')} class="back">← RETURN TO CATALOGUE</a>
+		<a href={resolve('/catalogue/')} class="btn-back">← RETURN TO CATALOGUE</a>
 	</div>
 
 	<div class="grid" class:no-image={!galleryImages.length}>
@@ -118,16 +118,6 @@
 	}
 	.back-row {
 		padding: 32px 0 0;
-	}
-	.back {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-	}
-	.back:hover {
-		color: var(--amber);
 	}
 	.grid {
 		display: flex;

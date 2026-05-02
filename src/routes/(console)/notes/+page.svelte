@@ -1,6 +1,7 @@
 <script lang="ts">
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Placeholder from '$lib/ui/Placeholder.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import { resolveLogImage, vercelSrcset } from '$lib/utils/image';
 	import { fmtDate } from '$lib/utils/fmt';
 	import type { NoteFrontmatter } from '$lib/types';
@@ -18,20 +19,20 @@
 />
 
 <div class="wrap">
-	<section class="hero">
-		<div class="eyebrow">// NOTES · LONGER PIECES</div>
-		<h1>Notes.</h1>
-		<p class="sub">
-			Longer writing. Build logs, post-mortems, opinions. Written when something took long enough to
-			be worth explaining. Signed by <em>Dexter</em>.
-		</p>
-		<div class="meta">
-			<span><b>{data.entries.length}</b> PIECES</span>
-			{#if data.entries[0]}
-				<span><b>LATEST</b> {fmtDate(data.entries[0].date)}</span>
-			{/if}
-		</div>
-	</section>
+	<PageHero eyebrow="// NOTES · LONGER PIECES" title="Notes.">
+		{#snippet children()}
+			<p class="sub">
+				Longer writing. Build logs, post-mortems, opinions. Written when something took long enough to
+				be worth explaining. Signed by <em>Dexter</em>.
+			</p>
+			<div class="meta">
+				<span><b>{data.entries.length}</b> PIECES</span>
+				{#if data.entries[0]}
+					<span><b>LATEST</b> {fmtDate(data.entries[0].date)}</span>
+				{/if}
+			</div>
+		{/snippet}
+	</PageHero>
 
 	<SectionH num="// INDEX" title="All notes" sub="NEWEST FIRST" />
 
@@ -74,24 +75,6 @@
 		@media (max-width: 720px) {
 			padding: 0 16px 56px;
 		}
-	}
-	.hero {
-		padding: 48px 0 40px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-hero);
-		line-height: 1;
-		letter-spacing: -0.03em;
-		margin: 0 0 16px;
 	}
 	.sub {
 		font-size: var(--t-lede);

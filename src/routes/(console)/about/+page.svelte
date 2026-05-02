@@ -2,6 +2,7 @@
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 </script>
 
 <SEO
@@ -10,10 +11,9 @@
 />
 
 <div class="wrap">
-	<section class="hero">
-		<div class="eyebrow">// ABOUT · DEXTER / DEXTERLABS</div>
-		<h1>Two names,<br /><em>one lab.</em></h1>
-	</section>
+	<PageHero eyebrow="// ABOUT · DEXTER / DEXTERLABS">
+		{#snippet headingContent()}Two names,<br /><em>one lab.</em>{/snippet}
+	</PageHero>
 
 	<div class="split">
 		<div class="col">
@@ -71,29 +71,6 @@
 			padding: 0 16px 56px;
 		}
 	}
-	.hero {
-		padding: 48px 0 40px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-hero);
-		line-height: 1;
-		letter-spacing: -0.03em;
-		margin: 0;
-	}
-	h1 em {
-		font-style: normal;
-		color: var(--ink-faint);
-	}
-
 	/* Two-col person/lab */
 	.split {
 		display: grid;

@@ -6,7 +6,7 @@ description: Bridge Eurorack and studio - USB interface, standalone recorder, ze
 status: coming-soon
 category: Interface
 tags: [Audio Interface, Recorder, USB, Utility]
-stripeProduct: prod_UPMuXHezrWyNpN
+stripeProduct: prod_UPliTmeI7Z57hB
 image: media/distrans-dune.png
 images:
   - media/distrans-glitch.png

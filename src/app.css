@@ -116,3 +116,122 @@ h6 {
 #svelte {
 	isolation: isolate;
 }
+
+/* =========================================================
+   SHARED UTILITIES
+   ========================================================= */
+
+/* 3->2->1 responsive card grid (requires container-type on parent) */
+.card-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 16px;
+	margin-top: 24px;
+
+	@container (max-width: 900px) {
+		grid-template-columns: 1fr 1fr;
+	}
+	@container (max-width: 720px) {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Back nav link - mono, faint color, amber on hover */
+.btn-back {
+	font-family: var(--mono);
+	font-size: var(--t-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--ink-faint);
+	transition: color 0.15s;
+}
+.btn-back:hover {
+	color: var(--amber);
+}
+
+/* Forward CTA link - amber color, ink on hover */
+.btn-cta {
+	font-family: var(--mono);
+	font-size: var(--t-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--amber);
+	transition: color 0.15s;
+}
+.btn-cta:hover {
+	color: var(--ink);
+}
+
+/* Ghost button - amber border, fills amber on hover */
+.btn-ghost {
+	font-family: var(--mono);
+	font-size: var(--t-mono);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--amber);
+	border: 1px solid var(--amber);
+	padding: 9px 20px;
+	border-radius: var(--radius);
+	background: none;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background 0.15s, color 0.15s;
+}
+.btn-ghost:hover {
+	background: var(--amber);
+	color: var(--bg);
+}
+.btn-ghost:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Primary button - filled amber, darkens on hover */
+.btn-primary {
+	display: inline-block;
+	font-family: var(--mono);
+	font-size: var(--t-mono);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	padding: 10px 16px;
+	background: var(--amber);
+	color: var(--bg);
+	white-space: nowrap;
+	transition: background 0.15s;
+	cursor: pointer;
+}
+.btn-primary:hover {
+	background: var(--ink);
+}
+.btn-primary:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Section eyebrow label - mono, faint, uppercase micro */
+.eyebrow {
+	font-family: var(--mono);
+	font-size: var(--t-micro);
+	letter-spacing: 0.12em;
+	color: var(--ink-faint);
+	text-transform: uppercase;
+	margin-bottom: 16px;
+}
+
+/* Destructive small button - faint border, danger on hover */
+.btn-del {
+	font-family: var(--mono);
+	font-size: var(--t-micro);
+	letter-spacing: 0.1em;
+	color: var(--ink-faint);
+	border: 1px solid var(--rule-strong);
+	background: none;
+	cursor: pointer;
+	padding: 3px 7px;
+	border-radius: var(--radius);
+	transition: color 0.15s, border-color 0.15s;
+}
+.btn-del:hover {
+	color: var(--danger);
+	border-color: var(--danger);
+}

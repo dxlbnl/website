@@ -1,5 +1,6 @@
 <script>
 	import SEO from '$lib/ui/SEO.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
 	import { resolve } from '$app/paths';
 </script>
 
@@ -9,45 +10,30 @@
 />
 
 <div class="wrap">
-	<div class="eyebrow">// LEGAL · DEXTERLABS</div>
-	<h1>Legal</h1>
-	<ul>
-		<li><a href={resolve('/legal/privacy/')}>Privacy Policy</a></li>
-		<li><a href={resolve('/legal/terms/')}>Terms &amp; Conditions</a></li>
-		<li><a href={resolve('/legal/shipping/')}>Shipping Policy</a></li>
-		<li><a href={resolve('/legal/returns/')}>Returns &amp; Refunds</a></li>
-	</ul>
+	<PageHero eyebrow="// LEGAL · DEXTERLABS" title="Legal">
+		<ul>
+			<li><a href={resolve('/legal/privacy/')}>Privacy Policy</a></li>
+			<li><a href={resolve('/legal/terms/')}>Terms &amp; Conditions</a></li>
+			<li><a href={resolve('/legal/shipping/')}>Shipping Policy</a></li>
+			<li><a href={resolve('/legal/returns/')}>Returns &amp; Refunds</a></li>
+		</ul>
+	</PageHero>
 </div>
 
 <style>
 	.wrap {
 		max-width: 1440px;
 		margin: 0 auto;
-		padding: 48px 32px 80px;
+		padding: 0 32px 80px;
 
 		@media (max-width: 720px) {
-			padding: 32px 16px 56px;
+			padding: 0 16px 56px;
 		}
-	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-		text-transform: uppercase;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-title);
-		letter-spacing: -0.02em;
-		line-height: 1.05;
-		margin: 0 0 32px;
 	}
 	ul {
 		list-style: none;
 		padding: 0;
-		margin: 0;
+		margin: 32px 0 0;
 		display: flex;
 		flex-direction: column;
 		gap: 12px;

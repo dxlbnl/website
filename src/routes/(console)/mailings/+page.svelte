@@ -51,13 +51,6 @@
 		padding: 48px 0 40px;
 		border-bottom: 1px solid var(--rule);
 	}
-	.eyebrow {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		color: var(--ink-faint);
-		margin-bottom: 16px;
-	}
 	h1 {
 		font-weight: 500;
 		font-size: var(--t-hero);

@@ -45,10 +45,12 @@
 
 <div class="pricebox" class:notify>
 	<div class="price-col">
-		<span class="price">{pd.displayPrice || 'TBD'}</span>
-		{#if pd.displayPrice}
-			<span class="price-tax">{pd.taxLabel}</span>
-		{/if}
+		<div class="price-row">
+			<span class="price">{pd.displayPrice || 'TBD'}</span>
+			{#if pd.displayPrice}
+				<span class="price-tax">{pd.taxLabel}</span>
+			{/if}
+		</div>
 		<span class="stock-info {pd.stock.cls}">
 			<Led tone={pd.stock.led} />
 			{pd.stock.label}{#if pd.stock.ship}
@@ -57,14 +59,16 @@
 	</div>
 	{#if product.status === 'available' || product.status === 'coming-soon'}
 		{#if product.stripeProduct}
-			<button class="buy" onclick={startCheckout} disabled={buying}>
-				{buying ? 'LOADING…' : `${pd.cta} →`}
-			</button>
-			{#if checkoutError}
-				<span class="checkout-err">Something went wrong. Please try again.</span>
-			{/if}
+			<div class="checkout-col">
+				<button class="btn-primary" onclick={startCheckout} disabled={buying}>
+					{buying ? 'LOADING…' : `${pd.cta} →`}
+				</button>
+				{#if checkoutError}
+					<span class="checkout-err">Something went wrong. Please try again.</span>
+				{/if}
+			</div>
 		{:else if product.tindieUrl}
-			<a href={product.tindieUrl} target="_blank" rel="external noopener" class="buy">
+			<a href={product.tindieUrl} target="_blank" rel="external noopener" class="btn-primary">
 				{pd.cta} →
 			</a>
 		{:else}
@@ -97,9 +101,15 @@
 		flex-direction: column;
 		gap: 6px;
 	}
+	.price-row {
+		display: flex;
+		align-items: flex-end;
+		gap: 8px;
+	}
 	.price {
 		font-family: var(--mono);
 		font-size: var(--t-h2);
+		line-height: 1;
 		color: var(--amber);
 		letter-spacing: 0.02em;
 	}
@@ -109,7 +119,6 @@
 		color: var(--ink-faint);
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
-		margin-top: -2px;
 	}
 	.stock-info {
 		display: flex;
@@ -135,23 +144,11 @@
 			}
 		}
 	}
-	.buy {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.1em;
-		padding: 10px 16px;
-		background: var(--amber);
-		color: var(--bg);
-		text-transform: uppercase;
-		transition: background 0.15s;
-		white-space: nowrap;
-	}
-	.buy:hover {
-		background: var(--ink);
-	}
-	.buy:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
+	.checkout-col {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 8px;
 	}
 	.checkout-err {
 		font-family: var(--mono);
