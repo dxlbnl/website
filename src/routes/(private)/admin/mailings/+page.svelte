@@ -8,7 +8,11 @@
 	let { data }: Props = $props();
 </script>
 
-<PageHero eyebrow="// ADMIN · MAILINGS" title="Mailings." sub="Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo.">
+<PageHero
+	eyebrow="// ADMIN · MAILINGS"
+	title="Mailings."
+	sub="Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo."
+>
 	<div class="meta">
 		<span><b>{data.mailings.length}</b> MAILINGS</span>
 	</div>

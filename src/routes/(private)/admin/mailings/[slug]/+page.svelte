@@ -10,6 +10,8 @@
 	let { data, form }: Props = $props();
 
 	let sending = $state(false);
+
+	const previewHtml = $derived(data.emailHtml.replace('<head>', '<head><base target="_blank">'));
 </script>
 
 <PageHero eyebrow="// ADMIN · MAILINGS · {data.mailing.slug}" title={data.mailing.title}>
@@ -18,9 +20,7 @@
 		<span class="meta-sep">·</span>
 		<span class="meta-item mono">{data.mailing.subject}</span>
 		<span class="meta-sep">·</span>
-		<span class="published" class:live={!!data.broadcast}
-			>{data.broadcast ? 'SENT' : 'DRAFT'}</span
-		>
+		<span class="published" class:live={!!data.broadcast}>{data.broadcast ? 'SENT' : 'DRAFT'}</span>
 	</div>
 </PageHero>
 
@@ -67,9 +67,9 @@
 	<div class="preview-wrap">
 		<iframe
 			class="preview"
-			srcdoc={data.emailHtml}
+			srcdoc={previewHtml}
 			title="Email preview"
-			sandbox="allow-same-origin"
+			sandbox="allow-same-origin allow-popups"
 		></iframe>
 	</div>
 </section>

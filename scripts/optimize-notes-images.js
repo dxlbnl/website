@@ -87,6 +87,7 @@ async function optimizeDir(contentDir, staticDir) {
 async function optimize() {
 	await optimizeDir('content/notes', 'static/images/notes');
 	await optimizeDir('content/products', 'static/images/products');
+	await optimizeDir('content/mailings', 'static/images/mailings');
 	console.log('✓ Optimization complete.');
 }
 

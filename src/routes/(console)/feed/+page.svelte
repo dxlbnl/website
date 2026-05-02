@@ -20,21 +20,19 @@
 
 <div class="wrap">
 	<PageHero eyebrow="// FEED · THE LIVE BENCH" title="Feed.">
-		{#snippet children()}
-			<p class="sub">
-				Short posts from the bench. What I'm building, breaking, or shipping right now - the kind of
-				thing I'd otherwise lose in a chat thread. Longer writeups live in <a
-					href={resolve('/notes/')}>notes</a
-				>.
-			</p>
-			<div class="meta">
-				<span><b>{data.entries.length}</b> POSTS</span>
-				{#if data.entries[0]}
-					<span><b>LATEST</b> {fmt(data.entries[0].date)}</span>
-				{/if}
-				<span><b>CADENCE</b> WHEN IT'S INTERESTING</span>
-			</div>
-		{/snippet}
+		<p class="sub">
+			Short posts from the bench. What I'm building, breaking, or shipping right now - the kind of
+			thing I'd otherwise lose in a chat thread. Longer writeups live in <a
+				href={resolve('/notes/')}>notes</a
+			>.
+		</p>
+		<div class="meta">
+			<span><b>{data.entries.length}</b> POSTS</span>
+			{#if data.entries[0]}
+				<span><b>LATEST</b> {fmt(data.entries[0].date)}</span>
+			{/if}
+			<span><b>CADENCE</b> WHEN IT'S INTERESTING</span>
+		</div>
 	</PageHero>
 
 	<div class="list">

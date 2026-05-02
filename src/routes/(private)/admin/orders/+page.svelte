@@ -61,69 +61,69 @@
 </PageHero>
 
 <section class="filters">
-		<div class="filter-group">
-			<label for="payment">Payment</label>
-			<select id="payment" bind:value={filterPayment}>
-				<option value="all">All</option>
-				<option value="paid">Paid</option>
-				<option value="pending">Pending</option>
-				<option value="failed">Failed</option>
-			</select>
-		</div>
-		<div class="filter-group">
-			<label for="fulfillment">Fulfillment</label>
-			<select id="fulfillment" bind:value={filterFulfillment}>
-				<option value="all">All</option>
-				<option value="unfulfilled">Unfulfilled</option>
-				<option value="shipped">Shipped</option>
-				<option value="delivered">Delivered</option>
-				<option value="cancelled">Cancelled</option>
-			</select>
-		</div>
-		<div class="filter-group">
-			<label for="preorder">Pre-order</label>
-			<select id="preorder" bind:value={filterPreorder}>
-				<option value="all">All</option>
-				<option value="yes">Yes</option>
-				<option value="no">No</option>
-			</select>
-		</div>
-	</section>
+	<div class="filter-group">
+		<label for="payment">Payment</label>
+		<select id="payment" bind:value={filterPayment}>
+			<option value="all">All</option>
+			<option value="paid">Paid</option>
+			<option value="pending">Pending</option>
+			<option value="failed">Failed</option>
+		</select>
+	</div>
+	<div class="filter-group">
+		<label for="fulfillment">Fulfillment</label>
+		<select id="fulfillment" bind:value={filterFulfillment}>
+			<option value="all">All</option>
+			<option value="unfulfilled">Unfulfilled</option>
+			<option value="shipped">Shipped</option>
+			<option value="delivered">Delivered</option>
+			<option value="cancelled">Cancelled</option>
+		</select>
+	</div>
+	<div class="filter-group">
+		<label for="preorder">Pre-order</label>
+		<select id="preorder" bind:value={filterPreorder}>
+			<option value="all">All</option>
+			<option value="yes">Yes</option>
+			<option value="no">No</option>
+		</select>
+	</div>
+</section>
 
-	<section class="log">
-		<div class="section-label">// LOG</div>
-		{#each filteredOrders as order (order.id)}
-			<div class="entry">
-				<span class="date">{fmtDateTime(order.createdAt)}</span>
-				<div class="entry-body">
-					<span class="product">
-						{order.productId}
-						{#if order.isPreorder}
-							<span class="tag">PREORDER</span>
-						{/if}
-					</span>
-					{#if order.customerEmail}
-						<span class="email">{order.customerEmail}</span>
+<section class="log">
+	<div class="section-label">// LOG</div>
+	{#each filteredOrders as order (order.id)}
+		<div class="entry">
+			<span class="date">{fmtDateTime(order.createdAt)}</span>
+			<div class="entry-body">
+				<span class="product">
+					{order.productId}
+					{#if order.isPreorder}
+						<span class="tag">PREORDER</span>
 					{/if}
-					{#if fmtAddress(order.shippingName, order.shippingAddress)}
-						<span class="address">{fmtAddress(order.shippingName, order.shippingAddress)}</span>
-					{/if}
-				</div>
-				<span class="amount">{fmtCents(order.amountTotal, order.currency)}</span>
-				<div class="statuses">
-					<span class="status">
-						<Led tone={statusTone(order.status)} />
-						{order.status.toUpperCase()}
-					</span>
-					<span class="status">
-						<Led tone={statusTone(order.fulfillmentStatus)} />
-						{order.fulfillmentStatus.toUpperCase()}
-					</span>
-				</div>
+				</span>
+				{#if order.customerEmail}
+					<span class="email">{order.customerEmail}</span>
+				{/if}
+				{#if fmtAddress(order.shippingName, order.shippingAddress)}
+					<span class="address">{fmtAddress(order.shippingName, order.shippingAddress)}</span>
+				{/if}
 			</div>
-		{:else}
-			<p class="empty">// NO RECORDS FOUND</p>
-		{/each}
+			<span class="amount">{fmtCents(order.amountTotal, order.currency)}</span>
+			<div class="statuses">
+				<span class="status">
+					<Led tone={statusTone(order.status)} />
+					{order.status.toUpperCase()}
+				</span>
+				<span class="status">
+					<Led tone={statusTone(order.fulfillmentStatus)} />
+					{order.fulfillmentStatus.toUpperCase()}
+				</span>
+			</div>
+		</div>
+	{:else}
+		<p class="empty">// NO RECORDS FOUND</p>
+	{/each}
 </section>
 
 <style>

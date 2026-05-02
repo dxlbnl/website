@@ -20,18 +20,16 @@
 
 <div class="wrap">
 	<PageHero eyebrow="// NOTES · LONGER PIECES" title="Notes.">
-		{#snippet children()}
-			<p class="sub">
-				Longer writing. Build logs, post-mortems, opinions. Written when something took long enough to
-				be worth explaining. Signed by <em>Dexter</em>.
-			</p>
-			<div class="meta">
-				<span><b>{data.entries.length}</b> PIECES</span>
-				{#if data.entries[0]}
-					<span><b>LATEST</b> {fmtDate(data.entries[0].date)}</span>
-				{/if}
-			</div>
-		{/snippet}
+		<p class="sub">
+			Longer writing. Build logs, post-mortems, opinions. Written when something took long enough to
+			be worth explaining. Signed by <em>Dexter</em>.
+		</p>
+		<div class="meta">
+			<span><b>{data.entries.length}</b> PIECES</span>
+			{#if data.entries[0]}
+				<span><b>LATEST</b> {fmtDate(data.entries[0].date)}</span>
+			{/if}
+		</div>
 	</PageHero>
 
 	<SectionH num="// INDEX" title="All notes" sub="NEWEST FIRST" />

@@ -25,6 +25,12 @@
       "skillPath": "SKILL.md",
       "computedHash": "d4632251d38a192191678a81da33d7eed72b3ca94e1ced4aebc41f4f3bf4922e"
     },
+    "security-review": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "skillPath": "skills/security-review/SKILL.md",
+      "computedHash": "9814020fb226bff5a25c01f6862be0ca2853187230e25bb092689b8ec3a23759"
+    },
     "stripe-best-practices": {
       "source": "docs.stripe.com",
       "sourceType": "well-known",

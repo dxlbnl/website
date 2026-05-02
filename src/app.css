@@ -175,7 +175,9 @@ h6 {
 	background: none;
 	cursor: pointer;
 	white-space: nowrap;
-	transition: background 0.15s, color 0.15s;
+	transition:
+		background 0.15s,
+		color 0.15s;
 }
 .btn-ghost:hover {
 	background: var(--amber);
@@ -229,7 +231,9 @@ h6 {
 	cursor: pointer;
 	padding: 3px 7px;
 	border-radius: var(--radius);
-	transition: color 0.15s, border-color 0.15s;
+	transition:
+		color 0.15s,
+		border-color 0.15s;
 }
 .btn-del:hover {
 	color: var(--danger);

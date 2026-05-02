@@ -1,6 +1,7 @@
 import { render } from 'svelte/server';
 import MailingTemplate from './MailingTemplate.svelte';
 import OrderConfirm from './OrderConfirm.svelte';
+import { emailImgUrl } from './image';
 
 export type OrderConfirmProps = {
 	productId: string;
@@ -15,6 +16,14 @@ function clean(html: string): string {
 	return html.replace(/<!--\[!?-->|<!--]-->/g, '');
 }
 
+// Rewrite relative img src paths through Vercel image optimization at 600px
+function absolutifyImages(html: string): string {
+	return html.replace(
+		/(<img\s[^>]*src=")(\/[^"]+)"/g,
+		(_, tag, path) => `${tag}${emailImgUrl(path)}"`
+	);
+}
+
 export function renderMailingEmail(
 	title: string,
 	bodyComponent: import('svelte').Component,
@@ -23,7 +32,10 @@ export function renderMailingEmail(
 	const { body: html } = render(MailingTemplate, {
 		props: { title, BodyComponent: bodyComponent, date }
 	});
-	return clean(html).replace('RESEND_UNSUBSCRIBE_PLACEHOLDER', '{{{RESEND_UNSUBSCRIBE_URL}}}');
+	return absolutifyImages(clean(html)).replace(
+		'RESEND_UNSUBSCRIBE_PLACEHOLDER',
+		'{{{RESEND_UNSUBSCRIBE_URL}}}'
+	);
 }
 
 export function renderOrderEmail(props: OrderConfirmProps): string {
