@@ -27,6 +27,9 @@ async function verifySvixSignature(
 	return svixSignature.split(' ').some((s) => s === `v1,${computed}`);
 }
 
+export const prerender = false;
+export const trailingSlash = 'ignore';
+
 export const POST = async ({ request }) => {
 	const svixId = request.headers.get('svix-id') ?? '';
 	const svixTimestamp = request.headers.get('svix-timestamp') ?? '';
