@@ -1,5 +1,5 @@
 import type { ProductFrontmatter } from '$lib/types';
-import { fmtCurrency } from '$lib/utils/fmt';
+import { fmtCents } from '$lib/utils/fmt';
 import { isEU, type Region } from '$lib/utils/location';
 
 type StockInfo = { label: string; cls: string; led: 'ok' | 'amber' | 'off'; ship?: string };
@@ -16,7 +16,7 @@ const STOCK_MAP: Record<
 export function useProduct(getProduct: () => ProductFrontmatter, getRegion: () => Region) {
 	const eu = $derived(isEU(getRegion()));
 	const price = $derived(eu ? getProduct().priceIncl : getProduct().priceExcl);
-	const displayPrice = $derived(price ? fmtCurrency(price) : '');
+	const displayPrice = $derived(price ? fmtCents(price) : '');
 	const taxLabel = $derived(eu ? 'incl. BTW' : 'excl. VAT');
 	const orderable = $derived(Boolean(getProduct().stripeProduct));
 	const cta = $derived(

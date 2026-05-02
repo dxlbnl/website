@@ -96,7 +96,7 @@
 				image: productImages,
 				offers: {
 					'@type': 'Offer',
-					price: product.priceIncl,
+					price: (product.priceIncl / 100).toFixed(2),
 					priceCurrency: 'EUR',
 					availability,
 					url,

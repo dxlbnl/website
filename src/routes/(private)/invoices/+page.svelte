@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
-	import { calculateInvoice, fmtDate, fmtCurrency } from '$lib/invoice';
+	import { calculateInvoice } from '$lib/invoice';
+	import { fmtCurrency, fmtDate } from '$lib/utils/fmt';
 
 	let { data }: { data: PageData } = $props();
 	let invoices = $derived(data.invoices);
