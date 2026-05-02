@@ -1,13 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import QRCode from 'qrcode';
-	import {
-		calculateInvoice,
-		fmtCurrency,
-		fmtDate,
-		generatePaymentUrl,
-		generateInvoicePDF
-	} from '$lib/invoice';
+	import { calculateInvoice, generateInvoicePDF } from '$lib/invoice';
+	import { fmtCurrency, fmtDate, generatePaymentUrl } from '$lib/utils/fmt';
 
 	let { data }: { data: PageData } = $props();
 	let invoice = $derived(data.invoice);
