@@ -13,8 +13,8 @@ images:
   - media/distrans-space-1.png
   - media/distrans-space.png
   - media/distrans-tv-glitch.png
-priceIncl: 250
-priceExcl: 220
+priceIncl: 25000
+priceExcl: 22000
 specs:
   Width: 6 HP
   Depth: 28mm (Skiff Friendly)

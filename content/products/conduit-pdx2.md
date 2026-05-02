@@ -11,8 +11,8 @@ images:
   - media/conduit-galaxy.webp
   - media/conduit-motherboard.webp
   - media/conduit-starglitch.webp
-priceIncl: 200
-priceExcl: 180
+priceIncl: 20000
+priceExcl: 18000
 specs:
   Width: 4 HP
   Depth: 15mm (Ultra-Shallow)
