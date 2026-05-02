@@ -4,7 +4,9 @@ import {
 	STRIPE_SECRET_KEY,
 	STRIPE_WEBHOOK_SECRET,
 	RESEND_API_KEY,
-	RESEND_FROM
+	RESEND_FROM,
+	RESEND_REPLY_TO,
+	RESEND_ADMIN_EMAIL
 } from '$env/static/private';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
@@ -75,6 +77,7 @@ export const POST: RequestHandler = async ({ request }) => {
 						});
 						const { data: emailData } = await resend.emails.send({
 							from: RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
+							replyTo: RESEND_REPLY_TO || undefined,
 							to: session.customer_details.email,
 							subject: 'Order received - DEXTERLABS',
 							html
@@ -84,6 +87,28 @@ export const POST: RequestHandler = async ({ request }) => {
 								.update(orders)
 								.set({ resendEmailId: emailData.id })
 								.where(eq(orders.stripeSessionId, session.id));
+						}
+
+						if (RESEND_ADMIN_EMAIL) {
+							const addr = session.collected_information?.shipping_details?.address;
+							const addrStr = addr
+								? [addr.line1, addr.line2, addr.city, addr.postal_code, addr.country]
+										.filter(Boolean)
+										.join(', ')
+								: 'unknown';
+							const amountStr = `${((session.amount_total ?? 0) / 100).toFixed(2)} ${(session.currency ?? 'eur').toUpperCase()}`;
+							await resend.emails.send({
+								from: RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
+								to: RESEND_ADMIN_EMAIL,
+								subject: `New order: ${session.metadata?.productId ?? 'unknown'}`,
+								text: [
+									`Product: ${session.metadata?.productId ?? 'unknown'}`,
+									`Customer: ${session.customer_details?.name ?? 'unknown'} <${session.customer_details?.email}>`,
+									`Amount: ${amountStr}`,
+									`Shipping: ${session.collected_information?.shipping_details?.name ?? 'unknown'}, ${addrStr}`,
+									`Session: ${session.id}`
+								].join('\n')
+							});
 						}
 					} catch (err) {
 						console.error('[webhook] order email failed', err);

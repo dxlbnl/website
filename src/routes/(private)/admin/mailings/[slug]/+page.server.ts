@@ -1,5 +1,10 @@
 import { error, fail } from '@sveltejs/kit';
-import { RESEND_API_KEY, RESEND_SEGMENT_ID, RESEND_FROM } from '$env/static/private';
+import {
+	RESEND_API_KEY,
+	RESEND_SEGMENT_ID,
+	RESEND_FROM,
+	RESEND_REPLY_TO
+} from '$env/static/private';
 import { Resend } from 'resend';
 import { renderMailingEmail } from '$lib/email/render';
 import { db } from '$lib/server/db';
@@ -75,6 +80,7 @@ export const actions: Actions = {
 		const { data, error: resendError } = await resend.broadcasts.create({
 			segmentId: RESEND_SEGMENT_ID ?? '',
 			from: RESEND_FROM ?? 'DEXTERLABS <hello@dxlb.nl>',
+			replyTo: RESEND_REPLY_TO || undefined,
 			name: mod.metadata.title,
 			subject: mod.metadata.subject,
 			html: emailHtml
