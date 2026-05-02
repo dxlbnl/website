@@ -56,6 +56,9 @@
 			{pd.stock.label}{#if pd.stock.ship}
 				· {pd.stock.ship}{/if}
 		</span>
+		{#if product.status === 'coming-soon'}
+			<span class="preorder-note">Preorder price — may increase at launch</span>
+		{/if}
 	</div>
 	{#if product.status === 'available' || product.status === 'coming-soon'}
 		{#if product.stripeProduct}
@@ -165,5 +168,13 @@
 	}
 	.notify-form {
 		width: 100%;
+	}
+	.preorder-note {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: color-mix(in srgb, var(--amber) 70%, var(--ink-faint));
+		margin-top: 2px;
 	}
 </style>

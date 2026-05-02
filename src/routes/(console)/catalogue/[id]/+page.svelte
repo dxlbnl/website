@@ -30,6 +30,16 @@
 	product={data.product}
 />
 
+{#if data.product.status === 'coming-soon'}
+	<div class="preorder-banner">
+		<div class="banner-inner">
+			<span class="banner-label">// PREORDER</span>
+			<span class="banner-sep">·</span>
+			<span class="banner-text">Early access pricing — lock in this price before launch</span>
+		</div>
+	</div>
+{/if}
+
 <div class="wrap">
 	<div class="back-row">
 		<a href={resolve('/catalogue/')} class="btn-back">← RETURN TO CATALOGUE</a>
@@ -106,6 +116,61 @@
 </div>
 
 <style>
+	.preorder-banner {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		background-color: color-mix(in srgb, var(--amber) 18%, var(--bg));
+		background-image: repeating-linear-gradient(
+			-45deg,
+			transparent 0,
+			transparent 10px,
+			color-mix(in srgb, var(--amber) 25%, transparent) 10px,
+			color-mix(in srgb, var(--amber) 25%, transparent) 20px
+		);
+	}
+	.banner-inner {
+		max-width: 1440px;
+		margin: 0 auto;
+		padding: 10px 32px;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		font-weight: 800;
+		letter-spacing: 0.08em;
+
+		@media (max-width: 720px) {
+			padding: 8px 16px;
+		}
+	}
+	.banner-label {
+		color: var(--amber);
+		font-weight: bold;
+		white-space: nowrap;
+		flex-shrink: 0;
+		text-shadow:
+			0 0 3px var(--bg),
+			0 0 3px var(--bg),
+			0 0 3px var(--bg);
+	}
+	.banner-sep {
+		color: var(--ink-dim);
+		flex-shrink: 0;
+		text-shadow:
+			0 0 3px var(--bg),
+			0 0 3px var(--bg),
+			0 0 3px var(--bg);
+	}
+	.banner-text {
+		color: var(--ink);
+		text-transform: uppercase;
+		text-shadow:
+			0 0 3px var(--bg),
+			0 0 3px var(--bg),
+			0 0 3px var(--bg);
+	}
 	.wrap {
 		max-width: 1440px;
 		margin: 0 auto;
