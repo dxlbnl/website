@@ -36,9 +36,15 @@
 	function waitIce(conn: RTCPeerConnection) {
 		return new Promise<void>((resolve) => {
 			if (conn.iceGatheringState === 'complete') { resolve(); return; }
+			let done = false;
+			const finish = () => { if (!done) { done = true; resolve(); } };
 			conn.addEventListener('icegatheringstatechange', () => {
-				if (conn.iceGatheringState === 'complete') resolve();
+				if (conn.iceGatheringState === 'complete') finish();
 			});
+			// null candidate = end-of-candidates signal (more reliable on mobile/Safari)
+			conn.addEventListener('icecandidate', (e) => { if (e.candidate === null) finish(); });
+			// fallback: proceed after 5s even if gathering never formally completes
+			setTimeout(finish, 5000);
 		});
 	}
 
