@@ -23,7 +23,7 @@
 	let pendingAnswer: string = $state('');
 	let trustedPeers: TrustedPeer[] = $state([]);
 	let chat: ChatEntry[] = $state([]);
-	let pendingGuestSessionId: string | null = $state(null);
+	let directedTo: string = $state('');
 
 	let pc: RTCPeerConnection | null = null;
 	let dc: RTCDataChannel | null = null;
@@ -76,9 +76,10 @@
 	function mkPc() {
 		pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
 		pc.onconnectionstatechange = () => {
-			if (pc?.connectionState === 'failed' || pc?.connectionState === 'disconnected' || pc?.connectionState === 'closed') {
+			// 'disconnected' is transient (mobile screen off) — only hard-fail on 'failed'
+			if (pc?.connectionState === 'failed') {
 				phase = 'error';
-				errorMsg = `Connection state: ${pc.connectionState}`;
+				errorMsg = 'Connection failed';
 			}
 		};
 		return pc;
@@ -145,6 +146,7 @@
 	async function startSession(name: string, targetDeviceId?: string) {
 		myName = name;
 		lsSet('share-name', name);
+		directedTo = targetDeviceId ? (trustedPeers.find((p) => p.id === targetDeviceId)?.name ?? '') : '';
 		phase = 'offering';
 		try {
 			const conn = mkPc();
@@ -174,9 +176,9 @@
 
 	async function startGuestSession(name: string) {
 		myName = name;
-		if (!pendingGuestSessionId) throw new Error('Session ID not found');
-		await joinSession(pendingGuestSessionId, name.trim() || 'Guest');
-		pendingGuestSessionId = null;
+		const s = new URLSearchParams(window.location.search).get('s');
+		if (!s) { fail(new Error('Session ID not found')); return; }
+		await joinSession(s, name.trim() || 'Guest');
 	}
 
 	function pollHost() {
@@ -330,15 +332,19 @@
 		}
 	}
 
-	function fail(e: unknown) { errorMsg = String(e); phase = 'error'; }
-	function reset() { phase = 'idle'; pc?.close(); pc = null; dc = null; stopPoll(); chat = []; startPendingPoll(); }
+	function fail(e: unknown) { stopPoll(); errorMsg = String(e); phase = 'error'; }
+	function reset() {
+		pc?.close(); pc = null; dc = null;
+		stopPoll(); chat = []; directedTo = '';
+		// Clear stale ?s= so the expired session ID doesn't re-trigger guest-setup
+		if (window.location.search) history.replaceState({}, '', window.location.pathname);
+		phase = 'idle';
+		startPendingPoll();
+	}
 
 	$effect(() => {
 		const s = $page.url.searchParams.get('s');
-		if (s && phase === 'idle') {
-			pendingGuestSessionId = s;
-			phase = 'guest-setup';
-		}
+		if (s && phase === 'idle') phase = 'guest-setup';
 	});
 
 	// Start pending poll once we have a device ID and no ?s= param
@@ -381,7 +387,11 @@
 		</div>
 
 	{:else if phase === 'waiting'}
-		<ShareWaiting {shareUrl} onanswer={(s) => { sessionId = s; pollHost(); }} />
+		{#if directedTo}
+			<div class="status"><Led tone="amber" blink /> <span>Waiting for <strong>{directedTo}</strong> to open /share/…</span></div>
+		{:else}
+			<ShareWaiting {shareUrl} onanswer={(s) => { sessionId = s; pollHost(); }} />
+		{/if}
 
 	{:else if phase === 'approving'}
 		<ShareApproval

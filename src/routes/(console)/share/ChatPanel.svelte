@@ -18,6 +18,7 @@
 	let dragging: boolean = $state(false);
 	let fileInput: HTMLInputElement | null = $state(null);
 	let messagesEl: HTMLElement | null = $state(null);
+	let textareaEl: HTMLTextAreaElement | null = $state(null);
 
 	function fmtTime(d: Date) {
 		return d.toLocaleTimeString('en-NL', { hour: '2-digit', minute: '2-digit' });
@@ -55,6 +56,14 @@
 	$effect(() => {
 		void chat.length;
 		tick().then(() => { if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; });
+	});
+
+	// Auto-grow textarea
+	$effect(() => {
+		void text;
+		if (!textareaEl) return;
+		textareaEl.style.height = 'auto';
+		textareaEl.style.height = Math.min(textareaEl.scrollHeight, 160) + 'px';
 	});
 </script>
 
@@ -101,16 +110,7 @@
 		{/each}
 	</div>
 
-	<div class="composer">
-		<button
-			class="tag-btn"
-			class:active={isSecret}
-			title={isSecret ? 'Secret on' : 'Toggle secret'}
-			onclick={() => (isSecret = !isSecret)}
-			aria-label="Toggle secret"
-		>SEC</button>
-		<input type="file" multiple bind:this={fileInput} onchange={onFileChange} style="display:none" />
-		<button class="tag-btn" title="Attach file" onclick={() => fileInput?.click()} aria-label="Attach">FILE</button>
+	<div class="composer" class:secret-mode={isSecret}>
 		{#if isSecret}
 			<input
 				type="password"
@@ -123,12 +123,23 @@
 			<textarea
 				class="field"
 				bind:value={text}
+				bind:this={textareaEl}
 				{onkeydown}
-				placeholder="Message… (Enter to send)"
+				placeholder="Message… (Shift+Enter for newline)"
 				rows="1"
 			></textarea>
 		{/if}
-		<button class="btn-primary" onclick={send} disabled={!text.trim()}>Send</button>
+		<div class="actions">
+			<input type="file" multiple bind:this={fileInput} onchange={onFileChange} style="display:none" />
+			<button class="action-btn" onclick={() => fileInput?.click()} title="Attach file">↑ Attach</button>
+			<button
+				class="action-btn"
+				class:active={isSecret}
+				onclick={() => (isSecret = !isSecret)}
+				title={isSecret ? 'Disable secret mode' : 'Send as secret (blurred)'}
+			>{isSecret ? '× Secret' : '+ Secret'}</button>
+			<button class="btn-primary send-btn" onclick={send} disabled={!text.trim()}>Send</button>
+		</div>
 	</div>
 </div>
 
@@ -233,38 +244,18 @@
 
 	.composer {
 		display: flex;
-		align-items: flex-end;
+		flex-direction: column;
 		gap: calc(var(--u) * 1);
 		padding: calc(var(--u) * 2);
 		border-top: 1px solid var(--rule);
+		transition: border-color 0.15s;
 	}
-
-	.tag-btn {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.1em;
-		background: transparent;
-		border: 1px solid var(--rule);
-		border-radius: var(--radius);
-		color: var(--ink-faint);
-		cursor: pointer;
-		padding: 4px 7px;
-		flex-shrink: 0;
-		white-space: nowrap;
-		transition: color 0.15s, border-color 0.15s, background 0.15s;
-	}
-	.tag-btn:hover {
-		color: var(--ink-dim);
-		border-color: var(--rule-strong);
-	}
-	.tag-btn.active {
-		color: var(--amber);
-		border-color: var(--amber);
-		background: var(--bg-sunken);
+	.composer.secret-mode {
+		border-top-color: var(--amber);
 	}
 
 	.field {
-		flex: 1;
+		width: 100%;
 		background: var(--bg-sunken);
 		border: 1px solid var(--rule);
 		border-radius: var(--radius);
@@ -275,11 +266,46 @@
 		resize: none;
 		outline: none;
 		line-height: 1.5;
-		max-height: 120px;
-		overflow-y: auto;
+		overflow-y: hidden;
+		box-sizing: border-box;
 		transition: border-color 0.15s;
 	}
 	.field:focus {
 		border-color: var(--amber);
+	}
+	.composer.secret-mode .field {
+		border-color: var(--amber);
+	}
+
+	.actions {
+		display: flex;
+		align-items: center;
+		gap: calc(var(--u) * 1);
+	}
+
+	.action-btn {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		background: transparent;
+		border: 1px solid var(--rule);
+		border-radius: var(--radius);
+		color: var(--ink-faint);
+		cursor: pointer;
+		padding: 4px 8px;
+		flex-shrink: 0;
+		transition: color 0.15s, border-color 0.15s;
+	}
+	.action-btn:hover {
+		color: var(--ink-dim);
+		border-color: var(--rule-strong);
+	}
+	.action-btn.active {
+		color: var(--amber);
+		border-color: var(--amber);
+	}
+
+	.send-btn {
+		margin-left: auto;
 	}
 </style>
