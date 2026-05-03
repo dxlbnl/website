@@ -2,8 +2,13 @@ import { json, error } from '@sveltejs/kit';
 import { z } from 'zod';
 import { db } from '$lib/server/db';
 import { shareSessions } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, lt } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
+
+async function cleanupOldSessions() {
+	const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+	await db.delete(shareSessions).where(lt(shareSessions.createdAt, tenMinutesAgo));
+}
 
 async function getSession(id: string) {
 	const rows = await db.select().from(shareSessions).where(eq(shareSessions.id, id)).limit(1);
@@ -11,6 +16,8 @@ async function getSession(id: string) {
 }
 
 export const GET: RequestHandler = async ({ params }) => {
+	await cleanupOldSessions();
+
 	const session = await getSession(params.id);
 	if (!session) error(404, 'Session not found');
 
@@ -30,6 +37,8 @@ const answerSchema = z.object({
 });
 
 export const PUT: RequestHandler = async ({ params, request }) => {
+	await cleanupOldSessions();
+
 	const session = await getSession(params.id);
 	if (!session) error(404, 'Session not found');
 	if (session.answer) error(409, 'Answer already submitted');
@@ -56,6 +65,8 @@ const patchSchema = z
 	);
 
 export const PATCH: RequestHandler = async ({ params, request }) => {
+	await cleanupOldSessions();
+
 	const session = await getSession(params.id);
 	if (!session) error(404, 'Session not found');
 	if (!session.answer) error(400, 'No answer to approve');
