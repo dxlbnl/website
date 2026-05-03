@@ -103,21 +103,31 @@
 
 	<div class="composer">
 		<button
-			class="icon-btn"
+			class="tag-btn"
 			class:active={isSecret}
 			title={isSecret ? 'Secret on' : 'Toggle secret'}
 			onclick={() => (isSecret = !isSecret)}
 			aria-label="Toggle secret"
-		>🔒</button>
+		>SEC</button>
 		<input type="file" multiple bind:this={fileInput} onchange={onFileChange} style="display:none" />
-		<button class="icon-btn" title="Attach file" onclick={() => fileInput?.click()} aria-label="Attach">📎</button>
-		<textarea
-			class="field"
-			bind:value={text}
-			{onkeydown}
-			placeholder={isSecret ? 'Secret message… (Enter to send)' : 'Message… (Enter to send)'}
-			rows="1"
-		></textarea>
+		<button class="tag-btn" title="Attach file" onclick={() => fileInput?.click()} aria-label="Attach">FILE</button>
+		{#if isSecret}
+			<input
+				type="password"
+				class="field"
+				bind:value={text}
+				onkeydown={(e) => { if (e.key === 'Enter') { e.preventDefault(); send(); } }}
+				placeholder="Secret message…"
+			/>
+		{:else}
+			<textarea
+				class="field"
+				bind:value={text}
+				{onkeydown}
+				placeholder="Message… (Enter to send)"
+				rows="1"
+			></textarea>
+		{/if}
 		<button class="btn-primary" onclick={send} disabled={!text.trim()}>Send</button>
 	</div>
 </div>
@@ -229,25 +239,28 @@
 		border-top: 1px solid var(--rule);
 	}
 
-	.icon-btn {
+	.tag-btn {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.1em;
 		background: transparent;
 		border: 1px solid var(--rule);
 		border-radius: var(--radius);
+		color: var(--ink-faint);
 		cursor: pointer;
-		font-size: 1rem;
-		padding: calc(var(--u) * 0.75);
-		opacity: 0.6;
-		line-height: 1;
+		padding: 4px 7px;
 		flex-shrink: 0;
-		transition: opacity 0.15s, background 0.15s, border-color 0.15s;
+		white-space: nowrap;
+		transition: color 0.15s, border-color 0.15s, background 0.15s;
 	}
-	.icon-btn:hover,
-	.icon-btn.active {
-		opacity: 1;
+	.tag-btn:hover {
+		color: var(--ink-dim);
+		border-color: var(--rule-strong);
 	}
-	.icon-btn.active {
-		background: var(--bg-sunken);
+	.tag-btn.active {
+		color: var(--amber);
 		border-color: var(--amber);
+		background: var(--bg-sunken);
 	}
 
 	.field {

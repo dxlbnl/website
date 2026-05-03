@@ -22,6 +22,7 @@
 		background: var(--bg-elev);
 		border: 1px solid var(--rule);
 		border-radius: var(--radius-card);
+		max-width: 520px;
 	}
 
 	.status {
