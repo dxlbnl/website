@@ -1,5 +1,6 @@
 <script lang="ts">
 	import QRCode from 'qrcode';
+	import { copyToClipboard } from '$lib/utils/clipboard';
 	import Led from '$lib/ui/Led.svelte';
 
 	type Props = { shareUrl: string; onanswer: (sessionId: string) => void };
@@ -19,7 +20,7 @@
 	});
 
 	function copyLink() {
-		navigator.clipboard.writeText(shareUrl);
+		copyToClipboard(shareUrl);
 	}
 
 	function connect() {

@@ -9,8 +9,8 @@ import type { RequestHandler } from './$types';
 const schema = z.object({
 	offer: z.string().min(10),
 	hostName: z.string().max(64).default('Host'),
-	hostDeviceId: z.string().uuid().optional(),
-	targetDeviceId: z.string().uuid().optional()
+	hostDeviceId: z.string().min(10).optional(),
+	targetDeviceId: z.string().min(10).optional()
 });
 
 export const POST: RequestHandler = async ({ request }) => {

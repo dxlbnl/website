@@ -7,7 +7,7 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
 	const forDevice = url.searchParams.get('for');
-	if (!z.string().uuid().safeParse(forDevice).success) error(400, 'Invalid device ID');
+	if (!forDevice || forDevice.length < 10) error(400, 'Invalid device ID');
 
 	const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
 	const rows = await db

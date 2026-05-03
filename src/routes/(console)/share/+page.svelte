@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { nanoid } from 'nanoid';
 	import { onDestroy, onMount } from 'svelte';
 	import { z } from 'zod';
 	import { page } from '$app/stores';
@@ -12,6 +13,7 @@
 	import type { ShareState, ChatEntry, MsgFile, TrustedPeer } from './types';
 
 	let phase: ShareState = $state('idle');
+	let isReconnecting: boolean = $state(false);
 	let myName: string = $state('');
 	let myDeviceId: string = $state('');
 	let peerName: string = $state('');
@@ -29,11 +31,11 @@
 	let dc: RTCDataChannel | null = null;
 	let pollTimer: ReturnType<typeof setInterval> | null = null;
 	let pendingPollTimer: ReturnType<typeof setInterval> | null = null;
-	const inFlight = new Map<string, { meta: MsgFile; chunks: string[]; total: number }>();
+	const inFlight = new Map<string, { meta: MsgFile; chunks: ArrayBuffer[]; total: number }>();
 
 	const MsgText = z.object({ type: z.literal('text'), content: z.string(), secret: z.boolean().optional() });
 	const MsgFileStart = z.object({ type: z.literal('file-start'), id: z.string(), name: z.string(), size: z.number(), mimeType: z.string(), totalChunks: z.number() });
-	const MsgFileChunk = z.object({ type: z.literal('file-chunk'), id: z.string(), data: z.string() });
+	const MsgFileChunk = z.object({ type: z.literal('file-chunk'), id: z.string(), data: z.string(), index: z.number().optional(), total: z.number().optional() });
 	const MsgFileEnd = z.object({ type: z.literal('file-end'), id: z.string() });
 	const AnyMsg = z.discriminatedUnion('type', [MsgText, MsgFileStart, MsgFileChunk, MsgFileEnd]);
 
@@ -53,8 +55,8 @@
 	onMount(() => {
 		// Load/create stable device identity
 		let storedId = lsGet('share-device-id');
-		if (!storedId || !z.string().uuid().safeParse(storedId).success) {
-			storedId = crypto.randomUUID();
+		if (!storedId || storedId.length < 10) {
+			storedId = nanoid();
 			lsSet('share-device-id', storedId);
 		}
 		myDeviceId = storedId;
@@ -73,13 +75,31 @@
 	function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
 	function stopPendingPoll() { if (pendingPollTimer) { clearInterval(pendingPollTimer); pendingPollTimer = null; } }
 
+	async function waitForBuffer() {
+		if (!dc) return;
+		if (dc.bufferedAmount < 1024 * 1024 * 4) return;
+		return new Promise<void>((resolve) => {
+			const check = () => {
+				if (!dc || dc.readyState !== 'open' || dc.bufferedAmount < 1024 * 1024 * 2) resolve();
+				else setTimeout(check, 50);
+			};
+			check();
+		});
+	}
+
+
+
 	function mkPc() {
 		pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
 		pc.onconnectionstatechange = () => {
-			// 'disconnected' is transient (mobile screen off) — only hard-fail on 'failed'
 			if (pc?.connectionState === 'failed') {
 				phase = 'error';
 				errorMsg = 'Connection failed';
+			} else if (pc?.connectionState === 'disconnected') {
+				isReconnecting = true;
+			} else if (pc?.connectionState === 'connected') {
+				isReconnecting = false;
+				phase = 'connected';
 			}
 		};
 		return pc;
@@ -100,7 +120,9 @@
 
 	function openChannel(ch: RTCDataChannel) {
 		dc = ch;
-		ch.onopen = () => { phase = 'connected'; };
+		const onOpen = () => { phase = 'connected'; isReconnecting = false; stopPoll(); stopPendingPoll(); };
+		ch.onopen = onOpen;
+		if (ch.readyState === 'open') onOpen();
 		ch.onmessage = (e: MessageEvent) => onMessage(e.data as string);
 		ch.onclose = () => { phase = 'error'; errorMsg = 'Connection closed by peer'; };
 		ch.onerror = () => { phase = 'error'; errorMsg = 'Data channel error occurred'; };
@@ -123,13 +145,13 @@
 		} else if (msg.type === 'file-chunk') {
 			const f = inFlight.get(msg.id);
 			if (!f) return;
-			f.chunks.push(msg.data);
+			f.chunks.push(base64ToBinary(msg.data).buffer as ArrayBuffer);
 			const e = chat.find((c): c is MsgFile => c.id === msg.id && c.kind === 'file');
 			if (e) e.progress = f.chunks.length / f.total;
 		} else if (msg.type === 'file-end') {
 			const f = inFlight.get(msg.id);
 			if (!f) return;
-			const blob = new Blob(f.chunks.map((b) => base64ToBinary(b).buffer as ArrayBuffer), { type: f.meta.mimeType });
+			const blob = new Blob(f.chunks, { type: f.meta.mimeType });
 			const blobUrl = URL.createObjectURL(blob);
 			const e = chat.find((c): c is MsgFile => c.id === msg.id && c.kind === 'file');
 			if (e) {
@@ -262,8 +284,12 @@
 			const data = (await res.json()) as { denied?: boolean; approved?: boolean; hostName?: string };
 			if (data.denied) { stopPoll(); phase = 'denied'; }
 			// When approved, remember the host as trusted (they implicitly trusted us by approving)
-			if (data.approved && hostDeviceId && !isTrusted(hostDeviceId)) {
-				addTrusted(hostDeviceId, data.hostName ?? peerName);
+			if (data.approved) {
+				stopPoll();
+				if (phase === 'guest-waiting') phase = 'connecting';
+				if (hostDeviceId && !isTrusted(hostDeviceId)) {
+					addTrusted(hostDeviceId, data.hostName ?? peerName);
+				}
 			}
 		}, 2000);
 	}
@@ -309,7 +335,6 @@
 		const CHUNK = 64 * 1024;
 		for (const file of files) {
 			const id = uid();
-			const buf = await file.arrayBuffer();
 			const totalChunks = Math.ceil(file.size / CHUNK);
 			const mimeType = file.type || 'application/octet-stream';
 			const entry: MsgFile = { kind: 'file', id, name: file.name, size: file.size, mimeType, dir: 'out', ts: new Date(), progress: 0 };
@@ -317,26 +342,36 @@
 
 			dc.send(JSON.stringify({ type: 'file-start', id, name: file.name, size: file.size, mimeType, totalChunks }));
 			for (let i = 0; i < totalChunks; i++) {
-				const chunk = new Uint8Array(buf.slice(i * CHUNK, (i + 1) * CHUNK));
+				if (!dc || dc.readyState !== 'open') break;
+				const blobSlice = file.slice(i * CHUNK, (i + 1) * CHUNK);
+				const buf = await blobSlice.arrayBuffer();
+				const chunk = new Uint8Array(buf);
 				const data = binaryToBase64(chunk);
+				
+				await waitForBuffer();
+				if (!dc || dc.readyState !== 'open') break;
+
 				dc.send(JSON.stringify({ type: 'file-chunk', id, index: i, total: totalChunks, data }));
 				entry.progress = (i + 1) / totalChunks;
 			}
-			dc.send(JSON.stringify({ type: 'file-end', id }));
+			if (dc && dc.readyState === 'open') {
+				dc.send(JSON.stringify({ type: 'file-end', id }));
+			}
 
-			const blob = new Blob([buf], { type: mimeType });
-			entry.blobUrl = URL.createObjectURL(blob);
+			entry.blobUrl = URL.createObjectURL(file);
 			if (mimeType.startsWith('text/') || mimeType === 'application/json') {
-				entry.textPreview = (await blob.text()).split('\n').slice(0, 12).join('\n');
+				entry.textPreview = (await file.slice(0, 1024 * 4).text()).split('\n').slice(0, 12).join('\n');
 			}
 		}
 	}
 
 	function fail(e: unknown) { stopPoll(); errorMsg = String(e); phase = 'error'; }
 	function reset() {
+		if (dc) { dc.onclose = null; dc.onerror = null; dc.onmessage = null; }
+		if (pc) { pc.onconnectionstatechange = null; }
 		pc?.close(); pc = null; dc = null;
-		stopPoll(); chat = []; directedTo = '';
-		// Clear stale ?s= so the expired session ID doesn't re-trigger guest-setup
+		stopPoll(); chat = []; directedTo = ''; inFlight.clear();
+		isReconnecting = false;
 		if (window.location.search) history.replaceState({}, '', window.location.pathname);
 		phase = 'idle';
 		startPendingPoll();
@@ -373,7 +408,7 @@
 		/>
 
 	{:else if phase === 'guest-setup'}
-		<ShareSetup onstart={startGuestSession} />
+		<ShareSetup name={myName} {trustedPeers} onstart={startGuestSession} onforget={removeTrusted} />
 
 	{:else if phase === 'offering' || phase === 'guest-init' || phase === 'guest-answering' || phase === 'connecting'}
 		<div class="status">
@@ -415,7 +450,7 @@
 	{/if}
 
 	{#if phase === 'connected'}
-		<ChatPanel {peerName} {chat} onsendtext={sendText} onsendfiles={sendFiles} />
+		<ChatPanel {peerName} {chat} {isReconnecting} onsendtext={sendText} onsendfiles={sendFiles} />
 	{/if}
 </div>
 

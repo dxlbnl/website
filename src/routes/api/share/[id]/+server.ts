@@ -36,7 +36,7 @@ export const GET: RequestHandler = async ({ params }) => {
 const answerSchema = z.object({
 	answer: z.string().min(10),
 	peerName: z.string().max(64).default('Guest'),
-	deviceId: z.string().uuid().optional()
+	deviceId: z.string().min(10).optional()
 });
 
 export const PUT: RequestHandler = async ({ params, request }) => {
@@ -48,6 +48,10 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 
 	const result = answerSchema.safeParse(await request.json());
 	if (!result.success) error(400, 'Invalid input');
+
+	if (session.targetDeviceId && session.targetDeviceId !== result.data.deviceId) {
+		error(403, 'This session is directed to another device');
+	}
 
 	await db
 		.update(shareSessions)

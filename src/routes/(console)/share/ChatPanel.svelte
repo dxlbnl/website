@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { copyToClipboard } from '$lib/utils/clipboard';
 	import Led from '$lib/ui/Led.svelte';
 	import FileCard from './FileCard.svelte';
 	import type { ChatEntry } from './types';
@@ -7,14 +8,14 @@
 	type Props = {
 		peerName: string;
 		chat: ChatEntry[];
+		isReconnecting?: boolean;
 		onsendtext: (content: string, secret: boolean) => void;
 		onsendfiles: (files: File[]) => void;
 	};
-	let { peerName, chat, onsendtext, onsendfiles }: Props = $props();
+	let { peerName, chat, isReconnecting = false, onsendtext, onsendfiles }: Props = $props();
 
 	let text: string = $state('');
 	let isSecret: boolean = $state(false);
-	let revealedIds: string[] = $state([]);
 	let dragging: boolean = $state(false);
 	let fileInput: HTMLInputElement | null = $state(null);
 	let messagesEl: HTMLElement | null = $state(null);
@@ -47,11 +48,7 @@
 		if (e.dataTransfer?.files.length) onsendfiles(Array.from(e.dataTransfer.files));
 	}
 
-	function toggleReveal(id: string, on: boolean) {
-		revealedIds = on ? [...revealedIds, id] : revealedIds.filter((x) => x !== id);
-	}
-
-	function copy(content: string) { navigator.clipboard.writeText(content); }
+	function copy(content: string) { copyToClipboard(content); }
 
 	$effect(() => {
 		void chat.length;
@@ -77,8 +74,13 @@
 	aria-label="Chat"
 >
 	<div class="header">
-		<Led tone="ok" />
-		<span>Connected to <strong>{peerName}</strong></span>
+		{#if isReconnecting}
+			<Led tone="amber" blink />
+			<span>Connection lost. Reconnecting to <strong>{peerName}</strong>…</span>
+		{:else}
+			<Led tone="ok" />
+			<span>Connected to <strong>{peerName}</strong></span>
+		{/if}
 	</div>
 
 	<div class="messages" bind:this={messagesEl}>
@@ -88,15 +90,9 @@
 					<div class="bubble" class:secret={entry.secret}>
 						{#if entry.secret}
 							<span class="secret-label"><Led tone="amber" /> Secret</span>
-							<span class="secret-text" class:revealed={revealedIds.includes(entry.id)}>{entry.content}</span>
+							<span class="secret-text">{entry.content}</span>
 							<div class="secret-actions">
 								<button class="btn-del" onclick={() => copy(entry.content)}>Copy</button>
-								<button
-									class="btn-del"
-									onmousedown={() => toggleReveal(entry.id, true)}
-									onmouseup={() => toggleReveal(entry.id, false)}
-									onmouseleave={() => toggleReveal(entry.id, false)}
-								>Hold to reveal</button>
 							</div>
 						{:else}
 							{entry.content}
@@ -222,13 +218,8 @@
 	.secret-text {
 		filter: blur(5px);
 		user-select: none;
-		transition: filter 0.1s;
 		word-break: break-all;
 		max-width: 260px;
-	}
-	.secret-text.revealed {
-		filter: none;
-		user-select: text;
 	}
 	.secret-actions {
 		display: flex;
