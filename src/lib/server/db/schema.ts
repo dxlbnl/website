@@ -6,7 +6,8 @@ import {
 	pgTable,
 	serial,
 	text,
-	timestamp
+	timestamp,
+	varchar
 } from 'drizzle-orm/pg-core';
 
 export const paymentStatusEnum = pgEnum('payment_status', ['pending', 'paid', 'failed']);
@@ -45,6 +46,17 @@ export const feedPosts = pgTable('feed_posts', {
 	body: text('body').notNull(),
 	date: timestamp('date', { withTimezone: true }).notNull().defaultNow(),
 	tags: text('tags').array().notNull().default([])
+});
+
+export const shareSessions = pgTable('share_sessions', {
+	id: varchar('id', { length: 8 }).primaryKey(),
+	offer: text('offer').notNull(),
+	hostName: text('host_name').notNull().default(''),
+	answer: text('answer'),
+	peerName: text('peer_name'),
+	approved: boolean('approved').notNull().default(false),
+	denied: boolean('denied').notNull().default(false),
+	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });
 
 export const orders = pgTable('orders', {
