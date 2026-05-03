@@ -83,7 +83,7 @@
 		} else if (msg.type === 'file-end') {
 			const f = inFlight.get(msg.id);
 			if (!f) return;
-			const blob = new Blob(f.chunks.map((b) => Uint8Array.from(atob(b), (c) => c.charCodeAt(0))), { type: f.meta.mimeType });
+			const blob = new Blob(f.chunks.map((b) => base64ToBinary(b)), { type: f.meta.mimeType });
 			const blobUrl = URL.createObjectURL(blob);
 			const e = chat.find((c): c is MsgFile => c.id === msg.id && c.kind === 'file');
 			if (e) {
@@ -192,6 +192,25 @@
 		}, 2000);
 	}
 
+	function binaryToBase64(buf: Uint8Array): string {
+		const chunked = [];
+		// Use smaller chunks (64KB max per String.fromCharCode call) to avoid stack overflow
+		for (let i = 0; i < buf.length; i += 8192) {
+			const slice = buf.subarray(i, i + 8192);
+			chunked.push(String.fromCharCode.apply(null, Array.from(slice) as any));
+		}
+		return btoa(chunked.join(''));
+	}
+
+	function base64ToBinary(b64: string): Uint8Array {
+		const binaryStr = atob(b64);
+		const bytes = new Uint8Array(binaryStr.length);
+		for (let i = 0; i < binaryStr.length; i++) {
+			bytes[i] = binaryStr.charCodeAt(i);
+		}
+		return bytes;
+	}
+
 	function sendText(content: string, secret: boolean) {
 		if (!dc) return;
 		dc.send(JSON.stringify({ type: 'text', content, secret }));
@@ -211,7 +230,8 @@
 
 			dc.send(JSON.stringify({ type: 'file-start', id, name: file.name, size: file.size, mimeType, totalChunks }));
 			for (let i = 0; i < totalChunks; i++) {
-				const data = btoa(String.fromCharCode(...new Uint8Array(buf.slice(i * CHUNK, (i + 1) * CHUNK))));
+				const chunk = new Uint8Array(buf.slice(i * CHUNK, (i + 1) * CHUNK));
+				const data = binaryToBase64(chunk);
 				dc.send(JSON.stringify({ type: 'file-chunk', id, index: i, total: totalChunks, data }));
 				entry.progress = (i + 1) / totalChunks;
 			}
