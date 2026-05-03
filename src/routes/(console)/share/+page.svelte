@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
+	import { z } from 'zod';
 	import { page } from '$app/stores';
 	import Led from '$lib/ui/Led.svelte';
 	import PageHero from '$lib/ui/PageHero.svelte';
@@ -24,6 +25,12 @@
 	let dc: RTCDataChannel | null = null;
 	let pollTimer: ReturnType<typeof setInterval> | null = null;
 	const inFlight = new Map<string, { meta: MsgFile; chunks: string[]; total: number }>();
+
+	const MsgText = z.object({ type: z.literal('text'), content: z.string(), secret: z.boolean().optional() });
+	const MsgFileStart = z.object({ type: z.literal('file-start'), id: z.string(), name: z.string(), size: z.number(), mimeType: z.string(), totalChunks: z.number() });
+	const MsgFileChunk = z.object({ type: z.literal('file-chunk'), id: z.string(), data: z.string() });
+	const MsgFileEnd = z.object({ type: z.literal('file-end'), id: z.string() });
+	const AnyMsg = z.discriminatedUnion('type', [MsgText, MsgFileStart, MsgFileChunk, MsgFileEnd]);
 
 	function uid() { return Math.random().toString(36).slice(2, 10); }
 	function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
@@ -55,21 +62,26 @@
 	}
 
 	async function onMessage(raw: string) {
-		const msg = JSON.parse(raw) as Record<string, unknown>;
+		let parsed: unknown;
+		try { parsed = JSON.parse(raw); } catch { return; }
+		const result = AnyMsg.safeParse(parsed);
+		if (!result.success) return;
+		const msg = result.data;
+
 		if (msg.type === 'text') {
-			chat.push({ kind: 'text', id: uid(), content: msg.content as string, secret: !!(msg.secret), dir: 'in', ts: new Date() });
+			chat.push({ kind: 'text', id: uid(), content: msg.content, secret: !!(msg.secret), dir: 'in', ts: new Date() });
 		} else if (msg.type === 'file-start') {
-			const entry: MsgFile = { kind: 'file', id: msg.id as string, name: msg.name as string, size: msg.size as number, mimeType: msg.mimeType as string, dir: 'in', ts: new Date(), progress: 0 };
-			inFlight.set(entry.id, { meta: entry, chunks: [], total: msg.totalChunks as number });
+			const entry: MsgFile = { kind: 'file', id: msg.id, name: msg.name, size: msg.size, mimeType: msg.mimeType, dir: 'in', ts: new Date(), progress: 0 };
+			inFlight.set(entry.id, { meta: entry, chunks: [], total: msg.totalChunks });
 			chat.push(entry);
 		} else if (msg.type === 'file-chunk') {
-			const f = inFlight.get(msg.id as string);
+			const f = inFlight.get(msg.id);
 			if (!f) return;
-			f.chunks.push(msg.data as string);
+			f.chunks.push(msg.data);
 			const e = chat.find((c): c is MsgFile => c.id === msg.id && c.kind === 'file');
 			if (e) e.progress = f.chunks.length / f.total;
 		} else if (msg.type === 'file-end') {
-			const f = inFlight.get(msg.id as string);
+			const f = inFlight.get(msg.id);
 			if (!f) return;
 			const blob = new Blob(f.chunks.map((b) => Uint8Array.from(atob(b), (c) => c.charCodeAt(0))), { type: f.meta.mimeType });
 			const blobUrl = URL.createObjectURL(blob);
@@ -81,7 +93,7 @@
 					e.textPreview = (await blob.text()).split('\n').slice(0, 12).join('\n');
 				}
 			}
-			inFlight.delete(msg.id as string);
+			inFlight.delete(msg.id);
 		}
 	}
 
