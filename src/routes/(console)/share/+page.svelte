@@ -138,8 +138,9 @@
 
 	async function approveGuest() {
 		try {
+			if (!pc) throw new Error('Connection not initialized');
 			await fetch(`/api/share/${sessionId}`, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ approved: true }) });
-			await pc!.setRemoteDescription(JSON.parse(pendingAnswer) as RTCSessionDescriptionInit);
+			await pc.setRemoteDescription(JSON.parse(pendingAnswer) as RTCSessionDescriptionInit);
 			peerName = approvalPeerName;
 			phase = 'connecting';
 		} catch (e) { fail(e); }
