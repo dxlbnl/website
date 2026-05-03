@@ -1,5 +1,18 @@
 # Knowledge Base Index
 
+## features
+
+Feature documentation — what each part of the site does and how to use it.
+
+| Article                                    | Summary                                                           | Updated    |
+| ------------------------------------------ | ----------------------------------------------------------------- | ---------- |
+| [Notes](features/notes.md)                 | Longer-form posts: build logs, project writeups, experiments      | 2026-05-03 |
+| [Catalogue](features/catalogue.md)         | Product storefront with Stripe Checkout and region-aware pricing  | 2026-05-03 |
+| [Feed](features/feed.md)                   | Short titleless status updates; powers the homepage live indicator | 2026-05-03 |
+| [Mailings](features/mailings.md)           | Newsletter: Resend broadcasts, subscriber API, open tracking      | 2026-05-03 |
+| [Invoicing](features/invoicing.md)         | Client-side PDF invoices in Dutch ZZP format with SEPA QR code   | 2026-05-03 |
+| [Share Tool](features/share.md)            | WebRTC P2P file and text transfer between your own devices        | 2026-05-03 |
+
 ## entities
 
 People, systems, and projects.
