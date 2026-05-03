@@ -39,7 +39,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const parsed = createSchema.safeParse({
 			body: (data.get('body') as string)?.trim(),
-			tags: data.get('tags')
+			tags: data.get('tags') ?? undefined
 		});
 		if (!parsed.success) return fail(400, { error: 'Invalid input' });
 		await db.insert(feedPosts).values({ body: parsed.data.body, tags: parsed.data.tags });
