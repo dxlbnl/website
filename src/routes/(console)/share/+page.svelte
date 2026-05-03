@@ -38,6 +38,12 @@
 
 	function mkPc() {
 		pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+		pc.onconnectionstatechange = () => {
+			if (pc?.connectionState === 'failed' || pc?.connectionState === 'disconnected' || pc?.connectionState === 'closed') {
+				phase = 'error';
+				errorMsg = `Connection state: ${pc.connectionState}`;
+			}
+		};
 		return pc;
 	}
 
@@ -60,6 +66,8 @@
 		dc = ch;
 		ch.onopen = () => { phase = 'connected'; };
 		ch.onmessage = (e: MessageEvent) => onMessage(e.data as string);
+		ch.onclose = () => { phase = 'error'; errorMsg = 'Connection closed by peer'; };
+		ch.onerror = () => { phase = 'error'; errorMsg = 'Data channel error occurred'; };
 	}
 
 	async function onMessage(raw: string) {
