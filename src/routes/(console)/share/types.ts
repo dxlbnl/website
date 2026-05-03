@@ -3,6 +3,7 @@ export type ShareState =
 	| 'offering'
 	| 'waiting'
 	| 'approving'
+	| 'guest-setup'
 	| 'guest-init'
 	| 'guest-answering'
 	| 'guest-waiting'

@@ -20,6 +20,7 @@
 	let approvalPeerName: string = $state('');
 	let pendingAnswer: string = $state('');
 	let chat: ChatEntry[] = $state([]);
+	let pendingGuestSessionId: string | null = $state(null);
 
 	let pc: RTCPeerConnection | null = null;
 	let dc: RTCDataChannel | null = null;
@@ -122,6 +123,13 @@
 		} catch (e) { fail(e); }
 	}
 
+	async function startGuestSession(name: string) {
+		myName = name;
+		if (!pendingGuestSessionId) throw new Error('Session ID not found');
+		await joinSession(pendingGuestSessionId, name.trim() || 'Guest');
+		pendingGuestSessionId = null;
+	}
+
 	function pollHost() {
 		stopPoll();
 		pollTimer = setInterval(async () => {
@@ -155,7 +163,7 @@
 		pollHost();
 	}
 
-	async function joinSession(id: string) {
+	async function joinSession(id: string, guestName: string) {
 		phase = 'guest-init';
 		try {
 			const res = await fetch(`/api/share/${id}`);
@@ -171,7 +179,6 @@
 			await conn.setLocalDescription(await conn.createAnswer());
 			await waitIce(conn);
 
-			const guestName = myName.trim() || 'Guest';
 			const put = await fetch(`/api/share/${id}`, {
 				method: 'PUT',
 				headers: { 'content-type': 'application/json' },
@@ -251,7 +258,10 @@
 
 	$effect(() => {
 		const s = $page.url.searchParams.get('s');
-		if (s && phase === 'idle') joinSession(s);
+		if (s && phase === 'idle') {
+			pendingGuestSessionId = s;
+			phase = 'guest-setup';
+		}
 	});
 
 	onDestroy(() => {
@@ -267,6 +277,9 @@
 
 	{#if phase === 'idle'}
 		<ShareSetup onstart={startSession} />
+
+	{:else if phase === 'guest-setup'}
+		<ShareSetup onstart={startGuestSession} />
 
 	{:else if phase === 'offering' || phase === 'guest-init' || phase === 'guest-answering' || phase === 'connecting'}
 		<div class="status">
