@@ -15,11 +15,19 @@ export const handle = async ({ event, resolve }) => {
 		response.headers.get('content-type')?.includes('text/html') &&
 		!event.url.pathname.startsWith('/api/')
 	) {
+		const rawReferrer = event.request.headers.get('referer');
+		const referrer = rawReferrer
+			? (() => {
+					try {
+						const u = new URL(rawReferrer);
+						return u.origin + u.pathname;
+					} catch {
+						return null;
+					}
+				})()
+			: null;
 		db.insert(pageviews)
-			.values({
-				path: event.url.pathname,
-				referrer: event.request.headers.get('referer') ?? null
-			})
+			.values({ path: event.url.pathname, referrer })
 			.execute()
 			.catch(() => {});
 	}

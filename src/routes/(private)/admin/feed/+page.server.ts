@@ -1,9 +1,24 @@
 import { fail } from '@sveltejs/kit';
+import { z } from 'zod';
 import { db } from '$lib/server/db';
 import { feedPosts } from '$lib/server/db/schema';
 import { desc, eq } from 'drizzle-orm';
 import { verifyAdminSession } from '$lib/utils/auth';
 import type { Actions, PageServerLoad } from './$types';
+
+const createSchema = z.object({
+	body: z.string().min(1).max(50_000),
+	tags: z
+		.string()
+		.max(500)
+		.optional()
+		.transform((v) =>
+			(v ?? '')
+				.split(',')
+				.map((t) => t.trim().toLowerCase())
+				.filter(Boolean)
+		)
+});
 
 export const prerender = false;
 
@@ -22,14 +37,12 @@ export const actions: Actions = {
 	create: async ({ request, cookies }) => {
 		if (!(await verifyAdminSession(cookies.get('admin_session')))) return fail(401);
 		const data = await request.formData();
-		const body = (data.get('body') as string)?.trim();
-		if (!body) return fail(400, { error: 'Body required' });
-		const tags =
-			(data.get('tags') as string)
-				?.split(',')
-				.map((t) => t.trim().toLowerCase())
-				.filter(Boolean) ?? [];
-		await db.insert(feedPosts).values({ body, tags });
+		const parsed = createSchema.safeParse({
+			body: (data.get('body') as string)?.trim(),
+			tags: data.get('tags')
+		});
+		if (!parsed.success) return fail(400, { error: 'Invalid input' });
+		await db.insert(feedPosts).values({ body: parsed.data.body, tags: parsed.data.tags });
 	},
 
 	delete: async ({ request, cookies }) => {

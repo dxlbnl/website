@@ -21,11 +21,12 @@ export const trailingSlash = 'ignore';
 export const POST: RequestHandler = async ({ request }) => {
 	const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2026-04-22.dahlia' });
 	const sig = request.headers.get('stripe-signature');
+	if (!sig) error(400, 'Missing stripe-signature header');
 	const body = await request.text();
 
 	let event: Stripe.Event;
 	try {
-		event = stripe.webhooks.constructEvent(body, sig!, STRIPE_WEBHOOK_SECRET);
+		event = stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET);
 	} catch (err) {
 		console.error('[webhook] signature verification failed', err);
 		error(400, 'Invalid webhook signature');
