@@ -71,8 +71,9 @@
 		if (msg.type === 'text') {
 			chat.push({ kind: 'text', id: uid(), content: msg.content, secret: !!(msg.secret), dir: 'in', ts: new Date() });
 		} else if (msg.type === 'file-start') {
+			const totalChunks = typeof msg.totalChunks === 'number' && msg.totalChunks > 0 ? msg.totalChunks : 1;
 			const entry: MsgFile = { kind: 'file', id: msg.id, name: msg.name, size: msg.size, mimeType: msg.mimeType, dir: 'in', ts: new Date(), progress: 0 };
-			inFlight.set(entry.id, { meta: entry, chunks: [], total: msg.totalChunks });
+			inFlight.set(entry.id, { meta: entry, chunks: [], total: totalChunks });
 			chat.push(entry);
 		} else if (msg.type === 'file-chunk') {
 			const f = inFlight.get(msg.id);
