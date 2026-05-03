@@ -1,11 +1,21 @@
 <script lang="ts">
-	type Props = { onstart: (name: string) => void };
-	let { onstart }: Props = $props();
+	import type { TrustedPeer } from './types';
 
-	let name: string = $state('');
+	type Props = {
+		name?: string;
+		trustedPeers?: TrustedPeer[];
+		onstart: (name: string) => void;
+		onstartdirected?: (peer: TrustedPeer) => void;
+		onforget?: (id: string) => void;
+	};
+	let { name = '', trustedPeers = [], onstart, onstartdirected, onforget }: Props = $props();
+
+	let inputName: string = $state('');
+
+	$effect(() => { inputName = name; });
 
 	function submit() {
-		onstart(name.trim() || 'Host');
+		onstart(inputName.trim() || 'Host');
 	}
 
 	function onkeydown(e: KeyboardEvent) {
@@ -14,18 +24,30 @@
 </script>
 
 <div class="panel">
-	<p class="hint">Enter your name so the other device can identify you.</p>
 	<div class="row">
 		<input
 			class="field"
 			type="text"
-			bind:value={name}
+			bind:value={inputName}
 			{onkeydown}
 			placeholder="Your name (optional)"
 			maxlength="32"
 		/>
 		<button class="btn-primary" onclick={submit}>New session</button>
 	</div>
+
+	{#if trustedPeers.length > 0}
+		<div class="trusted">
+			<div class="trusted-label">Trusted devices</div>
+			{#each trustedPeers as peer (peer.id)}
+				<div class="peer-row">
+					<span class="peer-name">{peer.name}</span>
+					<button class="btn-ghost peer-connect" onclick={() => onstartdirected?.(peer)}>Connect</button>
+					<button class="btn-del" onclick={() => onforget?.(peer.id)} title="Remove">×</button>
+				</div>
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -38,13 +60,6 @@
 		border: 1px solid var(--rule);
 		border-radius: var(--radius-card);
 		max-width: 520px;
-	}
-
-	.hint {
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		color: var(--ink-dim);
-		margin: 0;
 	}
 
 	.row {
@@ -68,5 +83,39 @@
 	}
 	.field:focus {
 		border-color: var(--amber);
+	}
+
+	.trusted {
+		display: flex;
+		flex-direction: column;
+		gap: calc(var(--u) * 1);
+		padding-top: calc(var(--u) * 2);
+		border-top: 1px solid var(--rule);
+	}
+
+	.trusted-label {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+		margin-bottom: calc(var(--u) * 0.5);
+	}
+
+	.peer-row {
+		display: flex;
+		align-items: center;
+		gap: calc(var(--u) * 1.5);
+	}
+
+	.peer-name {
+		flex: 1;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		color: var(--ink-dim);
+	}
+
+	.peer-connect {
+		padding: 5px 14px;
 	}
 </style>

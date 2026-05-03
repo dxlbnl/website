@@ -24,8 +24,10 @@ export const GET: RequestHandler = async ({ params }) => {
 	return json({
 		offer: session.offer,
 		hostName: session.hostName,
+		hostDeviceId: session.hostDeviceId,
 		answer: session.answer,
 		peerName: session.peerName,
+		guestDeviceId: session.guestDeviceId,
 		approved: session.approved,
 		denied: session.denied
 	});
@@ -33,7 +35,8 @@ export const GET: RequestHandler = async ({ params }) => {
 
 const answerSchema = z.object({
 	answer: z.string().min(10),
-	peerName: z.string().max(64).default('Guest')
+	peerName: z.string().max(64).default('Guest'),
+	deviceId: z.string().uuid().optional()
 });
 
 export const PUT: RequestHandler = async ({ params, request }) => {
@@ -48,7 +51,11 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 
 	await db
 		.update(shareSessions)
-		.set({ answer: result.data.answer, peerName: result.data.peerName })
+		.set({
+			answer: result.data.answer,
+			peerName: result.data.peerName,
+			guestDeviceId: result.data.deviceId
+		})
 		.where(eq(shareSessions.id, params.id));
 
 	return json({ ok: true });

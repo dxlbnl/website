@@ -35,3 +35,5 @@ export type MsgFile = {
 };
 
 export type ChatEntry = MsgText | MsgFile;
+
+export type TrustedPeer = { id: string; name: string };

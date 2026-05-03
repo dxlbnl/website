@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { z } from 'zod';
 	import { page } from '$app/stores';
 	import Led from '$lib/ui/Led.svelte';
@@ -9,22 +9,26 @@
 	import ShareWaiting from './ShareWaiting.svelte';
 	import ShareApproval from './ShareApproval.svelte';
 	import ChatPanel from './ChatPanel.svelte';
-	import type { ShareState, ChatEntry, MsgFile } from './types';
+	import type { ShareState, ChatEntry, MsgFile, TrustedPeer } from './types';
 
 	let phase: ShareState = $state('idle');
 	let myName: string = $state('');
+	let myDeviceId: string = $state('');
 	let peerName: string = $state('');
 	let sessionId: string = $state('');
 	let shareUrl: string = $state('');
 	let errorMsg: string = $state('');
 	let approvalPeerName: string = $state('');
+	let approvalPeerDeviceId: string = $state('');
 	let pendingAnswer: string = $state('');
+	let trustedPeers: TrustedPeer[] = $state([]);
 	let chat: ChatEntry[] = $state([]);
 	let pendingGuestSessionId: string | null = $state(null);
 
 	let pc: RTCPeerConnection | null = null;
 	let dc: RTCDataChannel | null = null;
 	let pollTimer: ReturnType<typeof setInterval> | null = null;
+	let pendingPollTimer: ReturnType<typeof setInterval> | null = null;
 	const inFlight = new Map<string, { meta: MsgFile; chunks: string[]; total: number }>();
 
 	const MsgText = z.object({ type: z.literal('text'), content: z.string(), secret: z.boolean().optional() });
@@ -33,8 +37,41 @@
 	const MsgFileEnd = z.object({ type: z.literal('file-end'), id: z.string() });
 	const AnyMsg = z.discriminatedUnion('type', [MsgText, MsgFileStart, MsgFileChunk, MsgFileEnd]);
 
+	function lsGet(key: string) { try { return localStorage.getItem(key); } catch { return null; } }
+	function lsSet(key: string, val: string) { try { localStorage.setItem(key, val); } catch { /* */ } }
+
+	function addTrusted(id: string, name: string) {
+		trustedPeers = [...trustedPeers.filter((p) => p.id !== id), { id, name }];
+		lsSet('share-trusted', JSON.stringify(trustedPeers));
+	}
+	function removeTrusted(id: string) {
+		trustedPeers = trustedPeers.filter((p) => p.id !== id);
+		lsSet('share-trusted', JSON.stringify(trustedPeers));
+	}
+	function isTrusted(id: string) { return trustedPeers.some((p) => p.id === id); }
+
+	onMount(() => {
+		// Load/create stable device identity
+		let storedId = lsGet('share-device-id');
+		if (!storedId || !z.string().uuid().safeParse(storedId).success) {
+			storedId = crypto.randomUUID();
+			lsSet('share-device-id', storedId);
+		}
+		myDeviceId = storedId;
+
+		// Load remembered name
+		myName = lsGet('share-name') ?? '';
+
+		// Load trusted peers
+		try {
+			const raw = lsGet('share-trusted');
+			trustedPeers = raw ? (JSON.parse(raw) as TrustedPeer[]) : [];
+		} catch { trustedPeers = []; }
+	});
+
 	function uid() { return Math.random().toString(36).slice(2, 10); }
 	function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
+	function stopPendingPoll() { if (pendingPollTimer) { clearInterval(pendingPollTimer); pendingPollTimer = null; } }
 
 	function mkPc() {
 		pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
@@ -55,9 +92,7 @@
 			conn.addEventListener('icegatheringstatechange', () => {
 				if (conn.iceGatheringState === 'complete') finish();
 			});
-			// null candidate = end-of-candidates signal (more reliable on mobile/Safari)
 			conn.addEventListener('icecandidate', (e) => { if (e.candidate === null) finish(); });
-			// fallback: proceed after 5s even if gathering never formally completes
 			setTimeout(finish, 5000);
 		});
 	}
@@ -93,7 +128,7 @@
 		} else if (msg.type === 'file-end') {
 			const f = inFlight.get(msg.id);
 			if (!f) return;
-			const blob = new Blob(f.chunks.map((b) => base64ToBinary(b)), { type: f.meta.mimeType });
+			const blob = new Blob(f.chunks.map((b) => base64ToBinary(b).buffer as ArrayBuffer), { type: f.meta.mimeType });
 			const blobUrl = URL.createObjectURL(blob);
 			const e = chat.find((c): c is MsgFile => c.id === msg.id && c.kind === 'file');
 			if (e) {
@@ -107,8 +142,9 @@
 		}
 	}
 
-	async function startSession(name: string) {
+	async function startSession(name: string, targetDeviceId?: string) {
 		myName = name;
+		lsSet('share-name', name);
 		phase = 'offering';
 		try {
 			const conn = mkPc();
@@ -119,7 +155,12 @@
 			const res = await fetch('/api/share', {
 				method: 'POST',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ offer: JSON.stringify(conn.localDescription), hostName: name })
+				body: JSON.stringify({
+					offer: JSON.stringify(conn.localDescription),
+					hostName: name,
+					hostDeviceId: myDeviceId || undefined,
+					targetDeviceId
+				})
 			});
 			if (!res.ok) throw new Error('Failed to create session');
 			const { id } = (await res.json()) as { id: string };
@@ -143,22 +184,29 @@
 		pollTimer = setInterval(async () => {
 			const res = await fetch(`/api/share/${sessionId}`).catch(() => null);
 			if (!res?.ok) return;
-			const data = (await res.json()) as { answer?: string; peerName?: string };
+			const data = (await res.json()) as { answer?: string; peerName?: string; guestDeviceId?: string };
 			if (data.answer && phase === 'waiting') {
 				stopPoll();
 				approvalPeerName = data.peerName ?? 'Guest';
+				approvalPeerDeviceId = data.guestDeviceId ?? '';
 				pendingAnswer = data.answer;
-				phase = 'approving';
+				// Auto-approve trusted devices
+				if (approvalPeerDeviceId && isTrusted(approvalPeerDeviceId)) {
+					await approveGuest();
+				} else {
+					phase = 'approving';
+				}
 			}
 		}, 2000);
 	}
 
-	async function approveGuest() {
+	async function approveGuest(remember = false) {
 		try {
 			if (!pc) throw new Error('Connection not initialized');
 			await fetch(`/api/share/${sessionId}`, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ approved: true }) });
 			await pc.setRemoteDescription(JSON.parse(pendingAnswer) as RTCSessionDescriptionInit);
 			peerName = approvalPeerName;
+			if (remember && approvalPeerDeviceId) addTrusted(approvalPeerDeviceId, approvalPeerName);
 			phase = 'connecting';
 		} catch (e) { fail(e); }
 	}
@@ -167,18 +215,22 @@
 		await fetch(`/api/share/${sessionId}`, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ denied: true }) });
 		pendingAnswer = '';
 		approvalPeerName = '';
+		approvalPeerDeviceId = '';
 		phase = 'waiting';
 		pollHost();
 	}
 
 	async function joinSession(id: string, guestName: string) {
+		stopPendingPoll();
 		phase = 'guest-init';
 		try {
 			const res = await fetch(`/api/share/${id}`);
 			if (!res.ok) throw new Error('Session not found');
-			const data = (await res.json()) as { offer: string; hostName?: string };
+			const data = (await res.json()) as { offer: string; hostName?: string; hostDeviceId?: string };
 			sessionId = id;
 			peerName = data.hostName ?? 'Host';
+
+			const hostDeviceId = data.hostDeviceId;
 
 			phase = 'guest-answering';
 			const conn = mkPc();
@@ -187,33 +239,38 @@
 			await conn.setLocalDescription(await conn.createAnswer());
 			await waitIce(conn);
 
+			lsSet('share-name', guestName);
 			const put = await fetch(`/api/share/${id}`, {
 				method: 'PUT',
 				headers: { 'content-type': 'application/json' },
-				body: JSON.stringify({ answer: JSON.stringify(conn.localDescription), peerName: guestName })
+				body: JSON.stringify({ answer: JSON.stringify(conn.localDescription), peerName: guestName, deviceId: myDeviceId || undefined })
 			});
 			if (!put.ok) throw new Error('Failed to submit answer');
+
 			phase = 'guest-waiting';
-			pollGuest();
+			pollGuest(hostDeviceId);
 		} catch (e) { fail(e); }
 	}
 
-	function pollGuest() {
+	function pollGuest(hostDeviceId?: string) {
 		stopPoll();
 		pollTimer = setInterval(async () => {
 			const res = await fetch(`/api/share/${sessionId}`).catch(() => null);
 			if (!res?.ok) return;
-			const data = (await res.json()) as { denied?: boolean };
+			const data = (await res.json()) as { denied?: boolean; approved?: boolean; hostName?: string };
 			if (data.denied) { stopPoll(); phase = 'denied'; }
+			// When approved, remember the host as trusted (they implicitly trusted us by approving)
+			if (data.approved && hostDeviceId && !isTrusted(hostDeviceId)) {
+				addTrusted(hostDeviceId, data.hostName ?? peerName);
+			}
 		}, 2000);
 	}
 
 	function binaryToBase64(buf: Uint8Array): string {
 		const chunked = [];
-		// Use smaller chunks (64KB max per String.fromCharCode call) to avoid stack overflow
 		for (let i = 0; i < buf.length; i += 8192) {
 			const slice = buf.subarray(i, i + 8192);
-			chunked.push(String.fromCharCode.apply(null, Array.from(slice) as any));
+			chunked.push(String.fromCharCode.apply(null, Array.from(slice) as number[]));
 		}
 		return btoa(chunked.join(''));
 	}
@@ -225,6 +282,18 @@
 			bytes[i] = binaryStr.charCodeAt(i);
 		}
 		return bytes;
+	}
+
+	function startPendingPoll() {
+		stopPendingPoll();
+		if (!myDeviceId) return;
+		pendingPollTimer = setInterval(async () => {
+			if (phase !== 'idle') return;
+			const res = await fetch(`/api/share/pending?for=${myDeviceId}`).catch(() => null);
+			if (!res?.ok) return;
+			const data = (await res.json()) as { id: string; hostName: string } | null;
+			if (data) joinSession(data.id, myName.trim() || 'Guest');
+		}, 3000);
 	}
 
 	function sendText(content: string, secret: boolean) {
@@ -262,7 +331,7 @@
 	}
 
 	function fail(e: unknown) { errorMsg = String(e); phase = 'error'; }
-	function reset() { phase = 'idle'; pc?.close(); pc = null; dc = null; stopPoll(); chat = []; }
+	function reset() { phase = 'idle'; pc?.close(); pc = null; dc = null; stopPoll(); chat = []; startPendingPoll(); }
 
 	$effect(() => {
 		const s = $page.url.searchParams.get('s');
@@ -272,8 +341,13 @@
 		}
 	});
 
+	// Start pending poll once we have a device ID and no ?s= param
+	$effect(() => {
+		if (myDeviceId && !$page.url.searchParams.get('s')) startPendingPoll();
+	});
+
 	onDestroy(() => {
-		stopPoll(); pc?.close();
+		stopPoll(); stopPendingPoll(); pc?.close();
 		chat.forEach((c) => { if (c.kind === 'file' && c.blobUrl) URL.revokeObjectURL(c.blobUrl); });
 	});
 </script>
@@ -284,7 +358,13 @@
 	<PageHero eyebrow="// TOOLS · SHARE" title="Share." sub="Peer-to-peer text and file transfer. Nothing stored on the server." />
 
 	{#if phase === 'idle'}
-		<ShareSetup onstart={startSession} />
+		<ShareSetup
+			name={myName}
+			{trustedPeers}
+			onstart={(name) => startSession(name)}
+			onstartdirected={(peer) => startSession(myName || 'Host', peer.id)}
+			onforget={removeTrusted}
+		/>
 
 	{:else if phase === 'guest-setup'}
 		<ShareSetup onstart={startGuestSession} />
@@ -304,7 +384,12 @@
 		<ShareWaiting {shareUrl} onanswer={(s) => { sessionId = s; pollHost(); }} />
 
 	{:else if phase === 'approving'}
-		<ShareApproval peerName={approvalPeerName} onallow={approveGuest} ondeny={denyGuest} />
+		<ShareApproval
+			peerName={approvalPeerName}
+			isTrusted={isTrusted(approvalPeerDeviceId)}
+			onallow={(remember) => approveGuest(remember)}
+			ondeny={denyGuest}
+		/>
 
 	{:else if phase === 'guest-waiting'}
 		<div class="status"><Led tone="amber" blink /> <span>Waiting for host approval…</span></div>
