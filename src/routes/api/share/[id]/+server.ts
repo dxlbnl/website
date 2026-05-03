@@ -45,10 +45,15 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 	return json({ ok: true });
 };
 
-const patchSchema = z.object({
-	approved: z.boolean().optional(),
-	denied: z.boolean().optional()
-});
+const patchSchema = z
+	.object({
+		approved: z.boolean().optional(),
+		denied: z.boolean().optional()
+	})
+	.refine(
+		(data) => !(data.approved === true && data.denied === true),
+		'Cannot set both approved and denied to true'
+	);
 
 export const PATCH: RequestHandler = async ({ params, request }) => {
 	const session = await getSession(params.id);
