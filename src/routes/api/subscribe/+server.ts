@@ -1,14 +1,18 @@
 import { Resend } from 'resend';
 import { RESEND_API_KEY, RESEND_SEGMENT_ID } from '$env/static/private';
 import { json, error } from '@sveltejs/kit';
+import { z } from 'zod';
 import type { RequestHandler } from './$types';
 
-export const POST: RequestHandler = async ({ request }) => {
-	const { email, firstName } = await request.json();
+const schema = z.object({
+	email: z.email(),
+	firstName: z.string().max(255).optional()
+});
 
-	if (!email || typeof email !== 'string' || !email.includes('@')) {
-		error(400, 'Invalid email');
-	}
+export const POST: RequestHandler = async ({ request }) => {
+	const result = schema.safeParse(await request.json());
+	if (!result.success) error(400, 'Invalid input');
+	const { email, firstName } = result.data;
 
 	const resend = new Resend(RESEND_API_KEY);
 
