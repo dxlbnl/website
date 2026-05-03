@@ -2,13 +2,13 @@
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Led from '$lib/ui/Led.svelte';
+	import PageHero from '$lib/ui/PageHero.svelte';
+	import SEO from '$lib/ui/SEO.svelte';
 	import ShareSetup from './ShareSetup.svelte';
 	import ShareWaiting from './ShareWaiting.svelte';
 	import ShareApproval from './ShareApproval.svelte';
 	import ChatPanel from './ChatPanel.svelte';
 	import type { ShareState, ChatEntry, MsgFile } from './types';
-
-	// ─── State ────────────────────────────────────────────────────────────────
 
 	let phase: ShareState = $state('idle');
 	let myName: string = $state('');
@@ -24,8 +24,6 @@
 	let dc: RTCDataChannel | null = null;
 	let pollTimer: ReturnType<typeof setInterval> | null = null;
 	const inFlight = new Map<string, { meta: MsgFile; chunks: string[]; total: number }>();
-
-	// ─── Helpers ──────────────────────────────────────────────────────────────
 
 	function uid() { return Math.random().toString(36).slice(2, 10); }
 	function stopPoll() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
@@ -80,8 +78,6 @@
 			inFlight.delete(msg.id as string);
 		}
 	}
-
-	// ─── Host flow ────────────────────────────────────────────────────────────
 
 	async function startSession(name: string) {
 		myName = name;
@@ -139,8 +135,6 @@
 		pollHost();
 	}
 
-	// ─── Guest flow ───────────────────────────────────────────────────────────
-
 	async function joinSession(id: string) {
 		phase = 'guest-init';
 		try {
@@ -179,8 +173,6 @@
 		}, 2000);
 	}
 
-	// ─── Send actions ─────────────────────────────────────────────────────────
-
 	function sendText(content: string, secret: boolean) {
 		if (!dc) return;
 		dc.send(JSON.stringify({ type: 'text', content, secret }));
@@ -215,10 +207,7 @@
 	}
 
 	function fail(e: unknown) { errorMsg = String(e); phase = 'error'; }
-
 	function reset() { phase = 'idle'; pc?.close(); pc = null; dc = null; stopPoll(); chat = []; }
-
-	// ─── Init ─────────────────────────────────────────────────────────────────
 
 	$effect(() => {
 		const s = $page.url.searchParams.get('s');
@@ -231,14 +220,16 @@
 	});
 </script>
 
-<svelte:head><title>Share — Dexterlabs</title></svelte:head>
+<SEO title="Share" description="Send text or files directly to another device. Peer-to-peer, nothing stored." />
 
-<div class="page">
+<div class="wrap">
+	<PageHero eyebrow="// TOOLS · SHARE" title="Share." sub="Peer-to-peer text and file transfer. Nothing stored on the server." />
+
 	{#if phase === 'idle'}
 		<ShareSetup onstart={startSession} />
 
 	{:else if phase === 'offering' || phase === 'guest-init' || phase === 'guest-answering' || phase === 'connecting'}
-		<div class="status-panel">
+		<div class="status">
 			<Led tone="amber" blink />
 			<span>
 				{phase === 'offering' ? 'Setting up connection…'
@@ -255,15 +246,15 @@
 		<ShareApproval peerName={approvalPeerName} onallow={approveGuest} ondeny={denyGuest} />
 
 	{:else if phase === 'guest-waiting'}
-		<div class="status-panel"><Led tone="amber" blink /> <span>Waiting for host approval…</span></div>
+		<div class="status"><Led tone="amber" blink /> <span>Waiting for host approval…</span></div>
 
 	{:else if phase === 'denied'}
-		<div class="status-panel"><Led tone="danger" /> <span>Connection was declined.</span></div>
+		<div class="status"><Led tone="danger" /> <span>Connection was declined.</span></div>
 
 	{:else if phase === 'error'}
-		<div class="status-panel">
-			<Led tone="danger" /> <span>Error: {errorMsg}</span>
-			<button class="btn-reset" onclick={reset}>Try again</button>
+		<div class="status">
+			<Led tone="danger" /> <span>{errorMsg}</span>
+			<button class="btn-back" onclick={reset}>↩ try again</button>
 		</div>
 	{/if}
 
@@ -273,26 +264,26 @@
 </div>
 
 <style>
-	.page {
-		max-width: 640px; margin: 0 auto;
-		padding: calc(var(--u) * 6) calc(var(--u) * 3);
-		display: flex; flex-direction: column; gap: calc(var(--u) * 3);
-		min-height: calc(100vh - 120px);
+	.wrap {
+		max-width: 1440px;
+		margin: 0 auto;
+		padding: 0 32px 80px;
+		container-type: inline-size;
+
+		@media (max-width: 720px) {
+			padding: 0 16px 56px;
+		}
 	}
-	.status-panel {
-		display: flex; align-items: center; gap: calc(var(--u) * 1.5);
-		padding: calc(var(--u) * 4);
-		background: var(--bg-elev);
-		border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
-		border-radius: var(--radius-card);
-		font-size: var(--t-sm); color: var(--ink-dim);
+
+	.status {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 24px 0;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		letter-spacing: 0.06em;
+		color: var(--ink-dim);
+		border-bottom: 1px solid var(--rule);
 	}
-	.btn-reset {
-		margin-left: auto; background: transparent; color: var(--ink-dim);
-		border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
-		border-radius: var(--radius);
-		padding: calc(var(--u) * 1) calc(var(--u) * 2);
-		font-family: inherit; font-size: var(--t-sm); cursor: pointer;
-	}
-	.btn-reset:hover { color: var(--ink); }
 </style>

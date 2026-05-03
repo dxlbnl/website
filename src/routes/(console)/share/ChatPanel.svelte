@@ -50,7 +50,7 @@
 		revealedIds = on ? [...revealedIds, id] : revealedIds.filter((x) => x !== id);
 	}
 
-	function copy(text: string) { navigator.clipboard.writeText(text); }
+	function copy(content: string) { navigator.clipboard.writeText(content); }
 
 	$effect(() => {
 		void chat.length;
@@ -81,9 +81,9 @@
 							<span class="secret-label"><Led tone="amber" /> Secret</span>
 							<span class="secret-text" class:revealed={revealedIds.includes(entry.id)}>{entry.content}</span>
 							<div class="secret-actions">
-								<button class="btn-micro" onclick={() => copy(entry.content)}>Copy</button>
+								<button class="btn-del" onclick={() => copy(entry.content)}>Copy</button>
 								<button
-									class="btn-micro"
+									class="btn-del"
 									onmousedown={() => toggleReveal(entry.id, true)}
 									onmouseup={() => toggleReveal(entry.id, false)}
 									onmouseleave={() => toggleReveal(entry.id, false)}
@@ -112,100 +112,161 @@
 		<input type="file" multiple bind:this={fileInput} onchange={onFileChange} style="display:none" />
 		<button class="icon-btn" title="Attach file" onclick={() => fileInput?.click()} aria-label="Attach">📎</button>
 		<textarea
-			class="input"
+			class="field"
 			bind:value={text}
 			{onkeydown}
 			placeholder={isSecret ? 'Secret message… (Enter to send)' : 'Message… (Enter to send)'}
 			rows="1"
 		></textarea>
-		<button class="btn-send" onclick={send} disabled={!text.trim()}>Send</button>
+		<button class="btn-primary" onclick={send} disabled={!text.trim()}>Send</button>
 	</div>
 </div>
 
 <style>
 	.wrap {
-		display: flex; flex-direction: column; flex: 1;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
 		background: var(--bg-elev);
-		border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+		border: 1px solid var(--rule);
 		border-radius: var(--radius-card);
-		overflow: hidden; min-height: 480px;
+		overflow: hidden;
+		min-height: 480px;
 		transition: border-color 0.15s;
 	}
-	.wrap.dragover { border-color: var(--cyan); }
+	.wrap.dragover {
+		border-color: var(--amber);
+	}
 
 	.header {
-		display: flex; align-items: center; gap: calc(var(--u) * 1.5);
+		display: flex;
+		align-items: center;
+		gap: calc(var(--u) * 1.5);
 		padding: calc(var(--u) * 2) calc(var(--u) * 3);
-		border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
-		font-size: var(--t-sm); color: var(--ink-dim);
+		border-bottom: 1px solid var(--rule);
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		color: var(--ink-dim);
 	}
 
 	.messages {
-		flex: 1; overflow-y: auto;
+		flex: 1;
+		overflow-y: auto;
 		padding: calc(var(--u) * 3);
-		display: flex; flex-direction: column; gap: calc(var(--u) * 2);
+		display: flex;
+		flex-direction: column;
+		gap: calc(var(--u) * 2);
 	}
 
-	.msg { display: flex; flex-direction: column; gap: 4px; max-width: 80%; }
+	.msg {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		max-width: 80%;
+	}
 	.msg.out { align-self: flex-end; align-items: flex-end; }
 	.msg.in  { align-self: flex-start; align-items: flex-start; }
 
 	.bubble {
-		background: var(--bg-sunken); border-radius: var(--radius-card);
+		background: var(--bg-sunken);
+		border: 1px solid var(--rule);
+		border-radius: var(--radius-card);
 		padding: calc(var(--u) * 1.5) calc(var(--u) * 2);
-		font-size: var(--t-sm); color: var(--ink);
-		white-space: pre-wrap; word-break: break-word; line-height: 1.5;
+		font-size: var(--t-body);
+		color: var(--ink);
+		white-space: pre-wrap;
+		word-break: break-word;
+		line-height: 1.5;
 	}
-	.msg.out .bubble { background: color-mix(in srgb, var(--cyan) 12%, var(--bg-elev)); }
-	.bubble.secret { display: flex; flex-direction: column; gap: calc(var(--u) * 1); }
+	.msg.out .bubble {
+		background: var(--bg-elev);
+		border-color: var(--rule-strong);
+	}
+	.bubble.secret {
+		display: flex;
+		flex-direction: column;
+		gap: calc(var(--u) * 1);
+	}
 
 	.secret-label {
-		display: flex; align-items: center; gap: 4px;
-		font-size: var(--t-micro); text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber);
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--amber);
 	}
-	.secret-text { filter: blur(5px); user-select: none; transition: filter 0.1s; word-break: break-all; max-width: 260px; }
-	.secret-text.revealed { filter: none; user-select: text; }
-	.secret-actions { display: flex; gap: calc(var(--u) * 1); flex-wrap: wrap; }
-
-	.ts { font-size: var(--t-micro); color: var(--ink-faint); }
-
-	.btn-micro {
-		background: transparent; color: var(--ink-dim);
-		border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
-		border-radius: var(--radius);
-		padding: calc(var(--u) * 0.5) calc(var(--u) * 1.5);
-		font-family: inherit; font-size: var(--t-micro); cursor: pointer;
+	.secret-text {
+		filter: blur(5px);
+		user-select: none;
+		transition: filter 0.1s;
+		word-break: break-all;
+		max-width: 260px;
 	}
-	.btn-micro:hover { color: var(--ink); }
+	.secret-text.revealed {
+		filter: none;
+		user-select: text;
+	}
+	.secret-actions {
+		display: flex;
+		gap: calc(var(--u) * 1);
+		flex-wrap: wrap;
+	}
+
+	.ts {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--ink-faint);
+	}
 
 	.composer {
-		display: flex; align-items: flex-end; gap: calc(var(--u) * 1);
+		display: flex;
+		align-items: flex-end;
+		gap: calc(var(--u) * 1);
 		padding: calc(var(--u) * 2);
-		border-top: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
+		border-top: 1px solid var(--rule);
 	}
+
 	.icon-btn {
-		background: transparent; border: none; cursor: pointer;
-		font-size: 1.1rem; padding: calc(var(--u) * 0.75);
-		border-radius: var(--radius); opacity: 0.6; line-height: 1; flex-shrink: 0;
+		background: transparent;
+		border: 1px solid var(--rule);
+		border-radius: var(--radius);
+		cursor: pointer;
+		font-size: 1rem;
+		padding: calc(var(--u) * 0.75);
+		opacity: 0.6;
+		line-height: 1;
+		flex-shrink: 0;
+		transition: opacity 0.15s, background 0.15s, border-color 0.15s;
 	}
-	.icon-btn:hover, .icon-btn.active { opacity: 1; }
-	.icon-btn.active { background: color-mix(in srgb, var(--amber) 15%, transparent); }
-	.input {
-		flex: 1; background: var(--bg-sunken);
-		border: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
-		border-radius: var(--radius); color: var(--ink);
-		font-family: inherit; font-size: var(--t-sm);
-		padding: calc(var(--u) * 1.25) calc(var(--u) * 2);
-		resize: none; outline: none; line-height: 1.5; max-height: 120px; overflow-y: auto;
+	.icon-btn:hover,
+	.icon-btn.active {
+		opacity: 1;
 	}
-	.input:focus { border-color: var(--cyan); }
-	.btn-send {
-		background: var(--cyan); color: var(--bg);
-		border: none; border-radius: var(--radius);
-		padding: calc(var(--u) * 1.25) calc(var(--u) * 2.5);
-		font-family: inherit; font-size: var(--t-sm); font-weight: 600;
-		cursor: pointer; white-space: nowrap;
+	.icon-btn.active {
+		background: var(--bg-sunken);
+		border-color: var(--amber);
 	}
-	.btn-send:disabled { opacity: 0.4; cursor: default; }
-	.btn-send:not(:disabled):hover { filter: brightness(1.1); }
+
+	.field {
+		flex: 1;
+		background: var(--bg-sunken);
+		border: 1px solid var(--rule);
+		border-radius: var(--radius);
+		color: var(--ink);
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		padding: 9px calc(var(--u) * 2);
+		resize: none;
+		outline: none;
+		line-height: 1.5;
+		max-height: 120px;
+		overflow-y: auto;
+		transition: border-color 0.15s;
+	}
+	.field:focus {
+		border-color: var(--amber);
+	}
 </style>

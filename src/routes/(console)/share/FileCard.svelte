@@ -31,7 +31,7 @@
 		{#if entry.progress < 1}
 			<div class="bar"><div class="fill" style="width:{entry.progress * 100}%"></div></div>
 		{:else if entry.blobUrl}
-			<a class="dl" href={entry.blobUrl} download={entry.name}>Download</a>
+			<a class="btn-del" href={entry.blobUrl} download={entry.name}>Download</a>
 		{/if}
 	</div>
 </div>
@@ -39,30 +39,72 @@
 <style>
 	.card {
 		background: var(--bg-sunken);
-		border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
+		border: 1px solid var(--rule);
 		border-radius: var(--radius-card);
 		overflow: hidden;
 		max-width: 300px;
 	}
-	.preview-img { display: block; max-width: 100%; max-height: 220px; object-fit: cover; width: 100%; }
-	.preview-media { display: block; max-width: 100%; width: 100%; }
+
+	.preview-img {
+		display: block;
+		max-width: 100%;
+		max-height: 220px;
+		object-fit: cover;
+		width: 100%;
+	}
+	.preview-media {
+		display: block;
+		max-width: 100%;
+		width: 100%;
+	}
 	.text-preview {
-		font-family: var(--mono); font-size: var(--t-micro); color: var(--ink-dim);
-		padding: calc(var(--u) * 2); margin: 0;
-		overflow: auto; max-height: 140px;
-		border-bottom: 1px solid color-mix(in srgb, var(--ink) 8%, transparent);
-		white-space: pre-wrap; word-break: break-all;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--ink-dim);
+		padding: calc(var(--u) * 2);
+		margin: 0;
+		overflow: auto;
+		max-height: 140px;
+		border-bottom: 1px solid var(--rule);
+		white-space: pre-wrap;
+		word-break: break-all;
 	}
-	.meta { display: flex; flex-direction: column; gap: 4px; padding: calc(var(--u) * 1.5) calc(var(--u) * 2); }
-	.name { font-size: var(--t-sm); color: var(--ink); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-	.size { font-size: var(--t-micro); color: var(--ink-faint); }
-	.bar { height: 3px; background: color-mix(in srgb, var(--ink) 10%, transparent); border-radius: 2px; overflow: hidden; }
-	.fill { height: 100%; background: var(--cyan); transition: width 0.1s; }
-	.dl {
-		font-size: var(--t-micro); color: var(--ink-dim);
-		border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
-		border-radius: var(--radius); padding: 2px 8px;
-		text-decoration: none; display: inline-block;
+
+	.meta {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: calc(var(--u) * 1.5) calc(var(--u) * 2);
 	}
-	.dl:hover { color: var(--ink); }
+	.name {
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		color: var(--ink);
+		font-weight: 500;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.size {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--ink-faint);
+	}
+
+	.bar {
+		height: 3px;
+		background: var(--rule);
+		border-radius: 2px;
+		overflow: hidden;
+	}
+	.fill {
+		height: 100%;
+		background: var(--amber);
+		transition: width 0.1s;
+	}
+
+	a.btn-del {
+		text-decoration: none;
+		display: inline-block;
+	}
 </style>
