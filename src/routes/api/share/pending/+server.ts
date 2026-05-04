@@ -2,14 +2,20 @@ import { json, error } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { shareSessions } from '$lib/server/db/schema';
 import { and, eq, gt, isNull } from 'drizzle-orm';
+import { checkRateLimit } from '$lib/server/rateLimit';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url, request }) => {
 	const forDevice = url.searchParams.get('for');
 	if (!forDevice || forDevice.length < 10) error(400, 'Invalid device ID');
 
-	const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+	// Rate limit: 30 requests per minute per IP address
 	const clientIp = request.headers.get('x-forwarded-for') || '127.0.0.1';
+	if (!checkRateLimit('share-pending', clientIp, 30, 60 * 1000)) {
+		error(429, 'Too many requests');
+	}
+
+	const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
 	// Find an invite for us
 	const invite = await db
