@@ -27,7 +27,10 @@ export const GET: RequestHandler = async ({ url, request }) => {
 		.from(shareSessions)
 		.where(
 			and(
-				eq(shareSessions.targetDeviceId, forDevice!),
+				// Security fix: Only return broadcast sessions (no specific target).
+				// Targeted sessions should be discovered via direct session link, not device enumeration.
+				// This prevents attackers from enumerating device IDs to discover pending sessions.
+				isNull(shareSessions.targetDeviceId),
 				isNull(shareSessions.answer),
 				eq(shareSessions.denied, false),
 				gt(shareSessions.createdAt, fiveMinutesAgo)
