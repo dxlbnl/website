@@ -3,8 +3,8 @@
 	import { copyToClipboard } from '$lib/utils/clipboard';
 	import Led from '$lib/ui/Led.svelte';
 
-	type Props = { shareUrl: string; onanswer: (sessionId: string) => void };
-	let { shareUrl, onanswer }: Props = $props();
+	type Props = { shareUrl: string; targetPeerName?: string; onanswer: (sessionId: string) => void };
+	let { shareUrl, targetPeerName, onanswer }: Props = $props();
 
 	let qrCanvas: HTMLCanvasElement | null = $state(null);
 	let answerInput: string = $state('');
@@ -37,17 +37,23 @@
 </script>
 
 <div class="panel">
-	<div class="status"><Led tone="amber" blink /> Waiting for peer…</div>
-	<canvas bind:this={qrCanvas} class="qr"></canvas>
-	<div class="row">
-		<input class="field" readonly value={shareUrl} />
-		<button class="btn-ghost" onclick={copyLink}>Copy link</button>
-	</div>
-	<div class="divider">— or paste their answer —</div>
-	<div class="row">
-		<input class="field" bind:value={answerInput} placeholder="Paste answer link…" />
-		<button class="btn-ghost" disabled={!answerInput.trim()} onclick={connect}>Connect</button>
-	</div>
+	{#if targetPeerName}
+		<div class="status">
+			<Led tone="amber" blink /> Waiting for <strong>{targetPeerName}</strong> to connect…
+		</div>
+	{:else}
+		<div class="status"><Led tone="amber" blink /> Waiting for peer…</div>
+		<canvas bind:this={qrCanvas} class="qr"></canvas>
+		<div class="row">
+			<input class="field" readonly value={shareUrl} />
+			<button class="btn-ghost" onclick={copyLink}>Copy link</button>
+		</div>
+		<div class="divider">— or paste their answer —</div>
+		<div class="row">
+			<input class="field" bind:value={answerInput} placeholder="Paste answer link…" />
+			<button class="btn-ghost" disabled={!answerInput.trim()} onclick={connect}>Connect</button>
+		</div>
+	{/if}
 </div>
 
 <style>

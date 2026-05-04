@@ -59,6 +59,7 @@ export const shareSessions = pgTable('share_sessions', {
 	guestDeviceId: varchar('guest_device_id', { length: 36 }),
 	approved: boolean('approved').notNull().default(false),
 	denied: boolean('denied').notNull().default(false),
+	ip: varchar('ip', { length: 45 }),
 	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });
 

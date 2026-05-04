@@ -7,6 +7,7 @@ export type ShareState =
 	| 'guest-init'
 	| 'guest-answering'
 	| 'guest-waiting'
+	| 'guest-invited'
 	| 'connecting'
 	| 'connected'
 	| 'denied'

@@ -33,7 +33,10 @@
 	}
 
 	function onkeydown(e: KeyboardEvent) {
-		if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+		if (e.key === 'Enter' && !e.shiftKey) {
+			e.preventDefault();
+			send();
+		}
 	}
 
 	function onFileChange(e: Event) {
@@ -48,11 +51,15 @@
 		if (e.dataTransfer?.files.length) onsendfiles(Array.from(e.dataTransfer.files));
 	}
 
-	function copy(content: string) { copyToClipboard(content); }
+	function copy(content: string) {
+		copyToClipboard(content);
+	}
 
 	$effect(() => {
 		void chat.length;
-		tick().then(() => { if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; });
+		tick().then(() => {
+			if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+		});
 	});
 
 	// Auto-grow textarea
@@ -67,7 +74,10 @@
 <div
 	class="wrap"
 	class:dragover={dragging}
-	ondragover={(e) => { e.preventDefault(); dragging = true; }}
+	ondragover={(e) => {
+		e.preventDefault();
+		dragging = true;
+	}}
 	ondragleave={() => (dragging = false)}
 	ondrop={onDrop}
 	role="region"
@@ -112,7 +122,12 @@
 				type="password"
 				class="field"
 				bind:value={text}
-				onkeydown={(e) => { if (e.key === 'Enter') { e.preventDefault(); send(); } }}
+				onkeydown={(e) => {
+					if (e.key === 'Enter') {
+						e.preventDefault();
+						send();
+					}
+				}}
 				placeholder="Secret message…"
 			/>
 		{:else}
@@ -126,14 +141,23 @@
 			></textarea>
 		{/if}
 		<div class="actions">
-			<input type="file" multiple bind:this={fileInput} onchange={onFileChange} style="display:none" />
-			<button class="action-btn" onclick={() => fileInput?.click()} title="Attach file">↑ Attach</button>
+			<input
+				type="file"
+				multiple
+				bind:this={fileInput}
+				onchange={onFileChange}
+				style="display:none"
+			/>
+			<button class="action-btn" onclick={() => fileInput?.click()} title="Attach file"
+				>↑ Attach</button
+			>
 			<button
 				class="action-btn"
 				class:active={isSecret}
 				onclick={() => (isSecret = !isSecret)}
 				title={isSecret ? 'Disable secret mode' : 'Send as secret (blurred)'}
-			>{isSecret ? '× Secret' : '+ Secret'}</button>
+				>{isSecret ? '× Secret' : '+ Secret'}</button
+			>
 			<button class="btn-primary send-btn" onclick={send} disabled={!text.trim()}>Send</button>
 		</div>
 	</div>
@@ -181,8 +205,14 @@
 		gap: 4px;
 		max-width: 80%;
 	}
-	.msg.out { align-self: flex-end; align-items: flex-end; }
-	.msg.in  { align-self: flex-start; align-items: flex-start; }
+	.msg.out {
+		align-self: flex-end;
+		align-items: flex-end;
+	}
+	.msg.in {
+		align-self: flex-start;
+		align-items: flex-start;
+	}
 
 	.bubble {
 		background: var(--bg-sunken);
@@ -285,7 +315,9 @@
 		cursor: pointer;
 		padding: 4px 8px;
 		flex-shrink: 0;
-		transition: color 0.15s, border-color 0.15s;
+		transition:
+			color 0.15s,
+			border-color 0.15s;
 	}
 	.action-btn:hover {
 		color: var(--ink-dim);

@@ -6,8 +6,8 @@ import { eq, lt } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 
 async function cleanupOldSessions() {
-	const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-	await db.delete(shareSessions).where(lt(shareSessions.createdAt, tenMinutesAgo));
+	const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+	await db.delete(shareSessions).where(lt(shareSessions.createdAt, fiveMinutesAgo));
 }
 
 async function getSession(id: string) {
@@ -44,7 +44,6 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 
 	const session = await getSession(params.id);
 	if (!session) error(404, 'Session not found');
-	if (session.answer) error(409, 'Answer already submitted');
 
 	const result = answerSchema.safeParse(await request.json());
 	if (!result.success) error(400, 'Invalid input');
@@ -68,7 +67,8 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 const patchSchema = z
 	.object({
 		approved: z.boolean().optional(),
-		denied: z.boolean().optional()
+		denied: z.boolean().optional(),
+		offer: z.string().optional()
 	})
 	.refine(
 		(data) => !(data.approved === true && data.denied === true),
@@ -80,7 +80,6 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 
 	const session = await getSession(params.id);
 	if (!session) error(404, 'Session not found');
-	if (!session.answer) error(400, 'No answer to approve');
 
 	const result = patchSchema.safeParse(await request.json());
 	if (!result.success) error(400, 'Invalid input');
@@ -89,7 +88,13 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 		.update(shareSessions)
 		.set({
 			...(result.data.approved !== undefined && { approved: result.data.approved }),
-			...(result.data.denied !== undefined && { denied: result.data.denied })
+			...(result.data.denied !== undefined && { denied: result.data.denied }),
+			...(result.data.offer !== undefined && {
+				offer: result.data.offer,
+				answer: null, // Clear old answer if offer changes
+				approved: false,
+				denied: false
+			})
 		})
 		.where(eq(shareSessions.id, params.id));
 

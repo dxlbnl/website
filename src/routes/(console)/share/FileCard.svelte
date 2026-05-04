@@ -13,6 +13,7 @@
 
 <div class="card">
 	{#if entry.blobUrl && entry.mimeType.startsWith('image/')}
+		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 		<a href={entry.blobUrl} target="_blank" rel="noopener">
 			<img src={entry.blobUrl} alt={entry.name} class="preview-img" />
 		</a>
@@ -31,6 +32,7 @@
 		{#if entry.progress < 1}
 			<div class="bar"><div class="fill" style="width:{entry.progress * 100}%"></div></div>
 		{:else if entry.blobUrl}
+			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 			<a class="btn-del" href={entry.blobUrl} download={entry.name}>Download</a>
 		{/if}
 	</div>

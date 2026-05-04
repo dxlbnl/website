@@ -4,15 +4,29 @@
 	type Props = {
 		name?: string;
 		trustedPeers?: TrustedPeer[];
+		nearbySessions?: { id: string; hostName: string }[];
 		onstart: (name: string) => void;
+		onjoin?: (id: string) => void;
+		isJoining?: boolean;
 		onstartdirected?: (peer: TrustedPeer) => void;
 		onforget?: (id: string) => void;
 	};
-	let { name = '', trustedPeers = [], onstart, onstartdirected, onforget }: Props = $props();
+	let {
+		name = '',
+		trustedPeers = [],
+		nearbySessions = [],
+		onstart,
+		onjoin,
+		onstartdirected,
+		onforget,
+		isJoining = false
+	}: Props = $props();
 
 	let inputName: string = $state('');
 
-	$effect(() => { inputName = name; });
+	$effect(() => {
+		inputName = name;
+	});
 
 	function submit() {
 		onstart(inputName.trim() || 'Host');
@@ -21,6 +35,39 @@
 	function onkeydown(e: KeyboardEvent) {
 		if (e.key === 'Enter') submit();
 	}
+
+	// Deduplicate: merge trusted and nearby
+	const mergedPeers = $derived(() => {
+		const nearbyMap = new Map(nearbySessions.map((s) => [s.hostDeviceId, s]));
+		const trustedMap = new Map(trustedPeers.map((p) => [p.id, p]));
+
+		// List of devices we can interact with
+		const result: { id: string; name: string; sessionId?: string; isTrusted: boolean }[] = [];
+
+		// Start with trusted devices
+		for (const p of trustedPeers) {
+			const nearby = nearbyMap.get(p.id);
+			result.push({
+				id: p.id,
+				name: p.name,
+				sessionId: nearby?.id,
+				isTrusted: true
+			});
+			nearbyMap.delete(p.id);
+		}
+
+		// Add remaining nearby devices (untrusted)
+		for (const n of nearbyMap.values()) {
+			result.push({
+				id: n.hostDeviceId,
+				name: n.hostName,
+				sessionId: n.id,
+				isTrusted: false
+			});
+		}
+
+		return result;
+	});
 </script>
 
 <div class="panel">
@@ -33,17 +80,36 @@
 			placeholder="Your name (optional)"
 			maxlength="32"
 		/>
-		<button class="btn-primary" onclick={submit}>New session</button>
+		<button class="btn-primary" onclick={submit}
+			>{isJoining ? 'Join session' : 'New session'}</button
+		>
 	</div>
 
-	{#if trustedPeers.length > 0}
+	{#if !isJoining}
+		<div class="status-faint">
+			<span class="dot"></span>
+			Listening for incoming connections...
+		</div>
+	{/if}
+
+	{#if mergedPeers().length > 0}
 		<div class="trusted">
-			<div class="trusted-label">Trusted devices</div>
-			{#each trustedPeers as peer (peer.id)}
+			<div class="trusted-label">Available devices</div>
+			{#each mergedPeers() as peer (peer.id)}
 				<div class="peer-row">
 					<span class="peer-name">{peer.name}</span>
-					<button class="btn-ghost peer-connect" onclick={() => onstartdirected?.(peer)}>Connect</button>
-					<button class="btn-del" onclick={() => onforget?.(peer.id)} title="Remove">×</button>
+					{#if peer.sessionId}
+						<button class="btn-primary peer-connect" onclick={() => onjoin?.(peer.sessionId!)}
+							>Join</button
+						>
+					{:else}
+						<button class="btn-ghost peer-connect" onclick={() => onstartdirected?.({ id: peer.id, name: peer.name })}
+							>Connect</button
+						>
+					{/if}
+					{#if peer.isTrusted}
+						<button class="btn-del" onclick={() => onforget?.(peer.id)} title="Remove trusted">×</button>
+					{/if}
 				</div>
 			{/each}
 		</div>
@@ -51,6 +117,33 @@
 </div>
 
 <style>
+	.status-faint {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--ink-faint);
+	}
+	.dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--ok);
+		box-shadow: 0 0 8px var(--ok);
+		animation: pulse 2s infinite;
+	}
+	@keyframes pulse {
+		0% {
+			opacity: 0.4;
+		}
+		50% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0.4;
+		}
+	}
 	.panel {
 		display: flex;
 		flex-direction: column;
