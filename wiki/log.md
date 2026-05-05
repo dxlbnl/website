@@ -14,6 +14,9 @@
 
 ## [2026-04-30] lint | 4 issues found, 4 auto-fixed
 
+## [2026-05-03] ingest | Share Tool
+- Written: `expertise/share-tool.md` — WebRTC P2P share feature: session flow, trusted device pairing, file protocol, DB schema, known limitations
+
 ## [2026-04-30] update | wiki maintenance
 - Updated: `entities/external sites.md` - Formatted as a structured wiki article.
 - Updated: `wiki/index.md` - Synthesized summaries for missing entries.
