@@ -199,7 +199,8 @@ export const GET = async ({ url, fetch }) => {
 	return new Response(Buffer.from(compressedBuffer), {
 		headers: {
 			'content-type': 'image/jpeg',
-			'cache-control': 'public, immutable, no-transform, max-age=31536000'
+			'cache-control': 'public, immutable, no-transform, max-age=31536000',
+			'X-Robots-Tag': 'noindex'
 		}
 	});
 };
