@@ -2,6 +2,12 @@ import { mdsvex } from 'mdsvex';
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
+const getOrigin = () => {
+	if (process.env.VERCEL_ENV === 'production') return 'https://www.dexterlabs.nl';
+	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+	return 'https://www.dexterlabs.nl';
+};
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	// Consult https://svelte.dev/docs/kit/integrations
@@ -25,6 +31,7 @@ const config = {
 			strict: true
 		}),
 		prerender: {
+			origin: getOrigin(),
 			handleHttpError: ({ path, message }) => {
 				if (path.startsWith('/_vercel/image')) return;
 				throw new Error(message);

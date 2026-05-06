@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://dexterlabs.nl/sitemap.xml
+Sitemap: https://www.dexterlabs.nl/sitemap.xml
