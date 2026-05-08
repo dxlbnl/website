@@ -1,6 +1,36 @@
 {
   "choices": [
     {
+      "id": "new-project",
+      "name": "New Project",
+      "type": "Template",
+      "command": true,
+      "templatePath": "templates/Project.md",
+      "fileNameFormat": {
+        "enabled": true,
+        "format": "{{VALUE}}"
+      },
+      "folder": {
+        "enabled": true,
+        "folders": [
+          "projects"
+        ],
+        "chooseWhenCreating": false,
+        "createInSameFolder": false
+      },
+      "append": false,
+      "incrementFileName": false,
+      "openFile": true,
+      "openFileInMode": "default",
+      "allowInExplorer": true,
+      "fileOpening": {
+        "location": "tab",
+        "direction": "vertical",
+        "mode": "default",
+        "focus": true
+      }
+    },
+    {
       "id": "new-note",
       "name": "New Note",
       "type": "Template",

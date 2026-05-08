@@ -8,8 +8,9 @@
 	const {
 		items = [
 			{ label: 'FEED', href: '/feed/' },
-			{ label: 'NOTES', href: '/notes/' },
 			{ label: 'CATALOGUE', href: '/catalogue/' },
+			{ label: 'PROJECTS', href: '/projects/' },
+			{ label: 'NOTES', href: '/notes/' },
 			{ label: 'ABOUT', href: '/about/' },
 			{ label: 'CONTACT', href: '/contact/' }
 		]
@@ -124,10 +125,6 @@
 		gap: 6px;
 		overflow: hidden;
 		min-width: 0;
-
-		@media (max-width: 900px) {
-			display: none;
-		}
 	}
 	.sep {
 		color: var(--ink-faint);

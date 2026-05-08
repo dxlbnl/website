@@ -1,9 +1,9 @@
-import { PUBLIC_COUNTRIES_EU, PUBLIC_COUNTRIES_WORLD } from '$env/static/public';
-import type Stripe from 'stripe';
+import { PUBLIC_COUNTRIES_EU, PUBLIC_COUNTRIES_WORLD } from "$env/static/public";
+import type Stripe from "stripe";
 
 type AllowedCountry = NonNullable<
-	Stripe.Checkout.SessionCreateParams['shipping_address_collection']
->['allowed_countries'][number];
+  Stripe.Checkout.SessionCreateParams["shipping_address_collection"]
+>["allowed_countries"][number];
 
 // prettier-ignore
 const ALLOWED_COUNTRIES_SET: Set<string> = new Set<AllowedCountry>([
@@ -26,21 +26,21 @@ const ALLOWED_COUNTRIES_SET: Set<string> = new Set<AllowedCountry>([
 ]);
 
 function isAllowedCountry(s: string): s is AllowedCountry {
-	return ALLOWED_COUNTRIES_SET.has(s);
+  return ALLOWED_COUNTRIES_SET.has(s);
 }
 export function isEU(region: Region) {
-	return region === 'NL' || region === 'EU';
+  return region === "NL" || region === "EU";
 }
 
-export const EU_COUNTRIES = PUBLIC_COUNTRIES_EU.split(',');
-export const WORLD_COUNTRIES = PUBLIC_COUNTRIES_WORLD.split(',');
+export const EU_COUNTRIES = PUBLIC_COUNTRIES_EU.split(",");
+export const WORLD_COUNTRIES = PUBLIC_COUNTRIES_WORLD.split(",");
 export const ALL_COUNTRIES = [...EU_COUNTRIES, ...WORLD_COUNTRIES].filter(isAllowedCountry);
 
-export type Region = 'NL' | 'EU' | 'World' | null;
+export type Region = "NL" | "EU" | "World" | null;
 
 export function getRegion(country: string): Region {
-	if (!country || country === 'NL') return 'NL';
-	if (EU_COUNTRIES.includes(country)) return 'EU';
-	if (WORLD_COUNTRIES.includes(country)) return 'World';
-	return null;
+  if (!country || country === "NL") return "NL";
+  if (EU_COUNTRIES.includes(country)) return "EU";
+  if (WORLD_COUNTRIES.includes(country)) return "World";
+  return null;
 }

@@ -4,7 +4,7 @@
 	type Props = {
 		name?: string;
 		trustedPeers?: TrustedPeer[];
-		nearbySessions?: { id: string; hostName: string }[];
+		nearbySessions?: { id: string; hostName: string; hostDeviceId: string }[];
 		onstart: (name: string) => void;
 		onjoin?: (id: string) => void;
 		isJoining?: boolean;
