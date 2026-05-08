@@ -20,5 +20,3 @@ The new design is a 4HP "Reactor Core." I've added a dual analog current visuali
 Under the hood, it’s still all about audio-grade silence. I'm using a 2.2 MHz switching architecture to keep any whine far above the audible range, paired with a multi-stage Pi-filter topology. It’s designed to deliver 3.0A on the +12V rail and 1.5A on the -12V, which is plenty of juice for a high-density travel case.
 
 The layouts are done, and I’m about to pull the trigger on the PCB order.
-
-_(Images coming soon - I'm getting the source files ready and will optimize them for the site.)_
