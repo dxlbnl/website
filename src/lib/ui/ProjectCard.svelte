@@ -2,29 +2,38 @@
 	import { resolve } from '$app/paths';
 	import type { ProjectFrontmatter } from '$lib/types';
 	import { resolveProjectImage, vercelSrcset } from '$lib/utils/image';
-	import { getPalette } from '$lib/theme.svelte';
 
 	type Props = { project: ProjectFrontmatter };
 	let { project }: Props = $props();
 
-	const imgSrc = $derived.by(() => {
-		const isLight = getPalette() === 'paper';
-		const src = (isLight ? project.imageLight : null) ?? project.image;
-		return src ? resolveProjectImage(src) : null;
-	});
+	const imgDark = $derived(project.image ? resolveProjectImage(project.image) : null);
+	const imgLight = $derived(project.imageLight ? resolveProjectImage(project.imageLight) : null);
 	const cta = $derived(project.url ? 'VIEW PROJECT' : 'OPEN SOURCE');
 </script>
 
 <a href={resolve(`/projects/${project.slug}/`)} class="card">
 	<div class="img">
-		{#if imgSrc}
-			<img
-				src={imgSrc}
-				srcset={vercelSrcset(imgSrc, [256, 384, 512, 768, 960])}
-				sizes="(max-width: 820px) calc(100vw - 32px), (max-width: 1000px) calc(50vw - 40px), calc(33.33vw - 32px)"
-				alt={project.title}
-				loading="lazy"
-			/>
+		{#if imgDark || imgLight}
+			{#if imgDark}
+				<img
+					class="dark-img"
+					src={imgDark}
+					srcset={vercelSrcset(imgDark, [256, 384, 512, 768, 960])}
+					sizes="(max-width: 820px) calc(100vw - 32px), (max-width: 1000px) calc(50vw - 40px), calc(33.33vw - 32px)"
+					alt={project.title}
+					loading="eager"
+				/>
+			{/if}
+			{#if imgLight}
+				<img
+					class="light-img"
+					src={imgLight}
+					srcset={vercelSrcset(imgLight, [256, 384, 512, 768, 960])}
+					sizes="(max-width: 820px) calc(100vw - 32px), (max-width: 1000px) calc(50vw - 40px), calc(33.33vw - 32px)"
+					alt={project.title}
+					loading="eager"
+				/>
+			{/if}
 		{:else}
 			{project.slug.toUpperCase()} · PROJECT
 		{/if}
@@ -73,6 +82,9 @@
 		height: 100%;
 		object-fit: cover;
 	}
+	:global([data-palette='paper']) .light-img { display: block; }
+	:global([data-palette='paper']) .dark-img { display: none; }
+	.light-img { display: none; }
 	.body {
 		padding: 12px 14px 10px;
 		display: flex;

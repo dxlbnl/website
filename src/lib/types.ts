@@ -1,98 +1,100 @@
-export type ProductStatus = "available" | "sold-out" | "coming-soon";
+export type ProductStatus = 'available' | 'sold-out' | 'coming-soon';
 
 export type ProductFrontmatter = {
-  pageType: "product";
-  id: string;
-  name: string;
-  description: string;
-  status: ProductStatus;
-  category: string;
-  tags: string[];
-  tindieUrl?: string;
-  stripeProduct?: string;
-  image?: string;
-  images?: string[];
-  priceIncl: number;
-  priceExcl: number;
-  specs?: Record<string, string>;
+	pageType: 'product';
+	id: string;
+	name: string;
+	description: string;
+	status: ProductStatus;
+	category: string;
+	tags: string[];
+	tindieUrl?: string;
+	stripeProduct?: string;
+	image?: string;
+	images?: string[];
+	priceIncl: number;
+	priceExcl: number;
+	specs?: Record<string, string>;
 };
 
 export type FeedFrontmatter = {
-  pageType: "feed";
-  date: string;
-  tags: string[];
-  body: string;
+	pageType: 'feed';
+	date: string;
+	tags: string[];
+	body: string;
 };
 
 export type NoteFrontmatter = {
-  pageType: "note";
-  title: string;
-  date: string;
-  tags: string[];
-  kind?: string;
-  lede?: string;
-  images?: string[];
-  productId?: string;
+	pageType: 'note';
+	title: string;
+	date: string;
+	tags: string[];
+	kind?: string;
+	lede?: string;
+	images?: string[];
+	productId?: string;
 };
 
 export type MailingFrontmatter = {
-  pageType: "mailing";
-  slug: string;
-  title: string;
-  subject: string;
-  date: string;
-  published: boolean;
+	pageType: 'mailing';
+	slug: string;
+	title: string;
+	subject: string;
+	date: string;
+	published: boolean;
 };
 
 export type LegalFrontmatter = {
-  pageType: "legal";
-  title: string;
-  lastUpdated: string;
+	pageType: 'legal';
+	title: string;
+	lastUpdated: string;
 };
 
 export type ProjectFrontmatter = {
-  pageType: "project";
-  slug: string;
-  title: string;
-  description: string;
-  tags: string[];
-  image?: string;
-  imageLight?: string;
-  images?: string[];
-  url?: string;
-  github?: string;
-  date?: string;
+	pageType: 'project';
+	slug: string;
+	title: string;
+	description: string;
+	tags: string[];
+	image?: string;
+	imageLight?: string;
+	images?: string[];
+	url?: string;
+	github?: string;
+	date?: string;
+	archived?: boolean;
+	stack?: Record<string, string>;
 };
 
 export type InvoiceFrontmatter = {
-  paginaType: "factuur";
-  factuurnr: string;
-  datum: string;
-  vervaldatum: string;
+	paginaType: 'factuur';
+	factuurnr: string;
+	datum: string;
+	vervaldatum: string;
 
-  verzender: {
-    naam: string;
-    gegevens: string[];
-    kvk: string;
-    btw: string;
-    iban: string;
-  };
+	verzender: {
+		naam: string;
+		gegevens: string[];
+		kvk: string;
+		btw: string;
+		iban: string;
+	};
 
-  klant: {
-    naam: string;
-    adres: string[];
-    btw_id?: string;
-  };
+	klant: {
+		naam: string;
+		adres: string[];
+		btw_id?: string;
+	};
 
-  regels: Array<{
-    omschrijving: string;
-    toelichting: string;
-    aantal: number;
-    tarief: number;
-    btw_tarief?: number;
-  }>;
+	regels: Array<{
+		omschrijving: string;
+		toelichting: string;
+		aantal: number;
+		tarief: number;
+		btw_tarief?: number;
+	}>;
 
-  btw_verlegd: boolean;
-  valuta?: string;
-  taal?: string;
+	btw_verlegd: boolean;
+	valuta?: string;
+	taal?: string;
 };

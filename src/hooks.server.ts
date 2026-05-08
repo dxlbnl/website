@@ -2,7 +2,11 @@ import { db } from "$lib/server/db";
 import { pageviews } from "$lib/server/db/schema";
 
 export const handle = async ({ event, resolve }) => {
-  const response = await resolve(event);
+  const palette = event.cookies.get('dxlb-palette') ?? 'phosphor';
+
+  const response = await resolve(event, {
+    transformPageChunk: ({ html }) => html.replace('<html', `<html data-palette="${palette}"`),
+  });
 
   // Add security headers
   response.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");

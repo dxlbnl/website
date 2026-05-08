@@ -749,7 +749,7 @@
 	<PageHero
 		eyebrow="// TOOLS · SHARE"
 		title="Share."
-		sub="Peer-to-peer text and file transfer. Nothing stored on the server."
+		sub="Easily share text and files across your devices — nothing is stored on the server."
 	/>
 
 	{#if phase === 'idle'}

@@ -6,7 +6,6 @@
 	import { resolve } from '$app/paths';
 	import type { Component } from 'svelte';
 	import type { ProjectFrontmatter } from '$lib/types';
-	import { getPalette } from '$lib/theme.svelte';
 	import { resolveProjectImage } from '$lib/utils/image';
 
 	type Props = {
@@ -18,17 +17,14 @@
 	};
 	let { data }: Props = $props();
 
-	const heroSrc = $derived.by(() => {
-		const isLight = getPalette() === 'paper';
-		const src = (isLight ? data.metadata.imageLight : null) ?? data.metadata.image;
-		return src ? resolveProjectImage(src) : null;
-	});
+	const heroDark = $derived(data.metadata.image ? resolveProjectImage(data.metadata.image) : null);
+	const heroLight = $derived(data.metadata.imageLight ? resolveProjectImage(data.metadata.imageLight) : null);
 </script>
 
 <SEO
 	title={data.metadata.title}
 	description={data.metadata.description}
-	image={heroSrc ?? data.images[0]}
+	image={heroDark ?? data.images[0]}
 	type="article"
 />
 
@@ -50,19 +46,35 @@
 				</a>
 			{/if}
 			{#if data.metadata.github}
-				<a href={data.metadata.github} class="btn-ghost" target="_blank" rel="noopener noreferrer">
+				<a href={data.metadata.github} class="btn-cta" target="_blank" rel="noopener noreferrer">
 					GITHUB →
 				</a>
 			{/if}
 		</div>
 
-		{#if heroSrc}
-			<img class="hero-img" src={heroSrc} alt={data.metadata.title} />
+		{#if heroDark || heroLight}
+			{#if heroDark}
+				<img class="hero-img dark-img" src={heroDark} alt={data.metadata.title} />
+			{/if}
+			{#if heroLight}
+				<img class="hero-img light-img" src={heroLight} alt={data.metadata.title} />
+			{/if}
 		{:else if data.images.length > 0}
 			<ImageCarousel images={data.images} />
 		{/if}
 
 		<MarkdownBody component={data.component} />
+
+		{#if data.metadata.stack}
+			<div class="stack-label">// STACK</div>
+			<table class="stack">
+				<tbody>
+					{#each Object.entries(data.metadata.stack) as [role, tech] (role)}
+						<tr><td>{role}</td><td>{tech}</td></tr>
+					{/each}
+				</tbody>
+			</table>
+		{/if}
 	</article>
 
 	<div class="post-foot">
@@ -124,6 +136,34 @@
 		border: 1px solid var(--rule);
 		display: block;
 		margin-bottom: 32px;
+	}
+	:global([data-palette='paper']) .light-img { display: block; }
+	:global([data-palette='paper']) .dark-img { display: none; }
+	.light-img { display: none; }
+	.stack-label {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--ink-faint);
+		margin: 32px 0 4px;
+	}
+	.stack {
+		border-collapse: collapse;
+		font-family: var(--mono);
+		font-size: var(--t-mono);
+		margin-bottom: 32px;
+	}
+	.stack td {
+		padding: 8px 0;
+		border-bottom: 1px dashed var(--rule);
+	}
+	.stack td:first-child {
+		color: var(--ink-dim);
+		padding-right: 48px;
+	}
+	.stack td:last-child {
+		color: var(--ink);
 	}
 	.post-foot {
 		max-width: 68ch;

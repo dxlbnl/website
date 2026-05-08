@@ -6,6 +6,7 @@
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
 	import ProductCard from '$lib/ui/ProductCard.svelte';
+	import ProjectCard from '$lib/ui/ProjectCard.svelte';
 	import NoteCard from '$lib/ui/NoteCard.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
 	import type { PageData } from './$types';
@@ -47,13 +48,25 @@
 			{/each}
 		</div>
 		<div class="cat-foot">
-			<a href={resolve('/catalogue/')} class="btn-cta">VIEW ALL HARDWARE →</a>
+			<a href={resolve('/catalogue/')} class="btn-ghost">VIEW ALL HARDWARE →</a>
 			<span class="faint">SHIPPED BY DEXTERLABS · DELFT, NL</span>
 		</div>
 	{/if}
 
+	{#if data.projects.length > 0}
+		<SectionH num="// 0x02" title="Projects" sub="SOFTWARE & OPEN SOURCE" />
+		<div class="card-grid">
+			{#each data.projects as project (project.slug)}
+				<ProjectCard {project} />
+			{/each}
+		</div>
+		<div class="cat-foot">
+			<a href={resolve('/projects/')} class="btn-ghost">VIEW ALL PROJECTS →</a>
+		</div>
+	{/if}
+
 	{#if data.notes.length > 0}
-		<SectionH num="// 0x02" title="Notes" sub="ENGINEERING NOTES & EXPERIMENTS" />
+		<SectionH num="// 0x03" title="Notes" sub="ENGINEERING NOTES & EXPERIMENTS" />
 		<div class="card-grid max-2-rows">
 			{#each data.notes as note (note.slug)}
 				<NoteCard
@@ -67,7 +80,7 @@
 			{/each}
 		</div>
 		<div class="cat-foot">
-			<a href={resolve('/notes/')} class="btn-cta">VIEW ALL NOTES →</a>
+			<a href={resolve('/notes/')} class="btn-ghost">VIEW ALL NOTES →</a>
 			<span class="faint">ENGINEERING NOTES & EXPERIMENTS</span>
 		</div>
 	{/if}

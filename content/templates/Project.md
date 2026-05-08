@@ -9,4 +9,7 @@ imageLight: ""
 github: ""
 url: ""
 date: <% tp.date.now("YYYY-MM-DD") %>
+stack:
+  Framework: ""
+  Language: TypeScript
 ---

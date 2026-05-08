@@ -196,21 +196,8 @@ h6 {
   color: var(--amber);
 }
 
-/* Forward CTA link - amber color, ink on hover */
+/* Forward CTA - amber border, fills amber on hover */
 .btn-cta {
-  font-family: var(--mono);
-  font-size: var(--t-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--amber);
-  transition: color 0.15s;
-}
-.btn-cta:hover {
-  color: var(--ink);
-}
-
-/* Ghost button - amber border, fills amber on hover */
-.btn-ghost {
   font-family: var(--mono);
   font-size: var(--t-mono);
   letter-spacing: 0.1em;
@@ -226,13 +213,26 @@ h6 {
     background 0.15s,
     color 0.15s;
 }
-.btn-ghost:hover {
+.btn-cta:hover {
   background: var(--amber);
   color: var(--bg);
 }
-.btn-ghost:disabled {
+.btn-cta:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Ghost link - amber text, ink on hover */
+.btn-ghost {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+  transition: color 0.15s;
+}
+.btn-ghost:hover {
+  color: var(--ink);
 }
 
 /* Primary button - filled amber, darkens on hover */

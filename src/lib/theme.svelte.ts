@@ -27,6 +27,7 @@ export function setPalette(value: string) {
   palette = value;
   if (browser) {
     localStorage.setItem("dxlb-palette", value);
+    document.cookie = `dxlb-palette=${value}; path=/; max-age=31536000; SameSite=Lax`;
   }
 }
 
