@@ -34,7 +34,7 @@
 				margin-bottom: 20px;
 				color: var(--ink);
 			}
-			a {
+			a:not([class]) {
 				border-bottom: 1px solid var(--rule-strong);
 				transition: border-color 0.15s;
 				&:hover {
@@ -67,18 +67,19 @@
 				color: var(--cyan);
 			}
 			pre {
-				background: var(--bg-sunken);
 				border: 1px solid var(--rule);
+				border-radius: 2px;
 				padding: 16px 20px;
 				overflow-x: auto;
+				white-space: pre;
 				margin: 24px 0;
 				line-height: 1.6;
 				code {
 					background: none;
 					border: none;
 					padding: 0;
-					color: var(--ink-dim);
 					font-size: var(--t-mono);
+					color: inherit;
 				}
 			}
 			ul,

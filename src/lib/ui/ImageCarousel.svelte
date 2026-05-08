@@ -58,6 +58,7 @@
 		display: block;
 		aspect-ratio: 16 / 9;
 		object-fit: cover;
+		object-position: top;
 	}
 	.regions {
 		position: absolute;

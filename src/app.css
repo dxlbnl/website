@@ -40,6 +40,20 @@
 
 /* Breakpoints: 720pxurl(../static/images/notes/003-conduit-pdx1/conduit.webp) mobile (hamburger, stacking), 900px tablet (3→2 col grids) */
 
+/* Shiki css-variables theme — mapped to site tokens */
+:root {
+	--shiki-foreground: var(--ink);
+	--shiki-background: var(--bg-sunken);
+	--shiki-token-keyword: var(--amber);
+	--shiki-token-function: var(--cyan);
+	--shiki-token-constant: var(--amber);
+	--shiki-token-string: #7ec8a0;
+	--shiki-token-string-expression: #7ec8a0;
+	--shiki-token-comment: var(--ink-faint);
+	--shiki-token-parameter: var(--ink-dim);
+	--shiki-token-punctuation: var(--ink-dim);
+	--shiki-token-link: var(--cyan);
+}
 [data-palette='paper'] {
 	--bg: #efece4;
 	--bg-rail: #e6e2d6;
@@ -54,6 +68,8 @@
 	--cyan: #030304;
 	--danger: #a83224;
 	--ok: #356b31;
+	--shiki-token-string: #2d7a50;
+	--shiki-token-string-expression: #2d7a50;
 }
 
 /* Reset */
@@ -128,11 +144,43 @@ h6 {
 	gap: 16px;
 	margin-top: 24px;
 
+
+	&.max-2-rows {
+		/* 1. Explicitly define exactly 2 rows */
+		grid-template-rows: auto auto;
+
+		/* 2. Force all subsequent (implicit) rows to be 0px tall */
+		grid-auto-rows: 0;
+
+		/* 3. Hide anything that spills out */
+		overflow: hidden;	
+
+		& > * {
+			/* 4. Ensure the content inside the 0px items is also hidden */
+			overflow: hidden; 
+		}
+	}
+
 	@container (max-width: 900px) {
 		grid-template-columns: 1fr 1fr;
+
+		/* hide lone last item that would orphan in a 2-col row */
+		> :last-child:nth-child(n + 3):nth-child(2n + 1) {
+			display: none;
+		}
 	}
+
 	@container (max-width: 720px) {
 		grid-template-columns: 1fr;
+
+		/* restore hidden item at single-column */
+		> :last-child {
+			display: revert;
+		}
+
+		&.max-2-rows {
+			grid-template-rows: auto auto auto; /* 3 rows */
+		}
 	}
 }
 

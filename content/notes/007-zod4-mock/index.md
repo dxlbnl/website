@@ -8,6 +8,12 @@ images: [screenshot.png]
 lede: A schema-driven mock library that generates byte-identical data from a seed, with built-in relational identity across multiple API schemas.
 ---
 
+<script>
+  import Cta from '$lib/ui/Cta.svelte';
+</script>
+
+<Cta href="https://github.com/dxlbnl/zod4-mock" eyebrow="// open source" name="zod4-mock" description="Deterministic, schema-driven mock data for Zod v4. One seed. Cross-API consistent." label="VIEW ON GITHUB →" external />
+
 At work, we had quite a nice setup generating mock data based on our client-side API schemas in Zod 3. Over the years we'd been using [zod-mock](https://github.com/anatine/zod-plugins/tree/main/packages/zod-mock) and [zod-fixture](https://zod-fixture.timdeschryver.dev/). But those libraries weren't updated to Zod 4 yet, and they had a few other issues: modifying a schema often caused the generated data to change completely, and getting referential integrity across schemas — consistent IDs between a `User` and an `Order`, for instance — required a lot of custom glue code.
 
 I built [zod4-mock](https://github.com/dxlbnl/zod4-mock) to fix both of those problems.
@@ -50,10 +56,23 @@ const world = createWorld({ seed: 42 })
 
 const people = world.generate(z.array(PersonApiSchema).min(3).max(10));
 // → [
-//     { id: 'a1b2...', firstName: 'Jan', lastName: 'Bakker', email: 'jan@...', age: 34, active: true },
-//     { id: 'c3d4...', firstName: 'Lisa', lastName: 'de Vries', email: 'lisa@...', age: 52, active: false },
-//     ...
-//   ]
+//   {
+//     id:        'a3f1c2d4-9e6b-4a0f-b821-3c7d2e1f0a94',
+//     firstName: 'Jan',
+//     lastName:  'Bakker',
+//     email:     'jan.bakker@dexterlabs.nl',
+//     age:       34,
+//     active:    true,
+//   },
+//   {
+//     id:        'e5b7f8c1-2d3a-4e9f-a016-7b4c5d6e2f38',
+//     firstName: 'Lisa',
+//     lastName:  'de Vries',
+//     email:     'lisa.devries@wolbodo.nl',
+//     age:       52,
+//     active:    false,
+//   },
+// ]
 ```
 
 ## Cross-API consistency
@@ -61,7 +80,10 @@ const people = world.generate(z.array(PersonApiSchema).min(3).max(10));
 Where this really pays off is when you have a second schema for the same entity. Add `PersonDetailSchema` to the same world:
 
 ```typescript
-const PersonDetailSchema = z.object({ personId: z.uuid(), bio: z.string() });
+const PersonDetailSchema = z.object({
+  personId: z.uuid(),
+  bio: z.string(),
+});
 
 world.withSchema(PersonDetailSchema, PersonSubject, {
   personId: (s) => s.id,

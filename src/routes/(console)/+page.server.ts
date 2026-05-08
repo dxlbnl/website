@@ -24,7 +24,7 @@ export const load: PageServerLoad = async () => {
 			return { slug, idx, ...mod.metadata };
 		})
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-		.slice(0, 4);
+		.slice(0, 6);
 
 	const products = Object.values(productsMods)
 		.map((mod) => mod.metadata)

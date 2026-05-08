@@ -54,7 +54,7 @@
 
 	{#if data.notes.length > 0}
 		<SectionH num="// 0x02" title="Notes" sub="ENGINEERING NOTES & EXPERIMENTS" />
-		<div class="card-grid">
+		<div class="card-grid max-2-rows">
 			{#each data.notes as note (note.slug)}
 				<NoteCard
 					slug={note.slug}
@@ -65,6 +65,10 @@
 					lede={note.lede}
 				/>
 			{/each}
+		</div>
+		<div class="cat-foot">
+			<a href={resolve('/notes/')} class="btn-cta">VIEW ALL NOTES →</a>
+			<span class="faint">ENGINEERING NOTES & EXPERIMENTS</span>
 		</div>
 	{/if}
 

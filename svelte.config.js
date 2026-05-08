@@ -1,6 +1,14 @@
 import { mdsvex } from 'mdsvex';
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import { createHighlighter, createCssVariablesTheme } from 'shiki';
+
+const cssVarsTheme = createCssVariablesTheme({ variablePrefix: '--shiki-' });
+
+const highlighter = await createHighlighter({
+	themes: [cssVarsTheme],
+	langs: ['typescript', 'javascript', 'svelte', 'bash', 'json', 'css', 'html']
+});
 
 const getOrigin = () => {
 	if (process.env.VERCEL_ENV === 'production') return 'https://www.dexterlabs.nl';
@@ -16,8 +24,21 @@ const config = {
 		vitePreprocess(),
 		mdsvex({
 			extension: '.md',
-			smartypants: true
-			// We'll handle component mapping in the page component for more control
+			smartypants: true,
+			highlight: {
+				highlighter: (code, lang) => {
+					const loaded = highlighter.getLoadedLanguages();
+					const useLang = lang && loaded.includes(lang) ? lang : 'text';
+					return highlighter
+						.codeToHtml(code, {
+							lang: useLang,
+							theme: cssVarsTheme.name
+						})
+						.replace(/\{/g, '&#123;')
+						.replace(/\}/g, '&#125;')
+						;
+				}
+			}
 		})
 	],
 	kit: {
