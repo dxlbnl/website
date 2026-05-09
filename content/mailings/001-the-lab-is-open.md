@@ -38,8 +38,8 @@ Currently in final hardware validation. Ships end of Q2 2026.
 
 ---
 
-Both are available to preorder.
+Both are available to preorder. If you're interested, that's the best way to show it — and it helps me gauge how many units to build for the first run.
 
-If you have thoughts on either of them, reply here. I read every reply.
+If you have questions, feedback, or just want to say the specs look wrong — reply here. This goes straight to me. I read every reply.
 
 — Dexter
