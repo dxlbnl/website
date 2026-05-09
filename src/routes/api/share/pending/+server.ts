@@ -1,7 +1,7 @@
 import { json, error } from "@sveltejs/kit";
 import { db } from "$lib/server/db";
 import { shareSessions } from "$lib/server/db/schema";
-import { and, eq, gt, isNull } from "drizzle-orm";
+import { and, eq, gt, isNull, ne } from "drizzle-orm";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async ({ url, request }) => {
@@ -11,26 +11,25 @@ export const GET: RequestHandler = async ({ url, request }) => {
   const clientIp = request.headers.get("x-forwarded-for") || "127.0.0.1";
   const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
-  // Find an invite for us
-  const invite = await db
-    .select({
-      id: shareSessions.id,
-      hostName: shareSessions.hostName,
-      hostDeviceId: shareSessions.hostDeviceId,
-    })
+  const freshAndOpen = and(isNull(shareSessions.answer), eq(shareSessions.denied, false), gt(shareSessions.createdAt, fiveMinutesAgo));
+
+  // Directed invites take priority (explicit, time-sensitive)
+  const directedInvite = await db
+    .select({ id: shareSessions.id, hostName: shareSessions.hostName, hostDeviceId: shareSessions.hostDeviceId })
     .from(shareSessions)
-    .where(
-      and(
-        // Security fix: Only return broadcast sessions (no specific target).
-        // Targeted sessions should be discovered via direct session link, not device enumeration.
-        // This prevents attackers from enumerating device IDs to discover pending sessions.
-        isNull(shareSessions.targetDeviceId),
-        isNull(shareSessions.answer),
-        eq(shareSessions.denied, false),
-        gt(shareSessions.createdAt, fiveMinutesAgo),
-      ),
-    )
+    .where(and(eq(shareSessions.targetDeviceId, forDevice!), freshAndOpen))
     .limit(1);
+
+  // Broadcast invite — only if no directed invite found, never return own sessions
+  const broadcastInvite = directedInvite.length === 0
+    ? await db
+        .select({ id: shareSessions.id, hostName: shareSessions.hostName, hostDeviceId: shareSessions.hostDeviceId })
+        .from(shareSessions)
+        .where(and(isNull(shareSessions.targetDeviceId), ne(shareSessions.hostDeviceId, forDevice!), freshAndOpen))
+        .limit(1)
+    : [];
+
+  const invite = directedInvite[0] ?? broadcastInvite[0] ?? null;
 
   // Find a session we are hosting that is still active/pending
   const hosting = await db
@@ -50,7 +49,7 @@ export const GET: RequestHandler = async ({ url, request }) => {
     )
     .limit(1);
 
-  // Find "Nearby" sessions (same IP, public)
+  // Find "Nearby" sessions (same IP, public, not yet answered, not denied/cancelled)
   const nearby = await db
     .select({
       id: shareSessions.id,
@@ -63,13 +62,14 @@ export const GET: RequestHandler = async ({ url, request }) => {
         eq(shareSessions.ip, clientIp),
         isNull(shareSessions.targetDeviceId),
         isNull(shareSessions.answer),
+        eq(shareSessions.denied, false),
         gt(shareSessions.createdAt, fiveMinutesAgo),
       ),
     )
     .limit(3);
 
   return json({
-    invite: invite[0] ?? null,
+    invite,
     hosting: hosting[0] ?? null,
     nearby: nearby.filter((n) => n.hostDeviceId !== forDevice),
   });

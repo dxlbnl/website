@@ -18,8 +18,20 @@
 	let isSecret: boolean = $state(false);
 	let dragging: boolean = $state(false);
 	let fileInput: HTMLInputElement | null = $state(null);
-	let messagesEl: HTMLElement | null = $state(null);
 	let textareaEl: HTMLTextAreaElement | null = $state(null);
+	let wrapEl: HTMLElement | null = $state(null);
+	let sentinelEl: HTMLElement | null = $state(null);
+	let composerEl: HTMLElement | null = $state(null);
+	let atBottom: boolean = $state(true);
+	let keyboardHeight: number = $state(0);
+
+	function scrollToBottom(behavior: ScrollBehavior = 'instant') {
+		if (!sentinelEl || !composerEl) return;
+		const composerHeight = composerEl.getBoundingClientRect().height;
+		const sentinelTop = sentinelEl.getBoundingClientRect().top;
+		const visibleHeight = (window.visualViewport?.height ?? window.innerHeight);
+		window.scrollTo({ top: window.scrollY + sentinelTop - (visibleHeight - composerHeight), behavior });
+	}
 
 	function fmtTime(d: Date) {
 		return d.toLocaleTimeString('en-NL', { hour: '2-digit', minute: '2-digit' });
@@ -56,10 +68,48 @@
 	}
 
 	$effect(() => {
+		if (!sentinelEl) return;
+		const margin = 80 + keyboardHeight;
+		const obs = new IntersectionObserver(([entry]) => { atBottom = entry.isIntersecting; }, {
+			rootMargin: `0px 0px -${margin}px 0px`,
+			threshold: 0
+		});
+		obs.observe(sentinelEl);
+		return () => obs.disconnect();
+	});
+
+	$effect(() => {
+		const vv = window.visualViewport;
+		if (!vv || !wrapEl) return;
+		const viewport = vv;
+		const wrap = wrapEl;
+		function update() {
+			keyboardHeight = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+			wrap.style.setProperty('--kbd', `${keyboardHeight}px`);
+		}
+		viewport.addEventListener('resize', update);
+		viewport.addEventListener('scroll', update);
+		return () => {
+			viewport.removeEventListener('resize', update);
+			viewport.removeEventListener('scroll', update);
+			wrap.style.removeProperty('--kbd');
+			keyboardHeight = 0;
+		};
+	});
+
+	$effect(() => {
 		void chat.length;
 		tick().then(() => {
-			if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight;
+			if (atBottom) scrollToBottom();
 		});
+	});
+
+	// Re-scroll when content height changes (e.g. images finishing load)
+	$effect(() => {
+		if (!wrapEl) return;
+		const obs = new ResizeObserver(() => { if (atBottom) scrollToBottom(); });
+		obs.observe(wrapEl);
+		return () => obs.disconnect();
 	});
 
 	// Auto-grow textarea
@@ -73,6 +123,7 @@
 
 <div
 	class="wrap"
+	bind:this={wrapEl}
 	class:dragover={dragging}
 	ondragover={(e) => {
 		e.preventDefault();
@@ -93,7 +144,7 @@
 		{/if}
 	</div>
 
-	<div class="messages" bind:this={messagesEl}>
+	<div class="messages">
 		{#each chat as entry (entry.id)}
 			<div class="msg" class:out={entry.dir === 'out'} class:in={entry.dir === 'in'}>
 				{#if entry.kind === 'text'}
@@ -114,9 +165,14 @@
 				<span class="ts">{fmtTime(entry.ts)}</span>
 			</div>
 		{/each}
+		<div bind:this={sentinelEl} aria-hidden="true" style="height:0;"></div>
 	</div>
 
-	<div class="composer" class:secret-mode={isSecret}>
+	{#if !atBottom}
+		<button class="scroll-btn" onclick={() => scrollToBottom('smooth')}>↓ Bottom</button>
+	{/if}
+
+	<div class="composer" class:secret-mode={isSecret} bind:this={composerEl}>
 		{#if isSecret}
 			<input
 				type="password"
@@ -171,8 +227,7 @@
 		background: var(--bg-elev);
 		border: 1px solid var(--rule);
 		border-radius: var(--radius-card);
-		overflow: hidden;
-		min-height: 480px;
+		overflow: clip;
 		transition: border-color 0.15s;
 	}
 	.wrap.dragover {
@@ -180,23 +235,26 @@
 	}
 
 	.header {
+		position: sticky;
+		top: 0;
+		z-index: 10;
 		display: flex;
 		align-items: center;
 		gap: calc(var(--u) * 1.5);
 		padding: calc(var(--u) * 2) calc(var(--u) * 3);
 		border-bottom: 1px solid var(--rule);
+		background: var(--bg-elev);
 		font-family: var(--mono);
 		font-size: var(--t-mono);
 		color: var(--ink-dim);
 	}
 
 	.messages {
-		flex: 1;
-		overflow-y: auto;
 		padding: calc(var(--u) * 3);
 		display: flex;
 		flex-direction: column;
 		gap: calc(var(--u) * 2);
+		min-height: 150px;
 	}
 
 	.msg {
@@ -263,12 +321,40 @@
 		color: var(--ink-faint);
 	}
 
+	.scroll-btn {
+		position: fixed;
+		bottom: calc(var(--kbd, 0px) + 96px);
+		right: 24px;
+		z-index: 20;
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		letter-spacing: 0.08em;
+		background: var(--bg-elev);
+		border: 1px solid var(--rule-strong);
+		border-radius: var(--radius);
+		color: var(--ink-dim);
+		cursor: pointer;
+		padding: 6px 12px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		transition:
+			color 0.15s,
+			border-color 0.15s;
+	}
+	.scroll-btn:hover {
+		color: var(--ink);
+		border-color: var(--amber);
+	}
+
 	.composer {
+		position: sticky;
+		bottom: var(--kbd, 0px);
+		z-index: 10;
 		display: flex;
 		flex-direction: column;
 		gap: calc(var(--u) * 1);
 		padding: calc(var(--u) * 2);
 		border-top: 1px solid var(--rule);
+		background: var(--bg-elev);
 		transition: border-color 0.15s;
 	}
 	.composer.secret-mode {

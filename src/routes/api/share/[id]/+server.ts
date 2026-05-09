@@ -52,12 +52,23 @@ export const PUT: RequestHandler = async ({ params, request }) => {
     error(403, "This session is directed to another device");
   }
 
+  // Reject if session is already connected (TR-5)
+  if (session.approved) {
+    error(409, "Session already connected");
+  }
+
+  // Reject if there is already a pending unanswered request (CS-8)
+  if (session.answer && !session.approved && !session.denied) {
+    error(409, "Session busy — another guest is awaiting approval");
+  }
+
   await db
     .update(shareSessions)
     .set({
       answer: result.data.answer,
       peerName: result.data.peerName,
       guestDeviceId: result.data.deviceId,
+      denied: false, // Clear denied from previous guest so host can approve this one
     })
     .where(eq(shareSessions.id, params.id));
 

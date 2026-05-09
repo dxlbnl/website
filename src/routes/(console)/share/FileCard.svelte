@@ -29,7 +29,9 @@
 	<div class="meta">
 		<span class="name">{entry.name}</span>
 		<span class="size">{fmtSize(entry.size)}</span>
-		{#if entry.progress < 1}
+		{#if entry.progress === -1}
+			<span class="interrupted">Transfer interrupted</span>
+		{:else if entry.progress < 1}
 			<div class="bar"><div class="fill" style="width:{entry.progress * 100}%"></div></div>
 		{:else if entry.blobUrl}
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
@@ -108,5 +110,12 @@
 	a.btn-del {
 		text-decoration: none;
 		display: inline-block;
+	}
+
+	.interrupted {
+		font-family: var(--mono);
+		font-size: var(--t-micro);
+		color: var(--danger, #e05252);
+		letter-spacing: 0.04em;
 	}
 </style>
