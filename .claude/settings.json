@@ -1,5 +1,9 @@
 {
   "permissions": {
-    "allow": ["Bash(pnpm lint *)", "Bash(pnpm format *)"]
+    "allow": [
+      "Bash(pnpm lint *)",
+      "Bash(pnpm format *)",
+      "Bash(xargs ls -la)"
+    ]
   }
 }

@@ -22,17 +22,17 @@ A 6HP module that does three things at once: records your patch to MicroSD at 48
 
 One button: long-press to record, short-press to mute, double-click to mount as a USB disk. Nothing to remember. The idea came from losing too many patches because capturing them was a three-step process and the moment was gone.
 
-Class-compliant USB — no drivers on Windows, macOS, Linux, or iOS. Currently on the second hardware revision. Firmware is close.
+Class-compliant USB — no drivers on Windows, macOS, Linux, or iOS. Currently on the second hardware revision. Firmware is 90% done.
 
 <EmailCta href="https://dxlb.nl/catalogue/distrans-ar1/" name="Distrans AR-1" description="6HP recorder, USB audio interface, and balanced I/O in one module." />
 
 ## Conduit PDX-2
 
-A 4HP power supply that runs your entire rack from a USB-C laptop charger. 3.0A on +12V, 1.5A on -12V. Switches at 2.2MHz — above the audio band — so there's no switching whine. Ripple under 5mVpp. Sequenced rails, TVS protection, short-circuit shutdown.
+4HP, 15mm deep, runs your entire rack from a USB-C laptop charger. 3.0A on +12V, 1.5A on -12V — enough for 15 to 20 modules. Switches at 2.2MHz so there's no switching noise in the audio band. Ripple under 5mVpp. Sequenced rails, short-circuit shutdown, TVS protection.
 
-If you've ever tried to take a modular rig somewhere without hunting down the right power brick, you know the problem.
+The practical upshot: plug in the charger already in your bag and the rack is ready to go. Take it to a gig, a studio session, a field recording — no adapter hunting, no mains socket required.
 
-Currently in final hardware validation. Ships Q2 2026.
+Currently in final hardware validation. Ships end of Q2 2026.
 
 <EmailCta href="https://dxlb.nl/catalogue/conduit-pdx2/" name="Conduit PDX-2" description="4HP power supply for your entire rack, runs from a USB-C laptop charger." />
 
