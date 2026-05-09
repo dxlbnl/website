@@ -2,7 +2,7 @@
 pageType: project
 slug: list-dexterlabs
 title: Lists
-description: A real-time shared list app — groceries, todos, whatever. Built with SvelteKit and Server-Sent Events.
+description: Real-time shared lists — groceries, todos, whatever. Share across devices and users, no passwords needed.
 tags: [SvelteKit, TypeScript, Real-time]
 image: media/lists-dark.png
 imageLight: media/lists-light.png
@@ -16,4 +16,4 @@ stack:
   Language: TypeScript
 ---
 
-**SvelteKit** handles routing and SSR. **Supabase** provides the real-time sync layer — list updates broadcast instantly to all connected clients over WebSockets without any custom backend code. The UI is intentionally minimal: one list, one input, items check off live as others walk through the store.
+**SvelteKit** handles routing and SSR. **Supabase** provides the real-time sync layer — list updates broadcast instantly to all connected clients over WebSockets without any custom backend code. Create as many lists as you need, share each one with whoever you want. Authentication is passwordless — a magic link is sent to your device, no credentials to remember.
