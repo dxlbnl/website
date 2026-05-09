@@ -9,6 +9,7 @@
 	import ProjectCard from '$lib/ui/ProjectCard.svelte';
 	import NoteCard from '$lib/ui/NoteCard.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
+	import { vercelImg, vercelSrcset } from '$lib/utils/image';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
@@ -24,7 +25,15 @@
 		border={false}
 	>
 		{#snippet headingContent()}
-			Dexter.<br /><em>Things built</em><br />in the lab.
+			<img
+				src={vercelImg('/dexter.png', 400)}
+				srcset={vercelSrcset('/dexter.png', [160, 280, 400, 560])}
+				sizes="(max-width: 480px) 120px, 280px"
+				alt=""
+				aria-hidden="true"
+				class="hero-portrait"
+			/>
+			<span>Dexter.<br /><em>Things built</em><br />in the lab.</span>
 		{/snippet}
 		{#if data.latestFeed}
 			<a href={resolve('/feed/')} class="status">
@@ -98,6 +107,27 @@
 		@media (max-width: 720px) {
 			padding: 0 16px 56px;
 		}
+	}
+
+	/* Hero portrait — in-flow, left of the heading text */
+	.wrap :global(.hero h1) {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.25em;
+	}
+	.hero-portrait {
+		height: 2.5em; /* spans all three heading lines */
+		width: auto;
+		flex-shrink: 0;
+		object-fit: contain;
+		object-position: left top;
+		pointer-events: none;
+		user-select: none;
+		mix-blend-mode: screen;
+		align-self: center;
+	}
+	:global([data-palette='paper']) .hero-portrait {
+		mix-blend-mode: multiply;
 	}
 
 	@media (max-width: 720px) {
