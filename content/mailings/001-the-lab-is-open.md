@@ -2,28 +2,25 @@
 pageType: mailing
 slug: the-lab-is-open
 title: The Lab Is Open
-subject: Dexterlabs is open
+subject: I stopped making LED cables. Here's what I built instead.
 date: 2026-05-01
 published: false
+unsubscribeMessage: 'You received this because we met at Dutch Modular Fest.'
 ---
 
 <script>
 	import EmailCta from '$lib/email/EmailCta.svelte';
 </script>
 
-It's been a while. Last year I was selling LED cables on Etsy — the fees were high and building them was too time-consuming. I shut it down and got back to what I actually wanted to build.
+It's been a while — we met at Dutch Modular Fest when I was still selling LED cables. I shut that down; building them by hand didn't scale and I wanted time back for what I actually wanted to make.
 
-While that was happening, I was also designing the modules I've been sitting on for too long. That took longer than expected. Hardware always does.
-
-I built this site to have somewhere to put it all: the specs, the process, the dead ends. If you've been following along from the early posts, the aesthetic should look familiar.
-
-Here's where things stand.
+That turned out to be hardware. I've been designing two Eurorack modules, and they're nearly ready. Here's where things stand.
 
 ## Distrans AR-1
 
 A 6HP module that does three things at once: records your patch to MicroSD at 48kHz/24-bit, streams audio to a DAW over USB, and handles balanced I/O to studio gear.
 
-One button: long-press to record, short-press to mute, double-click to mount as a USB disk. Nothing to remember. The i![alt text](../../static/images/products/distrans-space-2.webp)dea came from losing too many patches because capturing them was a three-step process and the moment was gone.
+One button: long-press to record, short-press to mute, double-click to mount as a USB disk. Nothing to remember. The idea came from losing too many patches because capturing them was a three-step process and the moment was gone.
 
 Class-compliant USB — no drivers on Windows, macOS, Linux, or iOS. Currently on the second hardware revision. Firmware is close.
 

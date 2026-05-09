@@ -28,9 +28,10 @@ export function renderMailingEmail(
   title: string,
   bodyComponent: import("svelte").Component,
   date: string,
+  unsubscribeMessage?: string,
 ): string {
   const { body: html } = render(MailingTemplate, {
-    props: { title, BodyComponent: bodyComponent, date },
+    props: { title, BodyComponent: bodyComponent, date, unsubscribeMessage },
   });
   return absolutifyImages(clean(html)).replace(
     "RESEND_UNSUBSCRIBE_PLACEHOLDER",

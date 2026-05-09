@@ -42,6 +42,7 @@ export type MailingFrontmatter = {
 	subject: string;
 	date: string;
 	published: boolean;
+	unsubscribeMessage?: string;
 };
 
 export type LegalFrontmatter = {

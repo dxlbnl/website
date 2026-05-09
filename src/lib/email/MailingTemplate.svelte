@@ -2,8 +2,8 @@
 	import { Html, Head, Body, Container, Heading, Text, Hr, Link } from 'svelte-email';
 	import type { Component } from 'svelte';
 
-	type Props = { title: string; BodyComponent: Component; date: string };
-	let { title, BodyComponent, date }: Props = $props();
+	type Props = { title: string; BodyComponent: Component; date: string; unsubscribeMessage?: string };
+	let { title, BodyComponent, date, unsubscribeMessage }: Props = $props();
 
 	// Resend replaces this placeholder with the real unsubscribe URL before delivery
 	const unsubUrl = 'RESEND_UNSUBSCRIBE_PLACEHOLDER';
@@ -106,10 +106,10 @@
 					margin: '0'
 				}}
 			>
-				You received this because you subscribed at
+				{unsubscribeMessage ?? 'You received this because you subscribed at dxlb.nl.'}
 				<Link href="https://dxlb.nl" style={{ color: c.inkFaint, textDecoration: 'none' }}
 					>dxlb.nl</Link
-				>.
+				> ·
 				<Link href={unsubUrl} style={{ color: c.inkFaint, textDecoration: 'none' }}
 					>Unsubscribe</Link
 				>.

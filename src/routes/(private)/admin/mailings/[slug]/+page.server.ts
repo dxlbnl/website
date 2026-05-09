@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ params }) => {
   if (!entry) throw error(404, `Mailing not found: ${params.slug}`);
 
   const [, mod] = entry;
-  const emailHtml = renderMailingEmail(mod.metadata.title, mod.default, mod.metadata.date);
+  const emailHtml = renderMailingEmail(mod.metadata.title, mod.default, mod.metadata.date, mod.metadata.unsubscribeMessage);
 
   const broadcasts = await db.select().from(mailingBroadcasts);
   const broadcast = broadcasts.find((b) => b.slug === params.slug);
@@ -68,7 +68,7 @@ export const actions: Actions = {
     if (!entry) return fail(404, { error: `Mailing not found: ${slug}` });
 
     const [, mod] = entry;
-    const emailHtml = renderMailingEmail(mod.metadata.title, mod.default, mod.metadata.date);
+    const emailHtml = renderMailingEmail(mod.metadata.title, mod.default, mod.metadata.date, mod.metadata.unsubscribeMessage);
 
     const resend = new Resend(RESEND_API_KEY);
 
