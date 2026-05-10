@@ -26,8 +26,8 @@
 	>
 		{#snippet headingContent()}
 			<img
-				src={vercelImg('/dexter.png', 400)}
-				srcset={vercelSrcset('/dexter.png', [160, 280, 400, 560])}
+				src={vercelImg('dexter.png', 400)}
+				srcset={vercelSrcset('dexter.png', [160, 280, 400, 560])}
 				sizes="(max-width: 480px) 120px, 280px"
 				alt=""
 				aria-hidden="true"
