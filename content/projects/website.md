@@ -18,4 +18,4 @@ stack:
   Language: TypeScript
 ---
 
-**SvelteKit** with **adapter-vercel** for static output and edge functions where needed. Content is Markdown processed by **mdsvex** — pages are Svelte components, frontmatter drives typed data. Images run through a **Sharp** optimization pipeline at build time and served via Vercel's image CDN. **Drizzle ORM** over a **Neon** Postgres database handles feed posts and page analytics. The invoice system generates multi-page PDFs in the browser using binary search for pagination.
+**SvelteKit** with **adapter-vercel** for static output and edge functions where needed. Content is Markdown processed by **mdsvex** — pages are Svelte components, frontmatter drives typed data. Images run through a **Sharp** optimization pipeline at build time and served via Vercel's image CDN. **Drizzle ORM** over a **Neon** Postgres database handles orders and page analytics. The invoice system generates multi-page PDFs in the browser using binary search for pagination.

@@ -2,8 +2,8 @@
 pageType: note
 title: <% tp.file.folder(false).replace(/^\d+-/, '') %>
 date: <% tp.date.now("YYYY-MM-DD") %>
-kind: BUILD
-tags: []
+kind: BUILD # BUILD | HARDWARE | TALK | PROJECT-LOG | OPEN-SOURCE
+tags: [] # canonical tags only — see src/lib/content/tags.ts
 lede: ""
 images: []
 productId: ""

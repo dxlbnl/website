@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { fmtDate } from '$lib/utils/fmt';
-	import Led from '$lib/ui/Led.svelte';
 	import PageHero from '$lib/ui/PageHero.svelte';
 	import SectionH from '$lib/ui/SectionH.svelte';
 	import Signature from '$lib/ui/Signature.svelte';
@@ -16,7 +14,10 @@
 	let { data }: Props = $props();
 </script>
 
-<SEO />
+<SEO
+	title="Dexterlabs"
+	description="A one-person engineering lab. Eurorack modules, software experiments, and bench notes from Delft."
+/>
 
 <div class="wrap">
 	<PageHero
@@ -35,18 +36,6 @@
 			/>
 			<span>Dexter.<br /><em>Things built</em><br />in the lab.</span>
 		{/snippet}
-		{#if data.latestFeed}
-			<a href={resolve('/feed/')} class="status">
-				<div class="status-head">
-					<span>// LATEST ENTRY</span>
-					<span>{fmtDate(data.latestFeed.date)} →</span>
-				</div>
-				<div class="status-line">
-					<Led tone="amber" blink />
-					<span>{data.latestFeed.body}</span>
-				</div>
-			</a>
-		{/if}
 	</PageHero>
 
 	{#if data.products.length > 0}
@@ -134,38 +123,6 @@
 		.wrap :global(.hero) {
 			padding: 20px 0 56px;
 		}
-	}
-
-	/* Status - link inside the hero */
-	.status {
-		display: block;
-		margin-top: 32px;
-		padding: 16px 20px;
-		border: 1px solid var(--rule);
-		background: var(--bg-rail);
-		max-width: 62ch;
-		color: inherit;
-		transition: border-color 0.15s;
-	}
-	.status:hover {
-		border-color: var(--amber);
-	}
-	.status-head {
-		display: flex;
-		justify-content: space-between;
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-	}
-	.status-line {
-		margin-top: 10px;
-		font-size: var(--t-body);
-		line-height: 1.5;
-		display: flex;
-		gap: 10px;
-		align-items: flex-start;
 	}
 
 	/* Catalogue */

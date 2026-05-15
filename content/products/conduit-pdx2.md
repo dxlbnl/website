@@ -2,7 +2,7 @@
 pageType: product
 id: conduit-pdx2
 name: Conduit PDX-2
-description: Power your entire Eurorack from a laptop charger - studio-grade silence in 4HP
+description: 'A 4HP USB-C Power Delivery supply that runs a whole Eurorack case from a laptop charger: 3A on +12V, 2.2MHz switching, studio-grade silence.'
 status: coming-soon
 category: Power
 tags: [Power Supply, USB-C, PD, Utility]

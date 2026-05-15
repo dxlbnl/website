@@ -26,6 +26,12 @@
 
 <svelte:head>
 	<link rel="canonical" href={page.url.origin + page.url.pathname} />
+	<link
+		rel="alternate"
+		type="application/rss+xml"
+		title="Dexterlabs — Notes"
+		href="/notes/rss.xml"
+	/>
 </svelte:head>
 
 {@render children()}

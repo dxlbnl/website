@@ -2,8 +2,8 @@
 pageType: note
 title: 'zod4-mock: Deterministic Mock Data for Zod v4'
 date: 2026-05-12
-tags: [typescript, testing, zod, open-source]
-kind: open-source
+tags: [TypeScript, Testing, Zod, Open Source]
+kind: OPEN-SOURCE
 images: [screenshot.png]
 lede: A zero-config, schema-driven mock library that generates byte-identical data from a seed, with built-in relational identity across multiple API schemas.
 ---

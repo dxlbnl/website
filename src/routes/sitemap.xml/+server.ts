@@ -1,55 +1,72 @@
+import type { NoteFrontmatter, ProjectFrontmatter, LegalFrontmatter } from '$lib/types';
+
+type SitemapEntry = { loc: string; lastmod?: string };
+
+const noteModules = import.meta.glob<{ metadata: NoteFrontmatter }>('/content/notes/*/index.md', {
+	eager: true
+});
+const projectModules = import.meta.glob<{ metadata: ProjectFrontmatter }>(
+	'/content/projects/*.md',
+	{ eager: true }
+);
+const productModules = import.meta.glob('/content/products/*.md', { eager: true });
+const legalModules = import.meta.glob<{ metadata: LegalFrontmatter }>('/content/legal/*.md', {
+	eager: true
+});
+
+const isoDate = (d?: string) => (d ? new Date(d).toISOString().split('T')[0] : undefined);
+
 export const GET = async ({ url }) => {
-  const domain = url.origin;
+	const domain = url.origin;
 
-  // Load products
-  const productModules = import.meta.glob("/content/products/*.md", { eager: true });
-  const products = Object.keys(productModules).map((path) => {
-    const id = path.split("/").at(-1)?.replace(".md", "");
-    return `${domain}/catalogue/${id}/`;
-  });
+	const products: SitemapEntry[] = Object.keys(productModules).map((path) => ({
+		loc: `${domain}/catalogue/${path.split('/').at(-1)?.replace('.md', '')}/`
+	}));
 
-  // Load notes
-  const noteModules = import.meta.glob("/content/notes/*/index.md", { eager: true });
-  const notes = Object.keys(noteModules).map((path) => {
-    const slug = path.split("/").at(-2);
-    return `${domain}/notes/${slug}/`;
-  });
+	const projects: SitemapEntry[] = Object.entries(projectModules).map(([path, mod]) => ({
+		loc: `${domain}/projects/${path.split('/').at(-1)?.replace('.md', '')}/`,
+		lastmod: isoDate(mod.metadata.date)
+	}));
 
-  // Load legal pages
-  const legalModules = import.meta.glob("/content/legal/*.md", { eager: true });
-  const legalPages = Object.keys(legalModules).map((path) => {
-    const slug = path.split("/").at(-1)?.replace(".md", "");
-    return `${domain}/legal/${slug}/`;
-  });
+	const notes: SitemapEntry[] = Object.entries(noteModules).map(([path, mod]) => ({
+		loc: `${domain}/notes/${path.split('/').at(-2)}/`,
+		lastmod: isoDate(mod.metadata.date)
+	}));
 
-  const staticPages = [
-    `${domain}/`,
-    `${domain}/catalogue/`,
-    `${domain}/notes/`,
-    `${domain}/about/`,
-    `${domain}/contact/`,
-    `${domain}/legal/`,
-  ];
+	const legalPages: SitemapEntry[] = Object.entries(legalModules).map(([path, mod]) => ({
+		loc: `${domain}/legal/${path.split('/').at(-1)?.replace('.md', '')}/`,
+		lastmod: isoDate(mod.metadata.lastUpdated)
+	}));
 
-  const allPages = [...staticPages, ...products, ...notes, ...legalPages];
+	const staticPages: SitemapEntry[] = [
+		`${domain}/`,
+		`${domain}/catalogue/`,
+		`${domain}/projects/`,
+		`${domain}/notes/`,
+		`${domain}/about/`,
+		`${domain}/contact/`,
+		`${domain}/legal/`
+	].map((loc) => ({ loc }));
 
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+	const allPages = [...staticPages, ...products, ...projects, ...notes, ...legalPages];
+
+	const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${allPages
-  .map(
-    (page) => `  <url>
-    <loc>${page}</loc>
+	.map(
+		({ loc, lastmod }) => `  <url>
+    <loc>${loc}</loc>${lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : ''}
     <changefreq>weekly</changefreq>
-    <priority>${page === `${domain}/` ? "1.0" : "0.7"}</priority>
-  </url>`,
-  )
-  .join("\n")}
+    <priority>${loc === `${domain}/` ? '1.0' : '0.7'}</priority>
+  </url>`
+	)
+	.join('\n')}
 </urlset>`;
 
-  return new Response(sitemap, {
-    headers: {
-      "Content-Type": "application/xml",
-      "Cache-Control": "public, max-age=3600",
-    },
-  });
+	return new Response(sitemap, {
+		headers: {
+			'Content-Type': 'application/xml',
+			'Cache-Control': 'public, max-age=3600'
+		}
+	});
 };

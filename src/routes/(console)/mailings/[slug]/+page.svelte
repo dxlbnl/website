@@ -16,6 +16,7 @@
 	description={data.mailing.subject}
 	type="article"
 	articleDate={data.mailing.date}
+	noindex
 />
 
 <div class="wrap">

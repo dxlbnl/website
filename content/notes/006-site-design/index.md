@@ -2,8 +2,8 @@
 pageType: note
 title: Shipping the Site
 date: 2026-05-01
-tags: [design, engineering, sveltekit]
-kind: project-log
+tags: [Design, Engineering, SvelteKit]
+kind: PROJECT-LOG
 images: [dexter-working.png]
 lede: Turning a messy functional prototype into a stable place to document the work and sell hardware.
 ---

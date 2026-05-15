@@ -3,7 +3,8 @@
     "allow": [
       "Bash(pnpm lint *)",
       "Bash(pnpm format *)",
-      "Bash(xargs ls -la)"
+      "Bash(xargs ls -la)",
+      "Bash(grep \"\\\\.md$\")"
     ]
   }
 }

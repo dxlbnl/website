@@ -2,7 +2,7 @@
 pageType: project
 slug: zod4-mock
 title: zod4-mock
-description: Generate realistic mock data from Zod v4 schemas — with a live playground.
+description: A TypeScript library that walks a Zod v4 schema and generates plausible mock data for every type, plus a live playground to test schemas in real time.
 tags: [TypeScript, Zod, Testing]
 image: media/zod4-mock-dark.png
 imageLight: media/zod4-mock-light.png

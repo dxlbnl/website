@@ -6,12 +6,14 @@
 
 	let {
 		title = 'Dexterlabs',
-		description = 'Software engineering, Eurorack hardware, and small web experiments from the lab.',
+		description = 'A one-person engineering lab. Eurorack modules, software experiments, and bench notes from Delft.',
 		image = '', // We will default this to our dynamic OG endpoint
 		type = 'website',
 		articleDate = undefined,
 		articleAuthor = 'Dexter',
-		product = undefined
+		product = undefined,
+		tags = undefined,
+		noindex = false
 	}: {
 		title?: string;
 		description?: string;
@@ -20,6 +22,8 @@
 		articleDate?: string;
 		articleAuthor?: string;
 		product?: ProductFrontmatter;
+		tags?: string[];
+		noindex?: boolean;
 	} = $props();
 
 	const siteOrigin = PUBLIC_SITE_URL;
@@ -61,6 +65,35 @@
 			description,
 			image: ogImage
 		};
+
+		if (page.url.pathname === '/') {
+			return {
+				'@context': 'https://schema.org',
+				'@graph': [
+					{ '@type': 'WebSite', url, name: title, description },
+					{
+						'@type': 'Organization',
+						'@id': `${origin}/#org`,
+						name: 'Dexterlabs',
+						url: origin,
+						logo: `${origin}/logo.png`,
+						description,
+						address: {
+							'@type': 'PostalAddress',
+							addressLocality: 'Delft',
+							addressCountry: 'NL'
+						}
+					},
+					{
+						'@type': 'Person',
+						'@id': `${origin}/#dexter`,
+						name: 'Dexter',
+						url: origin,
+						worksFor: { '@id': `${origin}/#org` }
+					}
+				]
+			};
+		}
 
 		if (type === 'article') {
 			return {
@@ -209,6 +242,12 @@
 	<title>{fullTitle}</title>
 	<meta name="description" content={description} />
 	<meta name="author" content={articleAuthor} />
+	{#if tags && tags.length > 0}
+		<meta name="keywords" content={tags.join(', ')} />
+	{/if}
+	{#if noindex}
+		<meta name="robots" content="noindex" />
+	{/if}
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content={type} />
@@ -219,6 +258,7 @@
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
 	<meta property="og:image:type" content="image/jpeg" />
+	<meta property="og:locale" content="en_US" />
 	<meta property="og:site_name" content="Dexterlabs" />
 	{#if type === 'article' && articleDate}
 		<meta property="article:published_time" content={articleDate} />

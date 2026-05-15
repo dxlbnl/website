@@ -18,7 +18,9 @@
 	let { data }: Props = $props();
 
 	const heroDark = $derived(data.metadata.image ? resolveProjectImage(data.metadata.image) : null);
-	const heroLight = $derived(data.metadata.imageLight ? resolveProjectImage(data.metadata.imageLight) : null);
+	const heroLight = $derived(
+		data.metadata.imageLight ? resolveProjectImage(data.metadata.imageLight) : null
+	);
 </script>
 
 <SEO
@@ -26,6 +28,7 @@
 	description={data.metadata.description}
 	image={heroDark ?? data.images[0]}
 	type="article"
+	tags={data.metadata.tags}
 />
 
 <div class="wrap">
@@ -137,9 +140,15 @@
 		display: block;
 		margin-bottom: 32px;
 	}
-	:global([data-palette='paper']) .light-img { display: block; }
-	:global([data-palette='paper']) .dark-img { display: none; }
-	.light-img { display: none; }
+	:global([data-palette='paper']) .light-img {
+		display: block;
+	}
+	:global([data-palette='paper']) .dark-img {
+		display: none;
+	}
+	.light-img {
+		display: none;
+	}
 	.stack-label {
 		font-family: var(--mono);
 		font-size: var(--t-micro);

@@ -7,7 +7,6 @@
 	type NavItem = { label: string; href: string };
 	const {
 		items = [
-			{ label: 'FEED', href: '/feed/' },
 			{ label: 'CATALOGUE', href: '/catalogue/' },
 			{ label: 'PROJECTS', href: '/projects/' },
 			{ label: 'NOTES', href: '/notes/' },

@@ -1,8 +1,5 @@
 import type { NoteFrontmatter, ProductFrontmatter, ProjectFrontmatter } from '$lib/types';
 import type { PageServerLoad } from './$types';
-import { db } from '$lib/server/db';
-import { feedPosts } from '$lib/server/db/schema';
-import { desc } from 'drizzle-orm';
 
 const notesMods = import.meta.glob<{ metadata: NoteFrontmatter }>('/content/notes/*/index.md', {
 	eager: true
@@ -17,9 +14,6 @@ const projectsMods = import.meta.glob<{ metadata: ProjectFrontmatter }>('/conten
 export const prerender = false;
 
 export const load: PageServerLoad = async () => {
-	const [latestPost] = await db.select().from(feedPosts).orderBy(desc(feedPosts.date)).limit(1);
-	const latestFeed = latestPost ? { ...latestPost, date: latestPost.date.toISOString() } : null;
-
 	const notes = Object.entries(notesMods)
 		.map(([path, mod]) => {
 			const slug = path.split('/').at(-2)!;
@@ -38,5 +32,5 @@ export const load: PageServerLoad = async () => {
 		.map((mod) => mod.metadata)
 		.slice(0, 4);
 
-	return { latestFeed, notes, products, projects };
+	return { notes, products, projects };
 };

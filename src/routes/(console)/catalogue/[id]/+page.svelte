@@ -28,6 +28,7 @@
 	image={galleryImages[0]}
 	type="product"
 	product={data.product}
+	tags={data.product.tags}
 />
 
 {#if data.product.status === 'coming-soon'}

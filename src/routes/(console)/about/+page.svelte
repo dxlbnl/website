@@ -44,7 +44,6 @@
 			<ul>
 				<li>A showcase - the modules and hardware that are ready for the rack.</li>
 				<li>A logbook - notes on experiments, schematics, and side-projects.</li>
-				<li>A feed - brief updates when something ships or breaks.</li>
 			</ul>
 		</div>
 		<div>

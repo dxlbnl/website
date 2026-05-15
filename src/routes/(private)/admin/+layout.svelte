@@ -3,7 +3,6 @@
 	let { children } = $props();
 
 	const adminItems = [
-		{ label: 'FEED', href: '/admin/feed' },
 		{ label: 'ORDERS', href: '/admin/orders' },
 		{ label: 'MAILINGS', href: '/admin/mailings' }
 	];

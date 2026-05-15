@@ -17,13 +17,6 @@ export type ProductFrontmatter = {
 	specs?: Record<string, string>;
 };
 
-export type FeedFrontmatter = {
-	pageType: 'feed';
-	date: string;
-	tags: string[];
-	body: string;
-};
-
 export type NoteFrontmatter = {
 	pageType: 'note';
 	title: string;

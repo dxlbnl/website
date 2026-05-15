@@ -32,6 +32,7 @@
 	image={images[0]}
 	type="article"
 	articleDate={data.metadata.date}
+	tags={data.metadata.tags}
 />
 
 <div class="wrap">
