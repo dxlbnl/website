@@ -84,11 +84,30 @@ async function optimizeDir(contentDir, staticDir) {
   }
 }
 
+async function optimizeSrcset(inputPath, outDir, baseName, widths) {
+  await fs.mkdir(outDir, { recursive: true });
+  const pipeline = sharp(inputPath);
+
+  for (const w of widths) {
+    const outPath = path.join(outDir, `${baseName}-${w}.webp`);
+    try {
+      await fs.access(outPath);
+      console.log(`[SKIP] ${baseName}-${w}.webp (already exists)`);
+      continue;
+    } catch {
+      // proceed
+    }
+    console.log(`[OPTIMIZE] ${baseName} >> ${baseName}-${w}.webp`);
+    await pipeline.clone().resize({ width: w, withoutEnlargement: true }).webp({ quality: 85, effort: 6 }).toFile(outPath);
+  }
+}
+
 async function optimize() {
   await optimizeDir("content/notes", "static/images/notes");
   await optimizeDir("content/products", "static/images/products");
   await optimizeDir("content/mailings", "static/images/mailings");
   await optimizeDir("content/projects", "static/images/projects");
+  await optimizeSrcset("static/dexter.png", "static/images", "dexter", [128, 256, 384, 512]);
   console.log("✓ Optimization complete.");
 }
 

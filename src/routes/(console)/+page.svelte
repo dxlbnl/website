@@ -7,7 +7,6 @@
 	import ProjectCard from '$lib/ui/ProjectCard.svelte';
 	import NoteCard from '$lib/ui/NoteCard.svelte';
 	import SEO from '$lib/ui/SEO.svelte';
-	import { vercelImg, vercelSrcset } from '$lib/utils/image';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
@@ -27,8 +26,8 @@
 	>
 		{#snippet headingContent()}
 			<img
-				src={vercelImg('dexter.png', 400)}
-				srcset={vercelSrcset('dexter.png', [160, 280, 400, 560])}
+				src="/images/dexter-384.webp"
+				srcset="/images/dexter-128.webp 128w, /images/dexter-256.webp 256w, /images/dexter-384.webp 384w, /images/dexter-512.webp 512w"
 				sizes="(max-width: 480px) 120px, 280px"
 				alt=""
 				aria-hidden="true"
