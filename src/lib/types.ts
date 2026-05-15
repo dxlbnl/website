@@ -60,6 +60,10 @@ export type ProjectFrontmatter = {
 	stack?: Record<string, string>;
 };
 
+export type CVFrontmatter = {
+	skills: Record<string, string[]>;
+};
+
 export type InvoiceFrontmatter = {
 	paginaType: 'factuur';
 	factuurnr: string;

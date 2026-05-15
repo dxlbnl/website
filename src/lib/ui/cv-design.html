@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alexander Esselink — CV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <!-- Apply theme before first paint to avoid flash -->
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('cv-theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+      } catch(e) {}
+    })();
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f7f5f0;
+      --bg-subtle: #efede7;
+      --text:      #1a1916;
+      --muted:     #7a7870;
+      --border:    #dedad2;
+      --tag-bg:    #e8e5de;
+      --tag-text:  #3a3830;
+      --link:      #1a1916;
+      --accent:    #5a5650;
+    }
+    [data-theme="dark"] {
+      --bg:        #0f0e0b;
+      --bg-subtle: #181610;
+      --text:      #e2ddd5;
+      --muted:     #7a7870;
+      --border:    #252320;
+      --tag-bg:    #2a2820;
+      --tag-text:  #c8c4bc;
+      --link:      #e2ddd5;
+      --accent:    #9a9890;
+    }
+
+    html { font-size: 13px; }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.2s, color 0.2s;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .cv-wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* HEADER */
+    .cv-header {
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 28px;
+    }
+    .cv-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .cv-sysline {
+      font-size: 0.8em;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+    .cv-name {
+      font-size: 2em;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .cv-title {
+      font-size: 0.95em;
+      color: var(--muted);
+      margin-top: 4px;
+      font-weight: 400;
+    }
+    .cv-contact {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 20px;
+      font-size: 0.82em;
+      color: var(--muted);
+    }
+    .cv-contact a {
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .cv-contact a:hover { color: var(--text); }
+    .cv-contact .net-label {
+      color: var(--accent);
+      font-size: 0.85em;
+    }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 1em;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .theme-toggle:hover { color: var(--text); border-color: var(--accent); }
+
+    /* SECTIONS */
+    .cv-section {
+      margin-bottom: 36px;
+    }
+    .cv-section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-slash {
+      color: var(--muted);
+      font-weight: 300;
+      font-size: 0.85em;
+    }
+    .section-hex {
+      color: var(--muted);
+      font-size: 0.75em;
+      font-weight: 400;
+    }
+    .section-title {
+      font-size: 0.72em;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--text);
+    }
+
+    /* SUMMARY */
+    .cv-summary {
+      font-size: 0.9em;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 680px;
+    }
+    .cv-summary strong {
+      font-weight: 600;
+      display: block;
+      margin-top: 10px;
+      font-size: 0.88em;
+      color: var(--muted);
+    }
+
+    /* SKILLS */
+    .skills-table {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 6px 16px;
+      font-size: 0.82em;
+    }
+    .skill-label {
+      color: var(--muted);
+      font-size: 0.78em;
+      letter-spacing: 0.08em;
+      padding-top: 2px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .skill-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .skill-tag {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 1px 6px;
+      font-size: 0.9em;
+      border-radius: 0;
+      white-space: nowrap;
+    }
+
+    /* EXPERIENCE */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .exp-item {}
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 2px;
+      gap: 8px;
+    }
+    .exp-company {
+      font-size: 0.85em;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .exp-dates {
+      font-size: 0.75em;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .exp-role {
+      font-size: 0.82em;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    .exp-bullets {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .exp-bullets li {
+      font-size: 0.83em;
+      line-height: 1.65;
+      padding-left: 14px;
+      position: relative;
+      color: var(--text);
+    }
+    .exp-bullets li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+      font-weight: 300;
+    }
+    .exp-stack {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+    .exp-stack-label {
+      font-size: 0.73em;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-right: 2px;
+    }
+
+    /* PROJECTS */
+    .proj-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .proj-item {}
+    .proj-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .proj-name {
+      font-size: 0.85em;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .proj-name a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .proj-name a:hover { text-decoration: underline; }
+    .proj-meta {
+      font-size: 0.75em;
+      color: var(--muted);
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .proj-desc {
+      font-size: 0.82em;
+      line-height: 1.65;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .proj-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    /* SPEAKING */
+    .speaking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .speaking-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      font-size: 0.83em;
+    }
+    .speaking-title {
+      font-weight: 500;
+    }
+    .speaking-meta {
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 0.9em;
+    }
+
+    /* LEARNING */
+    .learning-text {
+      font-size: 0.83em;
+      line-height: 1.75;
+      max-width: 680px;
+      color: var(--text);
+    }
+
+    /* FOOTER */
+    .cv-footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 0.78em;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .cv-footer-sig { font-style: italic; }
+    .cv-footer-sys { letter-spacing: 0.06em; }
+
+    /* PRINT BUTTON — screen only */
+    .print-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.78em;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      padding: 4px 10px;
+      line-height: 1;
+      transition: border-color 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    .print-btn:hover { color: var(--text); border-color: var(--accent); }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      margin-top: 2px;
+    }
+
+    /* PRINT */
+    @page {
+      size: A4;
+      margin: 16mm 20mm 16mm 20mm;
+    }
+
+    @media print {
+      /* Force light theme vars */
+      :root,
+      [data-theme="dark"] {
+        --bg:        #ffffff;
+        --bg-subtle: #f4f2ee;
+        --text:      #0e0d0b;
+        --muted:     #585550;
+        --border:    #c8c4bc;
+        --tag-bg:    #ebe8e2;
+        --tag-text:  #2e2c28;
+        --link:      #0e0d0b;
+        --accent:    #585550;
+      }
+
+      html { font-size: 9.8pt; }
+
+      body {
+        background: #fff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        /* kill transition noise */
+        transition: none !important;
+      }
+
+      /* Reset layout for full bleed */
+      .cv-wrap {
+        padding: 0;
+        max-width: 100%;
+      }
+
+      /* Hide everything interactive */
+      .theme-toggle,
+      .print-btn,
+      .header-actions,
+      #tweaks-portal { display: none !important; }
+
+      /* Tighten spacing */
+      .cv-header        { padding-bottom: 14pt; margin-bottom: 14pt; }
+      .cv-sysline       { margin-bottom: 10pt; }
+      .cv-contact       { margin-top: 10pt; gap: 0 14pt; }
+      .cv-section       { margin-bottom: 14pt; }
+      .cv-section-header{ margin-bottom: 7pt;  padding-bottom: 5pt; }
+      .cv-summary       { max-width: 100%; }
+      .exp-list         { gap: 12pt; }
+      .proj-list        { gap: 10pt; }
+      .skills-table     { gap: 5pt 14pt; }
+      .speaking-list    { gap: 5pt; }
+      .cv-footer        { margin-top: 14pt; padding-top: 8pt; }
+
+      /* Page-break rules */
+      .cv-section-header { break-after: avoid; }
+      .exp-item          { break-inside: avoid; }
+      .proj-item         { break-inside: avoid; }
+      .speaking-item     { break-inside: avoid; }
+      .cv-footer         { break-inside: avoid; }
+
+      /* Allow section breaks between major sections */
+      .cv-section        { break-inside: auto; }
+
+      /* Keep summary tight */
+      .cv-summary strong { margin-top: 6pt; }
+
+      /* Tags print with bg */
+      .skill-tag {
+        border: 1px solid var(--border);
+        background: var(--tag-bg) !important;
+      }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .cv-wrap { padding: 28px 20px 60px; }
+      .skills-table { grid-template-columns: 90px 1fr; }
+      .exp-header { flex-direction: column; gap: 0; }
+      .speaking-item { flex-direction: column; gap: 2px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel">
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "dark",
+  "fontSize": 14,
+  "density": "normal"
+}/*EDITMODE-END*/;
+
+const { useState, useEffect } = React;
+
+const skills = {
+  "LANGUAGES":  ["TypeScript", "JavaScript (ES6+)", "Python", "Rust"],
+  "FRONTEND":   ["React", "Svelte/SvelteKit", "Chakra-UI", "CSS"],
+  "BACKEND":    ["Node.js", "GraphQL", "Postgres", "Python"],
+  "INFRA":      ["Docker", "Kubernetes", "GitLab CI", "GitHub Actions", "Linux", "GCP", "AWS"],
+  "SPOKEN":     ["Dutch", "English"],
+};
+
+const experience = [
+  {
+    company: "FIOD",
+    role: "TypeScript Developer",
+    meta: "via Passionate People 2021–2025, direct 2025–Present",
+    dates: "2021 – PRESENT",
+    bullets: [
+      "Built and own data analysis tools for investigators inside a microservices architecture.",
+      "Led the modernization of the codebase — introduced TypeScript, Chakra-UI, and a type-safe API layer with Zod.",
+      "Established the design system and integrated it with Storybook.",
+      "Architected the CI/CD pipelines in GitLab CI, automating build, test, and deploy of containerized services to Kubernetes.",
+      "Co-designed backend services and led troubleshooting on complex API and data integration issues.",
+    ],
+    stack: ["React", "TypeScript", "Chakra-UI", "Zod", "Node.js", "Docker", "Kubernetes", "GitLab CI"],
+  },
+  {
+    company: "PASSIONATE PEOPLE",
+    role: "TypeScript Developer Consultant",
+    dates: "2019 – 2025",
+    bullets: [
+      "Set technical direction on high-profile client applications, mentoring colleagues and shaping architectural decisions across the stack.",
+      "Designed and optimized GraphQL and REST APIs in collaboration with backend teams, focused on data integration and frontend performance.",
+      "Advised clients on modernizing their development practices — containerization, CI/CD, and developer-velocity improvements.",
+    ],
+    stack: null,
+  },
+  {
+    company: "ING",
+    role: "JavaScript Developer",
+    meta: "via Passionate People",
+    dates: "2019 – 2021",
+    bullets: [
+      "Engineered a component-based mortgage calculator with deployment flexibility as a first-class concern.",
+      "Built a CI/CD process that let multiple client funnels release updates independently.",
+    ],
+    stack: ["LIT", "JavaScript", "CSS", "Node.js"],
+  },
+  {
+    company: "KABELFABRIEK, DELFT",
+    role: "Web Developer",
+    meta: "part-time side role",
+    dates: "2011 – 2022",
+    bullets: [
+      "Built full-stack websites and systems for a range of clients.",
+    ],
+    stack: ["TypeScript", "JavaScript", "React", "Svelte", "CSS", "PHP", "WordPress", "MySQL", "Python"],
+  },
+  {
+    company: "NERDALIZE, DELFT",
+    role: "Web Developer",
+    dates: "2017 – 2018",
+    bullets: [
+      "Built a frontend dashboard and integrated backend services for a cloud-computing startup.",
+    ],
+    stack: ["JavaScript", "Django", "PostgreSQL"],
+  },
+  {
+    company: "FREELANCE",
+    role: "Fullstack Engineer",
+    dates: "2014 – 2018",
+    bullets: [
+      "Velotype: Android app with USB integration.",
+      "MyAethon: Online resource-management platform on Django + Angular.",
+      "GingerPayments: PSP dashboard on Angular + AWS.",
+      "Megurumi: Web app for generating crochet doll patterns with PDF rendering.",
+    ],
+    stack: null,
+  },
+  {
+    company: "HANSJE BRINKER, DELFT",
+    role: "Software Engineer",
+    dates: "2013 – 2014",
+    bullets: [
+      "Built an online GIS system for visualizing elevation deformation maps, including backend API.",
+    ],
+    stack: ["JavaScript", "Python"],
+  },
+  {
+    company: "FENESTRAE, DEN HAAG",
+    role: "Software Engineer",
+    dates: "2012 – 2013",
+    bullets: [
+      "Built a JavaScript application for scanning, emailing, and faxing documents from a multifunction printer, including backend integration.",
+    ],
+    stack: ["Python", "JavaScript", "HTML", "CSS"],
+  },
+];
+
+const projects = [
+  {
+    name: "Dexterlabs",
+    url: "https://dexterlabs.nl",
+    meta: "2019 – Present",
+    tags: ["Hardware", "Software", "Eurorack"],
+    desc: "Solo operation designing, building, and shipping software libraries and Eurorack hardware. Covers the full pipeline — concept, electronics, firmware, web, storefront, and fulfillment.",
+  },
+  {
+    name: "zod4-mock",
+    meta: "TypeScript · Zod",
+    tags: ["TypeScript", "Zod"],
+    desc: "Zero-config, schema-driven mock library that generates byte-identical data from a seed, with built-in relational identity across multiple API schemas. Ships with a live playground.",
+  },
+  {
+    name: "Lists",
+    meta: "SvelteKit · TypeScript · offline-first",
+    tags: ["SvelteKit", "TypeScript"],
+    desc: "Real-time shared lists with passwordless auth and offline-first sync. Rebuilt v2 around an offline-first architecture so it stays useful with flaky or no connection.",
+  },
+  {
+    name: "Private Share",
+    meta: "WebRTC · SvelteKit · TypeScript",
+    tags: ["WebRTC", "SvelteKit", "TypeScript"],
+    desc: "Peer-to-peer sharing of text and files across devices — nothing stored on the server. An exercise in choosing the right boundary between client and server.",
+  },
+  {
+    name: "Members",
+    meta: "Svelte · Hasura · GraphQL · Postgres · Nginx",
+    tags: ["Svelte", "Hasura", "GraphQL", "Postgres"],
+    desc: "Authentication, access control, and member management for an association. Uses Nginx sub-requests for SSO across multiple services.",
+  },
+];
+
+function SectionHeader({ hex, title }) {
+  return (
+    <div className="cv-section-header">
+      <span className="section-slash">//</span>
+      {hex && <span className="section-hex">{hex}</span>}
+      <span className="section-title">{title}</span>
+    </div>
+  );
+}
+
+function SkillTag({ children }) {
+  return <span className="skill-tag">{children}</span>;
+}
+
+function App() {
+  const savedTheme = (() => { try { return localStorage.getItem('cv-theme'); } catch(e) { return null; } })();
+  const [t, setTweak] = useTweaks({ ...TWEAK_DEFAULTS, theme: savedTheme || TWEAK_DEFAULTS.theme });
+  const [showTweaks, setShowTweaks] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', t.theme);
+    document.documentElement.style.fontSize = t.fontSize + 'px';
+  }, [t.theme, t.fontSize]);
+
+  useEffect(() => {
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === '__activate_edit_mode') setShowTweaks(true);
+      if (e.data?.type === '__deactivate_edit_mode') setShowTweaks(false);
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+  }, []);
+
+  const toggleTheme = () => {
+    const next = t.theme === 'light' ? 'dark' : 'light';
+    try { localStorage.setItem('cv-theme', next); } catch(e) {}
+    setTweak('theme', next);
+  };
+
+  return (
+    <div className="cv-wrap">
+
+      {/* ── TWEAKS ── */}
+      {showTweaks && (
+        <TweaksPanel onClose={() => {
+          setShowTweaks(false);
+          window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+        }}>
+          <TweakSection title="Appearance">
+            <TweakRadio id="theme" label="Theme" value={t.theme}
+              options={['light', 'dark']}
+              onChange={v => setTweak('theme', v)} />
+            <TweakSlider id="fontSize" label="Font size" value={t.fontSize}
+              min={11} max={16} step={1}
+              onChange={v => setTweak('fontSize', v)} />
+          </TweakSection>
+          <TweakSection title="Layout">
+            <TweakRadio id="density" label="Density" value={t.density}
+              options={['compact', 'normal']}
+              onChange={v => setTweak('density', v)} />
+          </TweakSection>
+        </TweaksPanel>
+      )}
+
+      {/* ── HEADER ── */}
+      <header className="cv-header">
+        <div className="cv-sysline">// ALEXANDER ESSELINK · CV · 2026</div>
+        <div className="cv-header-top">
+          <div>
+            <div className="cv-name">Alexander Esselink</div>
+            <div className="cv-title">Fullstack Web Developer · Delft, Netherlands</div>
+          </div>
+          <div className="header-actions">
+            <button className="print-btn" onClick={() => window.print()}>PRINT →</button>
+            <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">◐</button>
+          </div>
+        </div>
+        <div className="cv-contact">
+          <span>06 2303 4351</span>
+          <a href="mailto:dexter@dexterlabs.nl">dexter@dexterlabs.nl</a>
+          <a href="https://github.com/dxlbnl" target="_blank" rel="noopener noreferrer">
+            <span className="net-label">[NET.GH]</span> github.com/dxlbnl
+          </a>
+          <a href="https://www.linkedin.com/in/alexander-esselink-414685a/" target="_blank" rel="noopener noreferrer">
+            <span className="net-label">[NET.LI]</span> linkedin
+          </a>
+          <a href="https://dexterlabs.nl" target="_blank" rel="noopener noreferrer">
+            <span className="net-label">[WEB]</span> dexterlabs.nl
+          </a>
+        </div>
+      </header>
+
+      {/* ── SUMMARY ── */}
+      <section className="cv-section">
+        <SectionHeader title="SUMMARY" />
+        <p className="cv-summary">
+          Fullstack developer with deep frontend roots and a habit of owning things end-to-end — from schema design and APIs through to UI and deployment. Strongest in TypeScript across the stack, with delivery experience in microservices, containerized infrastructure, and design systems. Outside of work: running Dexterlabs, an independent hardware and software lab in Delft.
+          <strong>SELECTED STACK &nbsp;·&nbsp; TypeScript · React · Svelte/SvelteKit · Node · GraphQL · Postgres · Docker · Kubernetes</strong>
+        </p>
+      </section>
+
+      {/* ── SKILLS ── */}
+      <section className="cv-section">
+        <SectionHeader hex="0x01" title="SKILLS" />
+        <div className="skills-table">
+          {Object.entries(skills).map(([label, items]) => (
+            <React.Fragment key={label}>
+              <div className="skill-label">{label}</div>
+              <div className="skill-items">
+                {items.map(s => <SkillTag key={s}>{s}</SkillTag>)}
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+      </section>
+
+      {/* ── EXPERIENCE ── */}
+      <section className="cv-section">
+        <SectionHeader hex="0x02" title="EXPERIENCE" />
+        <div className="exp-list">
+          {experience.map((e, i) => (
+            <div className="exp-item" key={i}>
+              <div className="exp-header">
+                <span className="exp-company">{e.company}</span>
+                <span className="exp-dates">{e.dates}</span>
+              </div>
+              <div className="exp-role">
+                {e.role}{e.meta && <span> · {e.meta}</span>}
+              </div>
+              <ul className="exp-bullets">
+                {e.bullets.map((b, j) => <li key={j}>{b}</li>)}
+              </ul>
+              {e.stack && (
+                <div className="exp-stack">
+                  <span className="exp-stack-label">STACK</span>
+                  {e.stack.map(s => <SkillTag key={s}>{s}</SkillTag>)}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── PROJECTS ── */}
+      <section className="cv-section">
+        <SectionHeader hex="0x03" title="PROJECTS" />
+        <div className="proj-list">
+          {projects.map((p, i) => (
+            <div className="proj-item" key={i}>
+              <div className="proj-header">
+                <span className="proj-name">
+                  {p.url
+                    ? <a href={p.url} target="_blank" rel="noopener noreferrer">{p.name} →</a>
+                    : p.name}
+                </span>
+                <span className="proj-meta">{p.meta}</span>
+              </div>
+              <p className="proj-desc">{p.desc}</p>
+              <div className="proj-tags">
+                {p.tags.map(t => <SkillTag key={t}>{t}</SkillTag>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── SPEAKING ── */}
+      <section className="cv-section">
+        <SectionHeader hex="0x04" title="SPEAKING" />
+        <div className="speaking-list">
+          <div className="speaking-item">
+            <span className="speaking-title">Building Distrans AR-1 with AI</span>
+            <span className="speaking-meta">0xFEFE · Apr 2026</span>
+          </div>
+          <div className="speaking-item">
+            <span className="speaking-title">Svelte: The Last Framework We Need?</span>
+            <span className="speaking-meta">Frontend Developer Love</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── LEARNING ── */}
+      <section className="cv-section">
+        <SectionHeader hex="0x05" title="CONTINUOUS LEARNING" />
+        <p className="learning-text">
+          Started in Electrical Engineering at TU Delft and The Hague University of Applied Sciences. Software pulled harder, and I've been self-taught ever since — picking up languages, frameworks, and entire stacks by building things with them. That habit hasn't slowed. Recent additions include Rust (Bifrost lighting control), SvelteKit with offline-first sync (Lists), Zod-based tooling (zod4-mock), and ESP32 firmware for hardware I now design and sell through Dexterlabs.
+        </p>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="cv-footer">
+        <span className="cv-footer-sig">— Alexander, available for new work</span>
+        <span className="cv-footer-sys">DEXTERLABS / DELFT, NL</span>
+      </footer>
+
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+  </script>
+</body>
+</html>
