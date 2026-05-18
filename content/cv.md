@@ -1,13 +1,3 @@
----
-skills:
-  languages: [TypeScript, JavaScript (ES6+), Python, Rust, C++]
-  frontend: [React, Svelte/SvelteKit, Chakra-UI, CSS, Storybook]
-  backend: [Node.js, GraphQL, Postgres, Hasura, Python]
-  infrastructure: [Docker, Kubernetes, Nginx, GitLab CI, GitHub Actions, Linux, GCP, AWS]
-  other: [WebRTC, WebSockets, ESP32 firmware]
-  spoken_languages: [Dutch, English]
----
-
 # Alexander Esselink
 
 **Fullstack web developer** · Delft, Netherlands
@@ -19,7 +9,7 @@ skills:
 
 ## Summary
 
-Fullstack developer, 13+ years in. TypeScript and React in production most of the time; broader fullstack work on my own projects (real-time sync, offline-first apps, WebRTC, hardware). I like owning a feature end-to-end, from schema through to deployment. Outside of work I run Dexterlabs, a small hardware and software lab in Delft.
+Fullstack developer, 13+ years in. TypeScript and React in production most of the time; broader fullstack work on my own projects (real-time sync, offline-first apps, WebRTC, hardware). I like owning a feature end-to-end, from schema through to deployment. I tend to be the person pushing for new tools and the one teammates come to with hard questions. Outside of work I run Dexterlabs, a small hardware and software lab in Delft.
 
 **Selected stack:** TypeScript · React · Svelte/SvelteKit · Node · GraphQL · Postgres · Docker · Kubernetes
 
@@ -47,6 +37,7 @@ Fullstack developer, 13+ years in. TypeScript and React in production most of th
 - Set up the design system and wired it into Storybook.
 - Built and maintain the GitLab CI pipelines, including containerized deploys to Kubernetes.
 - Help design backend services and own the troubleshooting when API or data integration bugs get tricky.
+- Go-to person on the team for code review, UX feasibility questions, and tricky technical calls.
 - **Stack:** `React` `TypeScript` `Chakra-UI` `Zod` `Node.js` `Docker` `Kubernetes` `GitLab CI`
 
 ### Passionate People — TypeScript Developer Consultant *2019–2025*
@@ -106,7 +97,7 @@ Real-time shared lists with passwordless auth and offline-first sync. Rebuilt v2
 
 Peer-to-peer sharing of text and files across devices. Nothing touches the server.
 
-### Members *Svelte · Postgres · Nginx*
+### Members *Svelte · Drizze · Postgres · Nginx*
 
 Authentication, access control, and member management for an association. SSO across multiple services via Nginx sub-requests.
 
