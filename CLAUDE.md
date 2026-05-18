@@ -89,3 +89,39 @@ Site is canonical; every platform gets a tailored teaser linking back. No X/Mast
 - **Facebook groups** — synth-DIY groups only, not personal feed. Photo + 1-2 paragraphs + link.
 - **LinkedIn** — only software/engineering Notes. Frame as "what I learned building X".
 - **HN** — rare, only substantial software-leaning Notes. Bare title, no marketing.
+
+---
+
+## Vibin Workflow
+
+This repo uses the **Vibin** wiki-driven, spec-first, test-first agent pipeline.
+
+### The wiki is the single source of truth
+
+- `wiki/` is the spec. Every agent reads `wiki/INDEX.md` first — a `PreToolUse` hook enforces this.
+- When code and wiki disagree, **update the wiki** (or run `/wiki-sync`). The wiki wins.
+- The wiki is open-ended. Only `INDEX.md` is structurally required; add pages freely and link them there.
+
+### Pipeline
+
+```
+feature/bug  →  spec-writer → test-writer → implementer → reviewer
+research     →  researcher specialist → reviewer confirms findings
+chore        →  implementer → reviewer (no spec, no tests-first)
+```
+
+- `/bootstrap` — sets up the wiki and scaffolding for a new project.
+- `/manager` — orchestrates the build: reads backlog, dispatches tracks, commits completed items.
+- `/intake "<title>"` — files a new backlog item into `wiki/backlog/inbox/` mid-run.
+- `/status` — shows current lane counts and the active item.
+
+### Operational rules
+
+- **Top-level only** — the top-level session answers questions and runs `/manager`. It never writes product code, specs, or tests directly — those go through delegated subagents.
+- **Artifact handoff** — subagents communicate only through repo + wiki files. Delegation prompts must name the exact files to read and write.
+- **Triage new work** — any bug/feature/change surfaced mid-run goes to `/intake`, not inline-patched.
+- **No ad-hoc interpreters** — never run `node -e …`, `python -c …`, or throwaway scripts. Use `Read`/`Grep`/`Glob` for code inspection; write a real test for behaviour verification; describe config changes and ask the user to apply them.
+- **Package manager** — always `pnpm`. Never substitute npm or yarn even if a config or README suggests it.
+- **Commits** — one commit per completed backlog item, message references the item id (e.g. `B3: add user login`). Never push unless the user asks.
+- **Run until blocked** — the manager works through the backlog without per-item check-ins, pausing only for: (1) the initial work-plan approval, (2) items flagged `review`, (3) unresolved failures after 4 attempts, (4) a second reviewer rejection.
+- **Decision log** — any notable design/tech choice is appended to `wiki/decisions.md` (ADR-style).

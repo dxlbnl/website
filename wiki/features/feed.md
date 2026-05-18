@@ -1,42 +1,29 @@
 # Feed
 
-> Sources: Internal, 2026-05-03
-> Updated: 2026-05-03
+> **STATUS: DROPPED.** The feed feature has been removed from the codebase. This page
+> is kept for historical reference only. Do not reintroduce feed routes, DB tables, or
+> references to `/admin/feed/`.
 
-## What it is
+---
 
-A chronological stream of short, titleless status updates. Low friction by design — one thought, one post, no editorial overhead. The latest entry is surfaced on the homepage as a live status indicator.
+## What it was
 
-Route: `/feed/`.
+A chronological stream of short, titleless status updates. The latest entry was intended
+to surface on the homepage as a live status indicator.
 
-## Core user stories
+## Why it was dropped
 
-**Post a quick update**
-Something shipped. I go to `/admin/feed/`, type a line, optionally add tags, and hit post. It appears at the top of the feed immediately. No title, no lede, no image pipeline.
+The feature was planned as a DB-backed micro-post system (`feedPosts` table) but that
+table was never created and the route was never shipped. The concept was abandoned before
+it reached production.
 
-**Check what's happening**
-A visitor opens `/feed/` to see recent activity. Posts appear newest-first, each with a date and optional tags.
+## Current state
 
-**Homepage status**
-The most recent feed post appears on the homepage as a small status blurb with a blinking indicator — a quick signal that the site is alive and something is happening.
-
-## Structure
-
-Feed posts are stored in the `feedPosts` database table, not as files. Fields:
-
-| Field | Notes |
-|-------|-------|
-| `id` | Auto-generated UUID |
-| `body` | The post text |
-| `date` | Timestamp |
-| `tags` | String array |
-
-There is no markdown body — the content is entirely in frontmatter-style fields in the DB. This is consistent with the old file-based feed format where `body` was a frontmatter field.
-
-## Admin
-
-Posts are created and deleted from `/admin/feed/`. No edit — delete and repost if something needs fixing.
+- No feed routes exist in `src/routes/`.
+- No `feedPosts` table in `src/lib/server/db/schema.ts`.
+- No feed content files in `content/`.
+- The homepage no longer has a feed/status indicator section.
 
 ## See Also
 
-- [Content Architecture](../concepts/content-architecture.md)
+- [Content Architecture](../concepts/content-architecture.md) — for what content types remain.

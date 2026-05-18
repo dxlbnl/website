@@ -26,3 +26,4 @@ vite.config.ts.timestamp-*
 content/invoices
 content/.obsidian/workspace.json
 SECURITY_REVIEW.md
+.claude/state/
