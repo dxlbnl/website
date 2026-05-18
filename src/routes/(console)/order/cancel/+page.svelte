@@ -1,60 +1,49 @@
 <script lang="ts">
-	import Signature from '$lib/ui/Signature.svelte';
-	import Led from '$lib/ui/Led.svelte';
-	import SEO from '$lib/ui/SEO.svelte';
+	import {
+		Container,
+		Stack,
+		Inline,
+		Spread,
+		Rule,
+		Heading,
+		Text,
+		Led,
+		Button
+	} from '@dxlbnl/ui';
 	import { resolve } from '$app/paths';
+
+	const body =
+		"You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to try again.";
 </script>
 
-<SEO title="Order Cancelled" description="Your order was not completed. No charge was made." />
+<svelte:head>
+	<title>Order Cancelled</title>
+	<meta name="description" content="Your order was not completed. No charge was made." />
+</svelte:head>
 
-<div class="wrap">
-	<div class="box">
-		<div class="label"><Led tone="amber" /> ORDER CANCELLED</div>
-		<h1>No charge made.</h1>
-		<p>
-			You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to
-			try again.
-		</p>
-		<a href={resolve('/catalogue/')} class="btn-back">← RETURN TO CATALOGUE</a>
-	</div>
-	<Signature />
-</div>
+<Container size="lg">
+	<Stack gap="lg">
+		<Stack gap="md">
+			<Inline gap="xs">
+				<Led color="amber" />
+				<Text variant="eyebrow" color="amber">ORDER CANCELLED</Text>
+			</Inline>
+			<Heading level={1}>No charge made.</Heading>
+			<Text color="dim">{body}</Text>
+			<Button as="a" href={resolve('/catalogue/')} variant="back">RETURN TO CATALOGUE</Button>
+		</Stack>
 
-<style>
-	.wrap {
-		max-width: 1440px;
-		margin: 0 auto;
-		padding: 80px 32px;
+		<Rule />
 
-		@media (max-width: 720px) {
-			padding: 40px 16px;
-		}
-	}
-	.box {
-		max-width: 48ch;
-	}
-	.label {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		color: var(--amber);
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		margin-bottom: 12px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-title);
-		letter-spacing: -0.02em;
-		margin: 0 0 16px;
-		line-height: 1;
-	}
-	p {
-		font-size: var(--t-body);
-		line-height: 1.6;
-		color: var(--ink-dim);
-		margin: 0 0 32px;
-	}
-</style>
+		<Spread gap="md">
+			<Stack gap="xs">
+				<Text variant="eyebrow">// SIGNED</Text>
+				<Text variant="lede">— Dexter, in the lab</Text>
+			</Stack>
+			<Stack gap="xs">
+				<Text variant="eyebrow">// SHIPPED BY</Text>
+				<Text variant="lede">DEXTERLABS / a one-person lab</Text>
+			</Stack>
+		</Spread>
+	</Stack>
+</Container>

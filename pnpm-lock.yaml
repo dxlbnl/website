@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@dxlbnl/ui':
+        specifier: ^1.0.0
+        version: 1.0.0(@sveltejs/kit@2.59.0(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(tsx@4.21.0)))(svelte@5.55.5(@typescript-eslint/types@8.59.1))(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(tsx@4.21.0)))(svelte@5.55.5(@typescript-eslint/types@8.59.1))
       '@neondatabase/serverless':
         specifier: ^1.1.0
         version: 1.1.0
@@ -159,6 +162,12 @@ packages:
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
+
+  '@dxlbnl/ui@1.0.0':
+    resolution: {integrity: sha512-yLfobKOfQ/o50Uj97+CGKkLd1SWmlZk+TOJGEqHBUcgp80M4emHfdfp6bynmUsxYFPo+lnuMRqXlX9miPABW/Q==}
+    peerDependencies:
+      '@sveltejs/kit': ^2.0.0
+      svelte: ^5.0.0
 
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
@@ -3225,6 +3234,13 @@ snapshots:
   '@blazediff/core@1.9.1': {}
 
   '@drizzle-team/brocli@0.10.2': {}
+
+  '@dxlbnl/ui@1.0.0(@sveltejs/kit@2.59.0(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(tsx@4.21.0)))(svelte@5.55.5(@typescript-eslint/types@8.59.1))(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(tsx@4.21.0)))(svelte@5.55.5(@typescript-eslint/types@8.59.1))':
+    dependencies:
+      '@fontsource/inter-tight': 5.2.7
+      '@fontsource/jetbrains-mono': 5.2.8
+      '@sveltejs/kit': 2.59.0(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(tsx@4.21.0)))(svelte@5.55.5(@typescript-eslint/types@8.59.1))(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.27.7)(tsx@4.21.0))
+      svelte: 5.55.5(@typescript-eslint/types@8.59.1)
 
   '@emnapi/core@1.10.0':
     dependencies:

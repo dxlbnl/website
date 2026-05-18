@@ -1,6 +1,7 @@
 /* =========================================================
    DEXTERLABS // DESIGN TOKENS + RESET
    ========================================================= */
+@import '@dxlbnl/ui/tokens/tokens.css';
 
 :root {
   /* Phosphor (dark default) */

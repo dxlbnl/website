@@ -20,6 +20,7 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@dxlbnl/ui": "^1.0.0",
     "@neondatabase/serverless": "^1.1.0",
     "@resvg/resvg-js": "^2.6.2",
     "@sveltejs/adapter-vercel": "^6.3.3",

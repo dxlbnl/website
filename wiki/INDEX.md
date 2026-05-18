@@ -26,12 +26,14 @@ Every agent reads this page first, before doing anything else.
 | [decisions.md](decisions.md) | Append-only decision log (ADR-style). |
 | [progress.md](progress.md) | Append-only run journal — what the agents have done. |
 | [specs/](specs/) | One detailed spec page per feature/bug. See `specs/README.md`. |
+| [specs/B3-component-library-integration.md](specs/B3-component-library-integration.md) | B3 — Integrate `@dxlbnl/ui` from npm; first-page proving ground on `/order/cancel/`, plus the page-by-page migration plan. |
 
 ### Codebase reference
 
 | Page | Purpose |
 |------|---------|
 | [codebase.md](codebase.md) | Lightweight agent reference: routes, components, content types, DB schema, utilities, env vars. |
+| [missing-components.md](missing-components.md) | Tracker for components needed during the `@dxlbnl/ui` migration but not yet shipped. Populated page-by-page. |
 
 ### Features
 

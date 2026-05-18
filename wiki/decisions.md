@@ -57,3 +57,11 @@
 - **Decision**: Feature abandoned. No feed routes, no `feedPosts` table, no admin feed UI.
 - **Consequences**: `wiki/features/feed.md` retained for historical reference only, marked DROPPED. The homepage does not have a feed/status indicator. Do not reintroduce.
 - **Supersedes**: none
+
+## D6 (proposed — pending Dexter): scoping of `@dxlbnl/ui` migration
+- **Date**: 2026-05-18
+- **By**: spec-writer (B3)
+- **Context**: B3 introduces `@dxlbnl/ui` as the sole rendering path for the site's visual layer. D4 forbids utility-class frameworks but is silent on component libraries — D4 is preserved, not superseded. Several routes are functionally or visually unsuited to a generic component library and must be excluded from the migration up front.
+- **Decision (proposed)**: `@dxlbnl/ui` is the canonical visual layer for **public marketing/content routes**. The following are **excluded** from `@dxlbnl/ui` migration: `src/lib/email/*` (Resend SSR, different runtime), `src/routes/(private)/invoices/*` (paper/print-specific renderer driven by DOM-height binary search), and `src/lib/invoice/*`. The `share/*` and `(private)/admin/*` routes are deferred (not excluded) to a later wave. First-page proving ground is `/order/cancel/`.
+- **Consequences**: Email and invoice rendering keep their bespoke layers. Migration plan in `wiki/specs/B3-component-library-integration.md` lists waves 0–5 plus an explicit "out of plan" set. If `@dxlbnl/ui` is found to ship conflicting global tokens or a utility-class API, a follow-up ADR will be filed before bridging or constraining usage.
+- **Supersedes**: none (extends D4)
