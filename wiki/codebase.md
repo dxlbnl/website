@@ -25,7 +25,7 @@ All routes live under `src/routes/`. SvelteKit layout groups:
 | `/projects/` | `+page.svelte`, `+page.ts` | Project showcase list | Yes |
 | `/projects/[slug]/` | `+page.svelte`, `+page.ts` | Individual project | Yes |
 | `/mailings/` | `+page.svelte`, `+page.server.ts` | Mailing archive — filter by `mailingBroadcasts` (DB, not frontmatter); `prerender = true` | Yes (DB read at build) |
-| `/mailings/[slug]/` | `+page.svelte`, `+page.server.ts`, `+page.ts` | Server load: DB check + entries(); client load: component from `import.meta.glob`. 404 unless slug has a `mailingBroadcasts` row; `prerender = true` | Yes (DB read at build) |
+| `/mailings/[slug]/` | `+page.svelte`, `+page.server.ts` | Server load: DB check + `entries()` + renders the email via `MailingTemplate.svelte` and returns the HTML string; page renders an iframe srcdoc with that HTML so the archive matches the email exactly. 404 unless slug has a `mailingBroadcasts` row; `prerender = true` | Yes (DB read + email render at build) |
 | `/share/` | `+page.svelte`, `+page.ts` + many `.svelte` | WebRTC P2P transfer tool | Yes |
 | `/about/` | `+page.svelte` | About page | Yes |
 | `/contact/` | `+page.svelte` | Contact page | Yes |

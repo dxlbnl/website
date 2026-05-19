@@ -1,17 +1,21 @@
 <script lang="ts">
-	import { Container, Stack, PageHero, Prose, SectionFoot, Text } from '@dxlbnl/ui';
+	import { Container, Stack, SectionFoot, Text } from '@dxlbnl/ui';
 	import SEO from '$lib/ui/SEO.svelte';
 	import Signature from '$lib/Signature.svelte';
 	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
 	import { resolve } from '$app/paths';
-	import type { Component } from 'svelte';
-	import type { MailingFrontmatter } from '$lib/types';
+	import type { PageData } from './$types';
 
-	type Props = { data: { component: Component; mailing: MailingFrontmatter } };
-	let { data }: Props = $props();
+	let { data }: { data: PageData } = $props();
+	let frame: HTMLIFrameElement | undefined = $state();
 
-	let Body = $derived(data.component);
+	function resizeFrame() {
+		if (!frame?.contentDocument) return;
+		frame.style.height = frame.contentDocument.body.scrollHeight + 'px';
+	}
 </script>
+
+<svelte:window onresize={resizeFrame} />
 
 <SEO
 	title={data.mailing.title}
@@ -22,15 +26,15 @@
 />
 
 <Container size="sm">
-	<PageHero
-		eyebrow={`// MAILING · ${data.mailing.date.split('T')[0]}`}
-		heading={data.mailing.title}
-	/>
-
 	<Stack gap="md">
-		<Prose>
-			<Body />
-		</Prose>
+		<iframe
+			bind:this={frame}
+			srcdoc={data.emailHtml}
+			title={data.mailing.title}
+			class="email-frame"
+			scrolling="no"
+			onload={resizeFrame}
+		></iframe>
 
 		<SectionFoot href={resolve('/mailings/')} label="← BACK TO MAILINGS" />
 
@@ -45,3 +49,12 @@
 <Container size="lg">
 	<Signature />
 </Container>
+
+<style>
+	.email-frame {
+		width: 100%;
+		border: 1px solid var(--rule);
+		background: var(--bg);
+		display: block;
+	}
+</style>
