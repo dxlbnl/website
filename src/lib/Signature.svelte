@@ -2,7 +2,7 @@
 	import { Grid, Rule, Stack, Text } from '@dxlbnl/ui';
 </script>
 
-<Rule />
+<Rule style="margin-bottom:var(--u2)" />
 <Grid cols={2} gap="md">
 	<Stack gap="xs">
 		<Text variant="mono" size="xs" color="faint">// SIGNED</Text>

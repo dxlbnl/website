@@ -1,14 +1,5 @@
 <script lang="ts">
-	import {
-		Container,
-		Stack,
-		PageHero,
-		Button,
-		Prose,
-		KvList,
-		SectionFoot,
-		Text
-	} from '@dxlbnl/ui';
+	import { Container, Stack, PageHero, Button, Prose, KvList, SectionFoot, Text } from '@dxlbnl/ui';
 	import SEO from '$lib/ui/SEO.svelte';
 	import Signature from '$lib/Signature.svelte';
 	import ImageCarousel from '$lib/ui/ImageCarousel.svelte';
@@ -88,11 +79,7 @@
 			</Stack>
 		{/if}
 
-		<SectionFoot
-			href={resolve('/projects/')}
-			label="← BACK TO PROJECTS"
-			meta="SIGNED / DEXTER"
-		/>
+		<SectionFoot href={resolve('/projects/')} label="← BACK TO PROJECTS" meta="SIGNED / DEXTER" />
 	</Stack>
 </Container>
 
