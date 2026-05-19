@@ -35,6 +35,7 @@ Every agent reads this page first, before doing anything else.
 |------|---------|
 | [codebase.md](codebase.md) | Lightweight agent reference: routes, components, content types, DB schema, utilities, env vars. |
 | [missing-components.md](missing-components.md) | Tracker for components needed during the `@dxlbnl/ui` migration but not yet shipped. Populated page-by-page. |
+| [regression-workflow.md](regression-workflow.md) | Per-page styling regression workflow: link the local `@dxlbnl/ui` repo, run the diff script, hand findings to the dxlb-ui agent, verify green, commit. |
 
 ### Features
 
