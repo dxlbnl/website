@@ -3,7 +3,7 @@
 //
 // Usage:
 //   pnpm regression:diff scripts/regression-configs/<page>.js
-//     → writes a report to /tmp/regression-<pageSlug>.md (for review)
+//     → writes a report to wiki/regressions/<pageSlug>.md (for review)
 //
 //   pnpm regression:diff scripts/regression-configs/<page>.js --push
 //     → also writes the report to dxlb-ui's backlog inbox so its Vibin
@@ -33,7 +33,7 @@
 //   }
 
 import { chromium } from 'playwright';
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
@@ -269,7 +269,9 @@ async function main() {
 
 	const { md, totalFindings, errored } = renderReport(cfg, results);
 
-	const stagingPath = `/tmp/regression-${cfg.pageSlug}.md`;
+	const stagingDir = resolve(process.cwd(), 'wiki/regressions');
+	const stagingPath = `${stagingDir}/${cfg.pageSlug}.md`;
+	mkdirSync(stagingDir, { recursive: true });
 	writeFileSync(stagingPath, md);
 	console.log(`\n[regression-diff] staging report: ${stagingPath}`);
 

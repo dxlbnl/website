@@ -59,20 +59,19 @@ export default {
 		},
 		{
 			name: 'signature container',
-			component: 'Spread',
+			component: 'Grid',
+			props: 'cols={2}',
 			live: '.sig',
-			local: '.spread',
+			local: '.grid-layout',
 			propertyGroups: ['layout', 'border'],
-			ignore: ['display', 'grid-template-columns', 'width']
-			// flex vs grid is visually equivalent for two equal columns;
-			// grid-template-columns naturally doesn't apply when display is flex.
+			ignore: ['width']
 		},
 		{
 			name: 'signature label — SIGNED',
 			component: 'Text',
 			props: 'variant="eyebrow"',
 			live: '.sig > div:first-child .label',
-			local: '.spread > .stack:first-child .eyebrow',
+			local: '.grid-layout > .stack:first-child .eyebrow',
 			propertyGroups: ['text'],
 			ignore: ['margin-bottom']
 		},
@@ -81,7 +80,7 @@ export default {
 			component: 'Text',
 			props: 'variant="lede" color="ink"',
 			live: '.sig > div:first-child .hand',
-			local: '.spread > .stack:first-child .body-lede',
+			local: '.grid-layout > .stack:first-child .body-lede',
 			propertyGroups: ['text']
 		},
 		{
@@ -89,7 +88,7 @@ export default {
 			component: 'Text',
 			props: 'variant="eyebrow"',
 			live: '.sig > div:nth-child(2) .label',
-			local: '.spread > .stack:nth-child(2) .eyebrow',
+			local: '.grid-layout > .stack:nth-child(2) .eyebrow',
 			propertyGroups: ['text'],
 			ignore: ['margin-bottom']
 		},
@@ -98,7 +97,7 @@ export default {
 			component: 'Text',
 			props: 'variant="lede" color="ink"',
 			live: '.sig > div:nth-child(2) .hand',
-			local: '.spread > .stack:nth-child(2) .body-lede',
+			local: '.grid-layout > .stack:nth-child(2) .body-lede',
 			propertyGroups: ['text']
 		},
 		{

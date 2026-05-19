@@ -27,10 +27,10 @@ migration) hangs off — every page repeats this loop.
 
 2. Generate findings to staging:
      pnpm regression:diff scripts/regression-configs/<page>.js
-   → writes /tmp/regression-<page>.md
+   → writes wiki/regressions/<page>.md
    → exits 0 if no findings, 1 if findings remain
 
-3. Read /tmp/regression-<page>.md. Decide: is this an actionable list?
+3. Read wiki/regressions/<page>.md. Decide: is this an actionable list?
    - Suppress noise via `ignore: [...]` per component in the config
    - Split or fix selectors via `propertyGroups: [...]`
    - Re-run step 2 until the staging file is sharp

@@ -1,29 +1,26 @@
 <script lang="ts">
-	import { Container, Stack, Inline, Heading, Text, Led, Button } from '@dxlbnl/ui';
+	import { Container, Stack, PageHero, Button, Inline, Led, Text } from '@dxlbnl/ui';
 	import { resolve } from '$app/paths';
+	import SEO from '$lib/ui/SEO.svelte';
 	import Signature from '$lib/Signature.svelte';
-
-	const body =
-		"You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to try again.";
 </script>
 
-<svelte:head>
-	<title>Order Cancelled</title>
-	<meta name="description" content="Your order was not completed. No charge was made." />
-</svelte:head>
+<SEO title="Order Cancelled" description="Your order was not completed. No charge was made." />
 
 <Container size="lg">
 	<Stack gap="lg">
-		<Stack gap="md">
-			<Inline gap="xs">
-				<Led color="amber" />
-				<Text variant="eyebrow" color="amber">ORDER CANCELLED</Text>
-			</Inline>
-			<Heading level={1}>No charge made.</Heading>
-			<Text color="dim">{body}</Text>
-			<Button as="a" href={resolve('/catalogue/')} variant="back">RETURN TO CATALOGUE</Button>
-		</Stack>
-
+		<PageHero
+			heading="No charge made."
+			lede="You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to try again."
+		>
+			{#snippet eyebrow()}
+				<Inline gap="xs">
+					<Led color="amber" />
+					<Text variant="eyebrow" color="amber">ORDER CANCELLED</Text>
+				</Inline>
+			{/snippet}
+			<Button as="a" href={resolve('/catalogue/')} variant="back">← RETURN TO CATALOGUE</Button>
+		</PageHero>
 		<Signature />
 	</Stack>
 </Container>
