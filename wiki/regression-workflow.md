@@ -1,17 +1,17 @@
 # Regression workflow — per-page styling diff against production
 
 Used during the `@dxlbnl/ui` migration to drive each page from "migrated but
-visually different" to "migrated and matches production". The script is the
-template B8 (full-site migration) hangs off — every page repeats this loop.
+visually different" to "migrated and matches production". Manual review +
+library iteration, not a CI gate. The script is the template B8 (full-site
+migration) hangs off — every page repeats this loop.
 
 ## Where things live
 
 - Script: [`scripts/regression-diff.mjs`](../scripts/regression-diff.mjs).
 - Per-page configs: [`scripts/regression-configs/`](../scripts/regression-configs/).
-- Output (cross-repo handoff): the dxlb-ui repo's backlog inbox, at
-  `~/Projects/Web/dxlb-ui/wiki/backlog/inbox/regression-<pageSlug>.md`.
-  Rolling file — overwritten on every run so the dxlb-ui manager always
-  works the current list.
+- Staging output (for review): `/tmp/regression-<pageSlug>.md`.
+- Pushed output (for dxlb-ui agent): `~/Projects/Web/dxlb-ui/wiki/backlog/inbox/regression-<pageSlug>.md`.
+  Rolling file — overwritten on every push.
 - Pinned dependency: `@dxlbnl/ui` is overridden to `link:../dxlb-ui` in
   `package.json` → `pnpm.overrides`. `node_modules/@dxlbnl/ui` is a symlink.
 - Library build path: the linked package reads from
@@ -25,20 +25,28 @@ template B8 (full-site migration) hangs off — every page repeats this loop.
 1. Keep dxlb-ui's dist/ warm:
      cd ~/Projects/Web/dxlb-ui && pnpm build:watch
 
-2. Generate findings:
+2. Generate findings to staging:
      pnpm regression:diff scripts/regression-configs/<page>.js
-   → writes ~/Projects/Web/dxlb-ui/wiki/backlog/inbox/regression-<page>.md
-   → exits 0 if green, non-zero if findings remain
+   → writes /tmp/regression-<page>.md
+   → exits 0 if no findings, 1 if findings remain
 
-3. dxlb-ui manager picks up the file, fixes the library, rebuilds dist/
-   (build:watch handles this automatically).
+3. Read /tmp/regression-<page>.md. Decide: is this an actionable list?
+   - Suppress noise via `ignore: [...]` per component in the config
+   - Split or fix selectors via `propertyGroups: [...]`
+   - Re-run step 2 until the staging file is sharp
 
-4. Re-run step 2. Loop until exit code 0.
+4. Push to dxlb-ui's inbox:
+     pnpm regression:diff scripts/regression-configs/<page>.js --push
 
-5. Commit the page migration in this repo:
-     git add … && git commit -m "B8: /<page>/ — match production against @dxlbnl/ui <version>"
+5. dxlb-ui's manager picks up the inbox item, fixes the library,
+   rebuilds dist/ (build:watch handles this automatically).
 
-6. Move on to the next page (new config, repeat from step 2).
+6. Re-run step 2 to verify. Loop steps 2–5 until exit code 0.
+
+7. Commit the page migration in this repo:
+     git commit -m "B8: /<page>/ — match production"
+
+8. Next page (new config file, repeat from step 2).
 ```
 
 ## Per-page config shape
@@ -49,39 +57,74 @@ export default {
   pageSlug: '<page>',
   liveUrl:  'https://www.dexterlabs.nl/<page>/',
   localUrl: 'http://localhost:5174/<page>/',
-  // optional: extra notes appended to the report's Description section
-  description: '<context for the dxlb-ui agent>',
+  description: '<context appended to report — keep it tight>',
   components: [
-    { name: '<semantic name>', live: '<selector on prod>', local: '<selector on dev>', notes: '<optional>' },
-    // ...
+    {
+      name:            '<surface name>',          // human-readable
+      live:            '<selector on prod>',
+      local:           '<selector on dev>',
+      component:       'Text',                    // library component (annotation)
+      props:           'variant="eyebrow"',       // instance props (annotation, free-form)
+      propertyGroups:  ['text'],                  // restrict diff to these groups
+      ignore:          ['margin-bottom'],         // skip these props (library-canon decisions)
+      notes:           '<optional one-liner>'
+    },
+    // …
   ]
 };
 ```
 
-The script captures a curated set of computed-style properties (font, spacing,
-colour, layout) and diffs them per component. Extend the property list in the
-script (`STYLE_PROPS` at the top of `regression-diff.mjs`) when a fix turns out
-to depend on something not captured.
+### Property groups
+
+The script captures computed styles bucketed into groups so a config can ask
+for just the relevant subset per component:
+
+- **text** — `font-family, font-size, font-weight, line-height, letter-spacing, text-transform, color`
+- **layout** — `display, padding-*, margin-*, max-width, width, gap, grid-template-columns`
+- **border** — `border-top-*, border-radius`
+- **background** — `background-color`
+
+Default (when `propertyGroups` is omitted): all groups. Use this for surfaces
+where you want everything; restrict for surfaces where text and container are
+different DOM nodes (e.g. eyebrow text in production is inherited from the
+`.label` wrapper, but on the migrated page the text is its own `<span>` inside
+an `<Inline>`).
+
+### Ignore
+
+Per-component property names to drop from the diff even when they differ.
+Use for **library-canon** decisions where production was wrong and the library
+is right (e.g. `margin-bottom` on eyebrow text — library says parent Stack
+owns spacing; production hand-rolled a margin).
+
+Document the reason in a comment next to the `ignore` list so future-you (or
+the dxlb-ui agent) knows why a property is excluded.
 
 ## Report format
 
-One section per component with at least one diff. Each diff is:
+One section per component with at least one diff. Section header:
 
-```markdown
-- `property`: `<value on local (new)>` → should be `<value on live (old)>`
+```
+### <surface name> — `<LibraryComponent props>` (`<local selector>`)
+```
+
+Each diff line:
+
+```
+- `<property>`: `<value on local (new)>` → should be `<value on live (old)>`
 ```
 
 The dxlb-ui agent treats the right-hand value as the target. If production is
-itself wrong, that's a separate design decision and is handled by editing the
-report's `description` (or filing a separate item in dxlb-ui's backlog).
+itself wrong, that's a separate design decision — flag it in the config's
+description.
 
 ## Caveats
 
-- Both pages render in the default palette. If you need to diff a non-default
-  palette, set `data-palette="paper"` on the document via Playwright's
-  `addInitScript` — feature to add to the script when first needed.
-- Width diffs are noisy: many are downstream effects of layout-container
-  choices, not library bugs. The dxlb-ui agent triages.
+- Both pages render in the default palette. Add init script via Playwright's
+  `addInitScript` to test the non-default palette when needed.
+- Width/spacing diffs are often downstream effects of layout-container choices.
+  Add to `ignore` per component when the diff isn't actionable at the library
+  level.
 - Selector mismatches (one side doesn't match) show up in the report's
-  "Selector errors" section. Either fix the config or note that the surface
-  doesn't exist post-migration.
+  "Selector errors" section. Fix the config or note that the surface doesn't
+  exist post-migration.

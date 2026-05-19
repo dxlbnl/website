@@ -1,68 +1,114 @@
 // scripts/regression-configs/order-cancel.js
 // Selector map for /order/cancel/ — first page through the regression workflow.
-// See plan at ~/.claude/plans/in-order-to-get-wild-glade.md.
 
 export default {
 	pageSlug: 'order-cancel',
 	liveUrl: 'https://www.dexterlabs.nl/order/cancel/',
 	localUrl: 'http://localhost:5174/order/cancel/',
 	description:
-		'Pattern note: the migrated page composes the hero block by hand ' +
-		'(Inline + Heading + Text + Button). Production uses no equivalent of a hero ' +
-		'pattern either. The library ships `PageHero` for this surface — once it grows an ' +
-		'`eyebrowContent` snippet prop (mirroring `headingContent`), the route should ' +
-		'switch to `<PageHero eyebrowContent={...} heading="..." lede="..." border={false} />` ' +
-		'with the `<Led /> ORDER CANCELLED` inside the eyebrow snippet.',
+		'Findings below are grouped by route surface, each tagged with the ' +
+		'`<LibraryComponent props>` instance responsible. Ignored properties per surface ' +
+		'(library-canon decisions like "parent Stack owns spacing") are listed in the ' +
+		'config — they are not regressions, just intentional library defaults.',
 	components: [
+		// Eyebrow is split: the LED + text wrapper is a flex container (layout),
+		// the text itself inherits text styling from its element (text only).
 		{
-			name: 'eyebrow label',
+			name: 'eyebrow wrapper (LED + label)',
+			component: 'Inline',
 			live: '.wrap .label',
-			local: '.inline .eyebrow'
+			local: '.inline',
+			propertyGroups: ['layout'],
+			ignore: ['width'] // wrapper width is a downstream effect of body width, not a library bug
+		},
+		{
+			name: 'eyebrow text',
+			component: 'Text',
+			props: 'variant="eyebrow"',
+			live: '.wrap .label',
+			local: '.inline .eyebrow',
+			propertyGroups: ['text'],
+			ignore: ['margin-bottom'] // library design: parent Stack owns spacing
 		},
 		{
 			name: 'h1 heading',
+			component: 'Heading',
+			props: 'level={1}',
 			live: '.wrap h1',
-			local: '.stack h1.h1'
+			local: '.stack h1.h1',
+			propertyGroups: ['text', 'layout'],
+			ignore: ['margin-bottom', 'width'] // parent Stack owns spacing; width is downstream
 		},
 		{
 			name: 'body paragraph',
+			component: 'Text',
+			props: 'color="dim"',
 			live: '.wrap p',
-			local: '.body-text'
+			local: '.body-text',
+			propertyGroups: ['text', 'layout'],
+			ignore: ['margin-bottom', 'width']
 		},
 		{
 			name: 'back link',
+			component: 'Button',
+			props: 'as="a" variant="back"',
 			live: '.btn-back',
-			local: 'a.btn.btn-back'
+			local: 'a.btn.btn-back',
+			propertyGroups: ['text', 'layout'],
+			ignore: ['width'] // back link on local stretches to row width; downstream of layout
 		},
 		{
 			name: 'signature container',
+			component: 'Spread',
 			live: '.sig',
-			local: '.spread'
+			local: '.spread',
+			propertyGroups: ['layout', 'border'],
+			ignore: ['display', 'grid-template-columns', 'width']
+			// flex vs grid is visually equivalent for two equal columns;
+			// grid-template-columns naturally doesn't apply when display is flex.
 		},
 		{
 			name: 'signature label — SIGNED',
+			component: 'Text',
+			props: 'variant="eyebrow"',
 			live: '.sig > div:first-child .label',
-			local: '.spread > .stack:first-child .eyebrow'
+			local: '.spread > .stack:first-child .eyebrow',
+			propertyGroups: ['text'],
+			ignore: ['margin-bottom']
 		},
 		{
 			name: 'signature hand — SIGNED',
+			component: 'Text',
+			props: 'variant="lede" color="ink"',
 			live: '.sig > div:first-child .hand',
-			local: '.spread > .stack:first-child .body-lede'
+			local: '.spread > .stack:first-child .body-lede',
+			propertyGroups: ['text']
 		},
 		{
 			name: 'signature label — SHIPPED BY',
+			component: 'Text',
+			props: 'variant="eyebrow"',
 			live: '.sig > div:nth-child(2) .label',
-			local: '.spread > .stack:nth-child(2) .eyebrow'
+			local: '.spread > .stack:nth-child(2) .eyebrow',
+			propertyGroups: ['text'],
+			ignore: ['margin-bottom']
 		},
 		{
 			name: 'signature hand — SHIPPED BY',
+			component: 'Text',
+			props: 'variant="lede" color="ink"',
 			live: '.sig > div:nth-child(2) .hand',
-			local: '.spread > .stack:nth-child(2) .body-lede'
+			local: '.spread > .stack:nth-child(2) .body-lede',
+			propertyGroups: ['text']
 		},
 		{
 			name: 'page wrap',
+			component: 'Container',
+			props: 'size="lg"',
 			live: '.wrap',
-			local: '.container-wrap'
+			local: '.container-wrap',
+			propertyGroups: ['layout'],
+			ignore: ['display', 'width', 'gap'] // Container shape vs hand-rolled wrap differ structurally
 		}
 	]
 };

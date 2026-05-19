@@ -2,26 +2,34 @@
 // regression-diff.mjs — visual regression diff for the @dxlbnl/ui migration.
 //
 // Usage:
-//   node scripts/regression-diff.mjs scripts/regression-configs/<page>.js
-//   (or)  pnpm regression:diff scripts/regression-configs/<page>.js
+//   pnpm regression:diff scripts/regression-configs/<page>.js
+//     → writes a report to /tmp/regression-<pageSlug>.md (for review)
 //
-// Loads the config, opens both URLs in headless Chromium via Playwright,
-// captures a small set of computed styles per named component on each side,
-// and writes a Markdown report to
-// /home/dexter/Projects/Web/dxlb-ui/wiki/backlog/inbox/regression-<pageSlug>.md
+//   pnpm regression:diff scripts/regression-configs/<page>.js --push
+//     → also writes the report to dxlb-ui's backlog inbox so its Vibin
+//       manager picks it up as a bug item
 //
-// Exit code 0 when zero findings remain (page matches production); non-zero
-// when there are findings, so the loop can be one-lined:
-//   pnpm regression:diff … && echo green
+// Exit code: 0 when zero findings remain, 1 if findings remain, 2 on error.
 //
 // Config shape (see scripts/regression-configs/order-cancel.js):
 //   export default {
-//     pageSlug: 'order-cancel',
-//     liveUrl: 'https://...',
-//     localUrl: 'http://localhost:5174/...',
-//     components: [{ name, live, local, notes? }, ...],
-//     // optional: extra notes appended to the report's Description section
-//     description?: string,
+//     pageSlug:   'order-cancel',
+//     liveUrl:    'https://...',
+//     localUrl:   'http://localhost:5174/...',
+//     description?: '<extra context appended to report>',
+//     components: [
+//       {
+//         name:           'eyebrow text',          // human-readable surface name
+//         live:           '.wrap .label',          // selector on production
+//         local:          '.inline .eyebrow',      // selector on dev
+//         component?:     'Text',                  // library component responsible (annotation)
+//         variant?:       'eyebrow',               // variant of that component (annotation)
+//         propertyGroups?: ['text'],               // restrict diff to these groups (default: all)
+//         ignore?:        ['margin-bottom'],       // never flag these properties
+//         notes?:         '<one-line note>'
+//       },
+//       …
+//     ]
 //   }
 
 import { chromium } from 'playwright';
@@ -29,45 +37,64 @@ import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const STYLE_PROPS = [
-	'display',
-	'font-family',
-	'font-size',
-	'font-weight',
-	'line-height',
-	'letter-spacing',
-	'text-transform',
-	'color',
-	'background-color',
-	'padding-top',
-	'padding-right',
-	'padding-bottom',
-	'padding-left',
-	'margin-top',
-	'margin-right',
-	'margin-bottom',
-	'margin-left',
-	'max-width',
-	'width',
-	'gap',
-	'grid-template-columns',
-	'border-top-width',
-	'border-top-style',
-	'border-top-color',
-	'border-radius'
-];
+const STYLE_GROUPS = {
+	text: [
+		'font-family',
+		'font-size',
+		'font-weight',
+		'line-height',
+		'letter-spacing',
+		'text-transform',
+		'color'
+	],
+	layout: [
+		'display',
+		'padding-top',
+		'padding-right',
+		'padding-bottom',
+		'padding-left',
+		'margin-top',
+		'margin-right',
+		'margin-bottom',
+		'margin-left',
+		'max-width',
+		'width',
+		'gap',
+		'grid-template-columns'
+	],
+	border: [
+		'border-top-width',
+		'border-top-style',
+		'border-top-color',
+		'border-radius'
+	],
+	background: ['background-color']
+};
 
-const DXLB_INBOX =
-	'/home/dexter/Projects/Web/dxlb-ui/wiki/backlog/inbox';
+const ALL_GROUPS = Object.keys(STYLE_GROUPS);
+const ALL_PROPS = ALL_GROUPS.flatMap((g) => STYLE_GROUPS[g]);
+
+const DXLB_INBOX = '/home/dexter/Projects/Web/dxlb-ui/wiki/backlog/inbox';
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+function propsFor(component) {
+	const groups = component.propertyGroups?.length ? component.propertyGroups : ALL_GROUPS;
+	const ignore = new Set(component.ignore ?? []);
+	const out = [];
+	for (const g of groups) {
+		if (!STYLE_GROUPS[g]) {
+			console.warn(`[regression-diff] unknown property group "${g}" on component "${component.name}"`);
+			continue;
+		}
+		for (const p of STYLE_GROUPS[g]) if (!ignore.has(p)) out.push(p);
+	}
+	return out;
+}
+
 async function loadConfig(arg) {
 	if (!arg) {
-		console.error(
-			'usage: node scripts/regression-diff.mjs <config-path>\n' +
-				'  e.g. pnpm regression:diff scripts/regression-configs/order-cancel.js'
-		);
+		console.error('usage: pnpm regression:diff scripts/regression-configs/<page>.js [--push]');
 		process.exit(2);
 	}
 	const path = resolve(process.cwd(), arg);
@@ -80,10 +107,11 @@ async function loadConfig(arg) {
 	return cfg;
 }
 
-async function captureStyles(page, components, side) {
+async function captureFor(page, components, side) {
 	const out = {};
 	for (const c of components) {
 		const selector = c[side];
+		const props = propsFor(c);
 		const styles = await page.evaluate(
 			({ selector, props }) => {
 				const el = document.querySelector(selector);
@@ -93,18 +121,18 @@ async function captureStyles(page, components, side) {
 				for (const p of props) o[p] = cs.getPropertyValue(p).trim();
 				return o;
 			},
-			{ selector, props: STYLE_PROPS }
+			{ selector, props }
 		);
-		out[c.name] = { selector, styles };
+		out[c.name] = styles;
 	}
 	return out;
 }
 
-function diffComponent(liveStyles, localStyles) {
-	if (liveStyles.__missing) return { error: `selector did not match on live page` };
-	if (localStyles.__missing) return { error: `selector did not match on local page` };
+function diffComponent(liveStyles, localStyles, component) {
+	if (liveStyles.__missing) return { error: `selector "${component.live}" did not match on live page` };
+	if (localStyles.__missing) return { error: `selector "${component.local}" did not match on local page` };
 	const diffs = [];
-	for (const p of STYLE_PROPS) {
+	for (const p of propsFor(component)) {
 		const live = liveStyles[p];
 		const local = localStyles[p];
 		if (live === local) continue;
@@ -114,13 +142,25 @@ function diffComponent(liveStyles, localStyles) {
 	return { diffs };
 }
 
+function formatValue(v) {
+	if (v === '' || v == null) return '_(empty)_';
+	return `\`${v}\``;
+}
+
+function componentTag(c) {
+	if (!c.component) return '';
+	const props = c.props ? ` ${c.props}` : '';
+	return ` — \`<${c.component}${props}>\``;
+}
+
 function renderReport(cfg, results) {
 	const date = today();
 	const id = `REG-${cfg.pageSlug}-${date}`;
+	const route = cfg.localUrl.replace(/^https?:\/\/[^/]+/, '');
 	const lines = [];
 	lines.push('---');
 	lines.push(`id: ${id}`);
-	lines.push(`title: "Regression — ${cfg.localUrl.replace(/^https?:\/\/[^/]+/, '')} on dexterlabs.nl"`);
+	lines.push(`title: "Regression — ${route} on dexterlabs.nl"`);
 	lines.push('type: bug');
 	lines.push('priority: high');
 	lines.push('flags: []');
@@ -133,7 +173,7 @@ function renderReport(cfg, results) {
 		`Computed-style regressions captured from \`${cfg.localUrl}\` (post-migration to \`@dxlbnl/ui\`) ` +
 			`against \`${cfg.liveUrl}\` (live production). Each finding lists what the new page renders and ` +
 			'what production renders for the same property. Library fixes should make the right-hand value ' +
-			'match the left-hand value (or update production via a separate decision).'
+			'match the left-hand value.'
 	);
 	if (cfg.description) {
 		lines.push('');
@@ -154,7 +194,7 @@ function renderReport(cfg, results) {
 		}
 		if (result.diffs.length === 0) continue;
 		totalFindings += result.diffs.length;
-		lines.push(`### ${component.name} (\`${component.local}\`)`);
+		lines.push(`### ${component.name}${componentTag(component)} (\`${component.local}\`)`);
 		if (component.notes) lines.push(`> ${component.notes}`);
 		lines.push('');
 		for (const d of result.diffs) {
@@ -185,8 +225,8 @@ function renderReport(cfg, results) {
 	lines.push('## Verification');
 	lines.push('');
 	lines.push(
-		'Once the library is fixed and a fresh \`dist/\` is built, re-running ' +
-			'\`pnpm regression:diff scripts/regression-configs/' +
+		'Once the library is fixed and a fresh `dist/` is built, re-running ' +
+			'`pnpm regression:diff scripts/regression-configs/' +
 			`${cfg.pageSlug}.js\` in the website repo should leave this file with an empty "Findings" ` +
 			'section. Exit code 0 = green.'
 	);
@@ -195,15 +235,13 @@ function renderReport(cfg, results) {
 	return { md: lines.join('\n'), totalFindings, errored };
 }
 
-function formatValue(v) {
-	if (v === '' || v == null) return '_(empty)_';
-	return `\`${v}\``;
-}
-
 async function main() {
-	const cfg = await loadConfig(process.argv[2]);
+	const args = process.argv.slice(2);
+	const push = args.includes('--push');
+	const configArg = args.find((a) => !a.startsWith('--'));
+	const cfg = await loadConfig(configArg);
 
-	console.log(`[regression-diff] ${cfg.pageSlug}`);
+	console.log(`[regression-diff] ${cfg.pageSlug}${push ? ' (push)' : ''}`);
 	console.log(`  live:  ${cfg.liveUrl}`);
 	console.log(`  local: ${cfg.localUrl}`);
 	console.log(`  components: ${cfg.components.length}`);
@@ -218,31 +256,36 @@ async function main() {
 			liveP.goto(cfg.liveUrl, { waitUntil: 'networkidle' }),
 			localP.goto(cfg.localUrl, { waitUntil: 'networkidle' })
 		]);
-		liveStyles = await captureStyles(liveP, cfg.components, 'live');
-		localStyles = await captureStyles(localP, cfg.components, 'local');
+		liveStyles = await captureFor(liveP, cfg.components, 'live');
+		localStyles = await captureFor(localP, cfg.components, 'local');
 	} finally {
 		await browser.close();
 	}
 
 	const results = cfg.components.map((component) => ({
 		component,
-		result: diffComponent(liveStyles[component.name].styles, localStyles[component.name].styles)
+		result: diffComponent(liveStyles[component.name], localStyles[component.name], component)
 	}));
 
 	const { md, totalFindings, errored } = renderReport(cfg, results);
 
-	const outPath = `${DXLB_INBOX}/regression-${cfg.pageSlug}.md`;
-	writeFileSync(outPath, md);
+	const stagingPath = `/tmp/regression-${cfg.pageSlug}.md`;
+	writeFileSync(stagingPath, md);
+	console.log(`\n[regression-diff] staging report: ${stagingPath}`);
 
-	console.log('');
-	console.log(`[regression-diff] wrote ${outPath}`);
+	if (push) {
+		const inboxPath = `${DXLB_INBOX}/regression-${cfg.pageSlug}.md`;
+		writeFileSync(inboxPath, md);
+		console.log(`[regression-diff] pushed to dxlb-ui inbox: ${inboxPath}`);
+	} else {
+		console.log('[regression-diff] not pushed — review the staging file then re-run with --push');
+	}
+
 	console.log(
 		`  findings: ${totalFindings}, errored selectors: ${errored.length}, components compared: ${cfg.components.length}`
 	);
 
-	if (totalFindings > 0 || errored.length > 0) {
-		process.exit(1);
-	}
+	if (totalFindings > 0 || errored.length > 0) process.exit(1);
 }
 
 main().catch((err) => {
