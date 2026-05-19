@@ -4,7 +4,6 @@ slug: the-lab-is-open
 title: The Lab Is Open
 subject: I stopped making LED cables. Here's what I built instead.
 date: 2026-05-01
-published: false
 unsubscribeMessage: 'You received this because we met at Dutch Modular Fest.'
 ---
 

@@ -6,7 +6,7 @@
 - R1: Notes (long-form) are written as Markdown in `/content/notes/*/index.md` and appear at `/notes/[slug]/` sorted by date, newest first.
 - R2: Projects are written as Markdown in `/content/projects/*.md` and appear at `/projects/[slug]/`. Non-archived projects appear on the homepage.
 - R3: Products are written as Markdown in `/content/products/*.md` and appear at `/catalogue/[id]/`. Available products appear on the homepage.
-- R4: Mailings are written as Markdown in `/content/mailings/*.md` and are archived at `/mailings/[slug]/` when `published: true`.
+- R4: Mailings are written as Markdown in `/content/mailings/*.md` and are archived at `/mailings/[slug]/` once a matching `mailingBroadcasts` row exists (i.e. the mailing has been sent via Resend). No `published` flag in frontmatter — the DB is the source of truth. See [D7](decisions.md#d7-mailings-archive-published-state-derived-from-mailingbroadcasts-not-frontmatter).
 - R5: A visitor can subscribe to the mailing list via a form. Subscriptions go to Resend.
 - R6: Tags on notes must come from the controlled vocabulary in `src/lib/content/tags.ts`. `tags.test.ts` enforces this at CI time.
 
@@ -41,7 +41,7 @@
 ## Constraints
 
 - **Package manager**: `pnpm` only. Never npm or yarn, even if a config or tutorial suggests it.
-- **No SSR for content**: all content routes use `+page.ts` (not `+page.server.ts`) and are prerendered at build time via `import.meta.glob`. The only server-side code is in API routes and the admin/private section.
+- **No SSR for content**: content routes are prerendered at build time. Default loader is `+page.ts` via `import.meta.glob`. The one exception is the mailings archive (`/mailings/` and `/mailings/[slug]/`), which uses `+page.server.ts` with `prerender = true` because the published-state comes from the `mailingBroadcasts` DB table — the build queries the DB and bakes the list into static HTML at deploy time, no per-request SSR. See [D7](decisions.md#d7-mailings-archive-published-state-derived-from-mailingbroadcasts-not-frontmatter). Other server-side code is limited to API routes and the admin/private section.
 - **No Tailwind**: semantic CSS with CSS variables only. The visual language is Lab Bench / phosphor display — nothing decorative.
 - **Svelte 5 runes only**: `$state`, `$derived`, `$props()`, `$effect`, `{@render}`. No legacy `$:`, `on:event`, or `<slot>`.
 - **Deployment**: Vercel via `adapter-vercel`. Not `adapter-static`. Prerender is fully enabled for public content.

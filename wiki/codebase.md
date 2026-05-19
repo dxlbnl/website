@@ -24,8 +24,8 @@ All routes live under `src/routes/`. SvelteKit layout groups:
 | `/catalogue/[id]/` | `+page.svelte`, `+page.ts`, `Pricebox.svelte` | Product detail + Stripe Checkout button | Yes |
 | `/projects/` | `+page.svelte`, `+page.ts` | Project showcase list | Yes |
 | `/projects/[slug]/` | `+page.svelte`, `+page.ts` | Individual project | Yes |
-| `/mailings/` | `+page.svelte`, `+page.ts` | Mailing archive (published only) | Yes |
-| `/mailings/[slug]/` | `+page.svelte`, `+page.ts` | Individual mailing, rendered via `MailingTemplate.svelte` | Yes |
+| `/mailings/` | `+page.svelte`, `+page.server.ts` | Mailing archive — filter by `mailingBroadcasts` (DB, not frontmatter); `prerender = true` | Yes (DB read at build) |
+| `/mailings/[slug]/` | `+page.svelte`, `+page.server.ts`, `+page.ts` | Server load: DB check + entries(); client load: component from `import.meta.glob`. 404 unless slug has a `mailingBroadcasts` row; `prerender = true` | Yes (DB read at build) |
 | `/share/` | `+page.svelte`, `+page.ts` + many `.svelte` | WebRTC P2P transfer tool | Yes |
 | `/about/` | `+page.svelte` | About page | Yes |
 | `/contact/` | `+page.svelte` | Contact page | Yes |

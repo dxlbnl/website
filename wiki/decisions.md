@@ -58,6 +58,14 @@
 - **Consequences**: `wiki/features/feed.md` retained for historical reference only, marked DROPPED. The homepage does not have a feed/status indicator. Do not reintroduce.
 - **Supersedes**: none
 
+## D7: Mailings archive `published` state derived from `mailingBroadcasts`, not frontmatter
+- **Date**: 2026-05-19
+- **By**: Dexter
+- **Context**: Mailings used to gate the public archive on a manual `published: true` frontmatter flag. Setting that flag after broadcasting a mailing via Resend was a manual step easy to forget — leaving sent mailings invisible on `/mailings/`. The `mailingBroadcasts` table already records every broadcast (slug + broadcastId + sentAt), so the broadcast IS the publish event.
+- **Decision**: Drop `published` from `MailingFrontmatter`. `/mailings/+page.server.ts` filters the markdown set by slugs present in `mailingBroadcasts`. `/mailings/[slug]/` splits its load: `+page.server.ts` runs the broadcast check + `entries()` for prerender, returns nothing; `+page.ts` reads the mdsvex Component from `import.meta.glob` (Components can't cross the server→client serialization boundary, so they must stay in the client load). Both routes keep `prerender = true`: the build queries the DB once and bakes the result into static HTML. Production runtime stays static.
+- **Consequences**: One narrow exception to [D3](#d3-rendering--adapter-vercel-with-full-prerender-no-ssr-for-content)'s "content loaders use `+page.ts`" rule — these two mailings routes use `+page.server.ts` because they need the DB. Spirit of D3 (no per-request SSR for content) is preserved by `prerender = true`. The build environment must have `DATABASE_URL` set (already required). Re-prerendering after a new broadcast requires a redeploy (or a triggered rebuild from the admin send action — future work).
+- **Supersedes**: none (extends D3)
+
 ## D6 (proposed — pending Dexter): scoping of `@dxlbnl/ui` migration
 - **Date**: 2026-05-18
 - **By**: spec-writer (B3)

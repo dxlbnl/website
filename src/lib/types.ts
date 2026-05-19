@@ -34,7 +34,6 @@ export type MailingFrontmatter = {
 	title: string;
 	subject: string;
 	date: string;
-	published: boolean;
 	unsubscribeMessage?: string;
 };
 

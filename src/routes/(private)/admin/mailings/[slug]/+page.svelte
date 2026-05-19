@@ -74,7 +74,7 @@
 
 <div class="back-row">
 	<a href={resolve('/admin/mailings/')} class="btn-back">← BACK TO MAILINGS</a>
-	{#if data.mailing.published}
+	{#if data.broadcast}
 		<a href={resolve(`/mailings/${data.mailing.slug}/`)} target="_blank" class="btn-back"
 			>VIEW PUBLIC →</a
 		>
