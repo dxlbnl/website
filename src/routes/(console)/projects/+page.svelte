@@ -1,71 +1,57 @@
 <script lang="ts">
-	import PageHero from '$lib/ui/PageHero.svelte';
-	import SectionH from '$lib/ui/SectionH.svelte';
-	import Signature from '$lib/ui/Signature.svelte';
-	import ProjectCard from '$lib/ui/ProjectCard.svelte';
+	import { Container, Stack, PageHero, SectionHead, Grid, Text, ProjectCard } from '@dxlbnl/ui';
 	import SEO from '$lib/ui/SEO.svelte';
+	import Signature from '$lib/Signature.svelte';
+	import { resolveProjectImage, vercelSrcset } from '$lib/utils/image';
+	import { resolve } from '$app/paths';
 	import type { ProjectFrontmatter } from '$lib/types';
 
 	type Props = { data: { projects: ProjectFrontmatter[] } };
 	let { data }: Props = $props();
 </script>
 
-<SEO title="Projects" description="Software projects from the lab — open source tools, experiments, and side ventures." />
+<SEO
+	title="Projects"
+	description="Software projects from the lab — open source tools, experiments, and side ventures."
+/>
 
-<div class="wrap">
-	<PageHero eyebrow="// PROJECTS · SOFTWARE" title="Projects.">
-		<p class="sub">
-			Open source tools, experiments, and side ventures. Built by <em>Dexter</em>.
-		</p>
-		<div class="meta">
-			<span><b>{data.projects.length}</b> PROJECTS</span>
-		</div>
-	</PageHero>
+<Container size="lg">
+	<Stack gap="lg">
+		<PageHero
+			border
+			variant="hero"
+			eyebrow="// PROJECTS · SOFTWARE"
+			heading="Projects."
+			lede="Open source tools, experiments, and side ventures. Built by Dexter."
+		>
+			<Text variant="mono" size="xs" color="faint" case="upper">
+				<Text as="span" color="ink">{data.projects.length}</Text> PROJECTS
+			</Text>
+		</PageHero>
 
-	<SectionH num="// INDEX" title="All projects" />
+		<SectionHead eyebrow="// INDEX" heading="All projects" />
 
-	<div class="card-grid">
-		{#each data.projects as project (project.slug)}
-			<ProjectCard {project} />
-		{/each}
-	</div>
+		<Grid cols={3} gap="sm">
+			{#each data.projects as project (project.slug)}
+				{@const img = project.image ? resolveProjectImage(project.image) : undefined}
+				{@const imgLight = project.imageLight ? resolveProjectImage(project.imageLight) : undefined}
+				<ProjectCard
+					slug={project.slug}
+					title={project.title}
+					description={project.description}
+					tags={project.tags}
+					ctaLabel={project.url ? 'VIEW PROJECT' : 'OPEN SOURCE'}
+					href={resolve(`/projects/${project.slug}/`)}
+					image={img}
+					imageSrcset={img ? vercelSrcset(img, [256, 384, 512, 768, 960]) : undefined}
+					imageLight={imgLight}
+					imageLightSrcset={imgLight
+						? vercelSrcset(imgLight, [256, 384, 512, 768, 960])
+						: undefined}
+				/>
+			{/each}
+		</Grid>
 
-	<Signature />
-</div>
-
-<style>
-	.wrap {
-		max-width: 1440px;
-		margin: 0 auto;
-		padding: 0 32px 80px;
-		container-type: inline-size;
-
-		@media (max-width: 720px) {
-			padding: 0 16px 56px;
-		}
-	}
-	.sub {
-		font-size: var(--t-lede);
-		color: var(--ink-dim);
-		line-height: 1.55;
-		max-width: 56ch;
-	}
-	.sub em {
-		font-style: italic;
-	}
-	.meta {
-		display: flex;
-		gap: 24px;
-		margin-top: 20px;
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-	}
-	.meta b {
-		color: var(--ink);
-		font-weight: 500;
-		margin-right: 4px;
-	}
-</style>
+		<Signature />
+	</Stack>
+</Container>
