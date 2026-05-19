@@ -27,6 +27,7 @@ Every agent reads this page first, before doing anything else.
 | [progress.md](progress.md) | Append-only run journal — what the agents have done. |
 | [specs/](specs/) | One detailed spec page per feature/bug. See `specs/README.md`. |
 | [specs/B3-component-library-integration.md](specs/B3-component-library-integration.md) | B3 — Integrate `@dxlbnl/ui` from npm; first-page proving ground on `/order/cancel/`, plus the page-by-page migration plan. |
+| [specs/B1-email-pageview-tracking.md](specs/B1-email-pageview-tracking.md) | B1 — Admin analytics view at `/admin/analytics/`: opens-per-broadcast table + recent pageview log (cap 100). |
 
 ### Codebase reference
 

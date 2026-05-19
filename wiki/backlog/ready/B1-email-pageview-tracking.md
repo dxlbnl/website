@@ -5,6 +5,7 @@ type: feature
 priority: high
 flags: []
 created: 2026-05-18
+spec: wiki/specs/B1-email-pageview-tracking.md
 ---
 
 ## Description

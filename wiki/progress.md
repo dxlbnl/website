@@ -34,3 +34,10 @@ it records the reason here AND states it in chat.
 - implementer: added `@import '@dxlbnl/ui/tokens/tokens.css';` as first non-comment line in `src/app.css`; rewrote `src/routes/(console)/order/cancel/+page.svelte` entirely through `@dxlbnl/ui` (`Container`, `Stack`, `Inline`, `Spread`, `Rule`, `Heading`, `Text`, `Led`, `Button`), inlined signature copy, used `<svelte:head>` for title/description; legacy `src/lib/ui/*` untouched.
 - B3: /order/cancel/ migrated to @dxlbnl/ui with no gaps logged.
 - implementer (cleanup pass): dropped `i` flag from forbidden-tag regex in `page.test.ts` (test was falsely flagging PascalCase `<Button>` as the HTML `<button>` element); removed `Button as UiButton` workaround in `+page.svelte`. `pnpm test` → 147/147 green.
+- reviewer: PASS. `pnpm test` 147/147, `pnpm check` 0 errors / 0 warnings, `pnpm build` clean. Every acceptance criterion 1–20 verified. Criteria 6/12/13 deferred to manual palette + nav smoke test (Dexter to visit `/order/cancel/` once locally). Flagged: `.claude/settings.json` had an unrelated key reorder + `WebFetch(domain:www.npmjs.com)` permission — excluded from the B3 commit (left modified in working tree for Dexter to handle separately).
+- result: done — commit `c7376de`. Filed two follow-up chore items from reviewer findings: B5 (vitest test-discovery for `wiki/specs/`), B6 (a11y warnings in `content/notes/007-zod4-mock/index.md`).
+- **Manual smoke check left for Dexter** (overnight run): visit `/order/cancel/` once, toggle `phosphor` ↔ `paper` palettes, confirm LED is amber and the back-link navigates to `/catalogue/`. Static checks all pass; this just closes the visual loop.
+- **D6 status**: spec-writer drafted **D6** in `wiki/decisions.md` and marked it `proposed — pending Dexter`. Dexter to confirm/reject in the morning. Not blocking B3 — recorded so the next manager run picks it up.
+
+## 2026-05-18 — B1: Email & page-view tracking
+- manager: start, track: feature. Moved card from `ready/` to `doing/`.
