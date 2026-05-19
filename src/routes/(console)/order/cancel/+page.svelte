@@ -1,16 +1,7 @@
 <script lang="ts">
-	import {
-		Container,
-		Stack,
-		Inline,
-		Spread,
-		Rule,
-		Heading,
-		Text,
-		Led,
-		Button
-	} from '@dxlbnl/ui';
+	import { Container, Stack, Inline, Heading, Text, Led, Button } from '@dxlbnl/ui';
 	import { resolve } from '$app/paths';
+	import Signature from '$lib/Signature.svelte';
 
 	const body =
 		"You cancelled the checkout. Nothing was charged. Head back to the catalogue if you'd like to try again.";
@@ -33,17 +24,6 @@
 			<Button as="a" href={resolve('/catalogue/')} variant="back">RETURN TO CATALOGUE</Button>
 		</Stack>
 
-		<Rule />
-
-		<Spread gap="md">
-			<Stack gap="xs">
-				<Text variant="eyebrow">// SIGNED</Text>
-				<Text variant="lede">— Dexter, in the lab</Text>
-			</Stack>
-			<Stack gap="xs">
-				<Text variant="eyebrow">// SHIPPED BY</Text>
-				<Text variant="lede">DEXTERLABS / a one-person lab</Text>
-			</Stack>
-		</Spread>
+		<Signature />
 	</Stack>
 </Container>
