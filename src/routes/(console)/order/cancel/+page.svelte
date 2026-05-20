@@ -21,6 +21,9 @@
 			{/snippet}
 			<Button as="a" href={resolve('/catalogue/')} variant="back">← RETURN TO CATALOGUE</Button>
 		</PageHero>
-		<Signature />
 	</Stack>
+</Container>
+
+<Container size="lg">
+	<Signature />
 </Container>

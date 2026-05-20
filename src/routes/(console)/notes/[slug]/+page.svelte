@@ -62,7 +62,9 @@
 			<Button as="a" href={resolve('/notes/')} variant="back">← BACK TO NOTES</Button>
 			<Text variant="mono" size="xs" color="faint" case="upper">SIGNED / DEXTER</Text>
 		</Spread>
-
-		<Signature />
 	</Stack>
+</Container>
+
+<Container size="lg">
+	<Signature />
 </Container>

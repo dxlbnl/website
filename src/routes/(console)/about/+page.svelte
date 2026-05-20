@@ -73,6 +73,9 @@
 			</Stack>
 		</Grid>
 
-		<Signature />
 	</Stack>
+</Container>
+
+<Container size="lg">
+	<Signature />
 </Container>
