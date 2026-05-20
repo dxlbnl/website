@@ -1,18 +1,46 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
-	import SectionH from '$lib/ui/SectionH.svelte';
-	import Signature from '$lib/ui/Signature.svelte';
-	import ProductCard from '$lib/ui/ProductCard.svelte';
-	import Led from '$lib/ui/Led.svelte';
-	import PageHero from '$lib/ui/PageHero.svelte';
-	import type { ProductFrontmatter } from '$lib/types';
+	import {
+		Container,
+		Stack,
+		Inline,
+		Grid,
+		Card,
+		PageHero,
+		SectionHead,
+		Heading,
+		Button,
+		Text,
+		ProductCard
+	} from '@dxlbnl/ui';
 	import SEO from '$lib/ui/SEO.svelte';
+	import Signature from '$lib/Signature.svelte';
+	import { fmtCents } from '$lib/utils/fmt';
+	import { resolveProductImage, vercelSrcset } from '$lib/utils/image';
+	import { resolve } from '$app/paths';
+	import type { ProductFrontmatter, ProductStatus } from '$lib/types';
 	import type { Region } from '$lib/utils/location';
 
 	type Props = { data: { products: ProductFrontmatter[]; region: Region } };
 	let { data }: Props = $props();
+
 	const production = $derived(data.products.filter((p) => p.status !== 'sold-out'));
 	const archive = $derived(data.products.filter((p) => p.status === 'sold-out'));
+
+	function priceFor(product: ProductFrontmatter): string {
+		const cents = data.region === 'World' ? product.priceExcl : product.priceIncl;
+		return fmtCents(cents);
+	}
+
+	function stockStatus(s: ProductStatus): 'in-stock' | 'coming-soon' | 'out-of-stock' {
+		if (s === 'available') return 'in-stock';
+		if (s === 'coming-soon') return 'coming-soon';
+		return 'out-of-stock';
+	}
+
+	function imageFor(product: ProductFrontmatter): string | undefined {
+		const raw = product.image ?? product.images?.[0];
+		return raw ? resolveProductImage(raw, product.id) : undefined;
+	}
 </script>
 
 <SEO
@@ -20,116 +48,94 @@
 	description="Eurorack modules hand-built in Delft. Small batches, studio-grade quality."
 />
 
-<div class="wrap">
+<Container size="lg">
 	<PageHero
+		variant="hero"
 		eyebrow="// CATALOGUE · HARDWARE · FOR SALE"
-		title="Catalogue."
-		sub="Professional-grade Eurorack modules and studio tools. Engineered for stability and performance. Built in Delft, shipped worldwide. For custom engineering or prototype development, use the link below."
+		heading="Catalogue."
+		lede="Professional-grade Eurorack modules and studio tools. Engineered for stability and performance. Built in Delft, shipped worldwide. For custom engineering or prototype development, use the link below."
 	>
-		<div class="meta">
-			<span><b>{data.products.length}</b> MODULES LIVE</span>
-			<span><b>BATCH</b> 2026-Q2</span>
-			<span><b>SHIPS FROM</b> DELFT, NL</span>
-		</div>
+		<Inline gap="md">
+			<Text variant="mono" size="xs" color="faint" case="upper">
+				<Text as="span" color="ink">{data.products.length}</Text> MODULES LIVE
+			</Text>
+			<Text variant="mono" size="xs" color="faint" case="upper">
+				<Text as="span" color="ink">BATCH</Text>
+				2026-Q2
+			</Text>
+			<Text variant="mono" size="xs" color="faint" case="upper">
+				<Text as="span" color="ink">SHIPS FROM</Text>
+				DELFT, NL
+			</Text>
+		</Inline>
 	</PageHero>
 
-	{#if production.length > 0}
-		<SectionH num="// 0x01" title="In development">
-			<Led tone="amber" blink />
-			<span>ACTIVE PROTOTYPING</span>
-		</SectionH>
+	<Stack gap="lg">
+		{#if production.length > 0}
+			<SectionHead eyebrow="// 0x01" heading="In development" sublabel="ACTIVE PROTOTYPING" />
 
-		<div class="card-grid">
-			{#each production as product (product.id)}
-				<ProductCard {product} region={data.region} />
-			{/each}
-		</div>
-	{/if}
+			<Grid cols={3} gap="sm">
+				{#each production as product (product.id)}
+					{@const img = imageFor(product)}
+					<ProductCard
+						sku={product.id}
+						name={product.name}
+						description={product.description}
+						price={priceFor(product)}
+						status={stockStatus(product.status)}
+						href={resolve(`/catalogue/${product.id}/`)}
+						image={img}
+						imageSrcset={img ? vercelSrcset(img, [256, 384, 512, 768, 960]) : undefined}
+					/>
+				{/each}
+			</Grid>
+		{/if}
 
-	{#if archive.length > 0}
-		<SectionH
-			num={production.length ? '// 0x02' : '// 0x01'}
-			title="Archive"
-			sub="SOLD OUT / DISCONTINUED"
-		/>
+		{#if archive.length > 0}
+			<SectionHead
+				eyebrow={production.length ? '// 0x02' : '// 0x01'}
+				heading="Archive"
+				sublabel="SOLD OUT / DISCONTINUED"
+			/>
 
-		<div class="card-grid">
-			{#each archive as product (product.id)}
-				<ProductCard {product} region={data.region} />
-			{/each}
-		</div>
-	{/if}
+			<Grid cols={3} gap="sm">
+				{#each archive as product (product.id)}
+					{@const img = imageFor(product)}
+					<ProductCard
+						sku={product.id}
+						name={product.name}
+						description={product.description}
+						price={priceFor(product)}
+						status={stockStatus(product.status)}
+						href={resolve(`/catalogue/${product.id}/`)}
+						image={img}
+						imageSrcset={img ? vercelSrcset(img, [256, 384, 512, 768, 960]) : undefined}
+					/>
+				{/each}
+			</Grid>
+		{/if}
 
-	<div class="hire">
-		<div class="hire-label">// ENGINEERING & PROTOTYPING</div>
-		<h3>Custom hardware and software development.</h3>
-		<p>
-			I take on a limited number of specialized engineering projects each year. If you have a
-			concept that requires PCB design, embedded firmware development, or a functional prototype,
-			get in touch to discuss the technical scope and timeline.
-		</p>
-		<a href={resolve('/contact/')} class="btn-cta hire-link">GET IN TOUCH →</a>
-	</div>
+		<Card style="padding: 28px">
+			<Stack gap="md">
+				<Stack gap="xs">
+					<Text variant="mono" size="xs" color="faint" case="upper">
+						// ENGINEERING & PROTOTYPING
+					</Text>
+					<Heading level={3}>Custom hardware and software development.</Heading>
+					<Text color="dim" style="max-width: 62ch">
+						I take on a limited number of specialized engineering projects each year. If you have a
+						concept that requires PCB design, embedded firmware development, or a functional
+						prototype, get in touch to discuss the technical scope and timeline.
+					</Text>
+				</Stack>
+				<Inline>
+					<Button as="a" href={resolve('/contact/')} variant="cta">GET IN TOUCH →</Button>
+				</Inline>
+			</Stack>
+		</Card>
+	</Stack>
+</Container>
 
+<Container size="lg">
 	<Signature />
-</div>
-
-<style>
-	.wrap {
-		max-width: 1440px;
-		margin: 0 auto;
-		padding: 0 32px 80px;
-		container-type: inline-size;
-
-		@media (max-width: 720px) {
-			padding: 0 16px 56px;
-		}
-	}
-	.meta {
-		margin-top: 32px;
-		display: flex;
-		gap: 32px;
-		flex-wrap: wrap;
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-	}
-	.meta b {
-		color: var(--ink);
-		font-weight: 500;
-	}
-	.hire {
-		margin-top: 56px;
-		border: 1px solid var(--rule);
-		padding: 28px;
-		background: var(--bg-rail);
-	}
-	.hire-label {
-		font-family: var(--mono);
-		font-size: var(--t-micro);
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		color: var(--ink-faint);
-		margin-bottom: 8px;
-	}
-	.hire h3 {
-		font-family: var(--sans);
-		font-size: var(--t-h3);
-		font-weight: 500;
-		letter-spacing: -0.01em;
-		margin: 0;
-	}
-	.hire p {
-		color: var(--ink-dim);
-		max-width: 62ch;
-		margin-top: 10px;
-		margin-bottom: 0;
-		line-height: 1.6;
-	}
-	.hire-link {
-		margin-top: 12px;
-		display: inline-block;
-	}
-</style>
+</Container>
