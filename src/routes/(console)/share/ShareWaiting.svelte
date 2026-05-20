@@ -1,7 +1,7 @@
 <script lang="ts">
 	import QRCode from 'qrcode';
 	import { copyToClipboard } from '$lib/utils/clipboard';
-	import Led from '$lib/ui/Led.svelte';
+	import { Led } from '@dxlbnl/ui';
 
 	type Props = { shareUrl: string; targetPeerName?: string; onanswer: (sessionId: string) => void };
 	let { shareUrl, targetPeerName, onanswer }: Props = $props();
@@ -39,10 +39,10 @@
 <div class="panel">
 	{#if targetPeerName}
 		<div class="status">
-			<Led tone="amber" blink /> Waiting for <strong>{targetPeerName}</strong> to connect…
+			<Led color="amber" blink /> Waiting for <strong>{targetPeerName}</strong> to connect…
 		</div>
 	{:else}
-		<div class="status"><Led tone="amber" blink /> Waiting for peer…</div>
+		<div class="status"><Led color="amber" blink /> Waiting for peer…</div>
 		<canvas bind:this={qrCanvas} class="qr"></canvas>
 		<div class="row">
 			<input class="field" readonly value={shareUrl} />

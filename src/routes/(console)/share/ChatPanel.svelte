@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { copyToClipboard } from '$lib/utils/clipboard';
-	import Led from '$lib/ui/Led.svelte';
+	import { Led } from '@dxlbnl/ui';
 	import FileCard from './FileCard.svelte';
 	import type { ChatEntry } from './types';
 
@@ -136,10 +136,10 @@
 >
 	<div class="header">
 		{#if isReconnecting}
-			<Led tone="amber" blink />
+			<Led color="amber" blink />
 			<span>Connection lost. Reconnecting to <strong>{peerName}</strong>…</span>
 		{:else}
-			<Led tone="ok" />
+			<Led color="ok" />
 			<span>Connected to <strong>{peerName}</strong></span>
 		{/if}
 	</div>
@@ -150,7 +150,7 @@
 				{#if entry.kind === 'text'}
 					<div class="bubble" class:secret={entry.secret}>
 						{#if entry.secret}
-							<span class="secret-label"><Led tone="amber" /> Secret</span>
+							<span class="secret-label"><Led color="amber" /> Secret</span>
 							<span class="secret-text">{entry.content}</span>
 							<div class="secret-actions">
 								<button class="btn-del" onclick={() => copy(entry.content)}>Copy</button>

@@ -2,8 +2,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { page } from '$app/state';
 	import { replaceState } from '$app/navigation';
-	import Led from '$lib/ui/Led.svelte';
-	import PageHero from '$lib/ui/PageHero.svelte';
+	import { Led, PageHero } from '@dxlbnl/ui';
 	import SEO from '$lib/ui/SEO.svelte';
 	import ShareSetup from './ShareSetup.svelte';
 	import ShareWaiting from './ShareWaiting.svelte';
@@ -49,8 +48,8 @@
 <div class="wrap">
 	<PageHero
 		eyebrow="// TOOLS · SHARE"
-		title="Share."
-		sub="Easily share text and files across your devices — nothing is stored on the server."
+		heading="Share."
+		lede="Easily share text and files across your devices — nothing is stored on the server."
 	/>
 
 	{#if share.phase === 'idle'}
@@ -73,7 +72,7 @@
 		/>
 	{:else if share.phase === 'offering' || share.phase === 'guest-init' || share.phase === 'guest-answering' || share.phase === 'connecting'}
 		<div class="status">
-			<Led tone="amber" blink />
+			<Led color="amber" blink />
 			<span>
 				{share.phase === 'offering'
 					? 'Setting up connection…'
@@ -111,19 +110,19 @@
 		/>
 	{:else if share.phase === 'guest-waiting'}
 		<div class="status">
-			<Led tone="amber" blink />
+			<Led color="amber" blink />
 			<span>Waiting for host approval…</span>
 			<button class="btn-back" onclick={handleReset} style="margin-left: auto;">cancel</button>
 		</div>
 	{:else if share.phase === 'denied'}
 		<div class="status">
-			<Led tone="danger" />
+			<Led color="danger" />
 			<span>Connection was declined.</span>
 			<button class="btn-back" onclick={handleReset} style="margin-left: auto;">↩ try again</button>
 		</div>
 	{:else if share.phase === 'error'}
 		<div class="status">
-			<Led tone="danger" /> <span>{share.errorMsg}</span>
+			<Led color="danger" /> <span>{share.errorMsg}</span>
 			<button class="btn-back" onclick={handleReset} style="margin-left: auto;">↩ try again</button>
 		</div>
 	{/if}

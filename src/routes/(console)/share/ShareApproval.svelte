@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Led from '$lib/ui/Led.svelte';
+	import { Led } from '@dxlbnl/ui';
 
 	type Props = {
 		peerName: string;
@@ -14,7 +14,7 @@
 
 <div class="panel">
 	<div class="status">
-		<Led tone="amber" blink />
+		<Led color="amber" blink />
 		<strong>{peerName}</strong> wants to connect
 		{#if isTrusted}<span class="badge">known device</span>{/if}
 	</div>

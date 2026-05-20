@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Led from '$lib/ui/Led.svelte';
+	import { Led } from '@dxlbnl/ui';
 	import SubscribeForm from '$lib/ui/SubscribeForm.svelte';
 	import type { ProductFrontmatter } from '$lib/types';
 	import { type Region } from '$lib/utils/location';
@@ -52,7 +52,7 @@
 			{/if}
 		</div>
 		<span class="stock-info {pd.stock.cls}">
-			<Led tone={pd.stock.led} />
+			<Led color={pd.stock.led} />
 			{pd.stock.label}{#if pd.stock.ship}
 				· {pd.stock.ship}{/if}
 		</span>
