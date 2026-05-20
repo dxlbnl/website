@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { fmtDate } from '$lib/utils/fmt';
-	import PageHero from '$lib/ui/PageHero.svelte';
+	import { PageHero } from '@dxlbnl/ui';
 	import type { PageData } from './$types';
 
 	type Props = { data: PageData };
@@ -10,8 +10,8 @@
 
 <PageHero
 	eyebrow="// ADMIN · MAILINGS"
-	title="Mailings."
-	sub="Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo."
+	heading="Mailings."
+	lede="Send a mailing as a Resend Broadcast to your entire audience. Sent immediately — no undo."
 >
 	<div class="meta">
 		<span><b>{data.mailings.length}</b> MAILINGS</span>

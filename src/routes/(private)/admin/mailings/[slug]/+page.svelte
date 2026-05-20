@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { enhance } from '$app/forms';
-	import Led from '$lib/ui/Led.svelte';
-	import PageHero from '$lib/ui/PageHero.svelte';
+	import { Led, PageHero } from '@dxlbnl/ui';
 	import { fmtDate } from '$lib/utils/fmt';
 	import type { PageData, ActionData } from './$types';
 
@@ -12,7 +11,7 @@
 	let sending = $state(false);
 </script>
 
-<PageHero eyebrow="// ADMIN · MAILINGS · {data.mailing.slug}" title={data.mailing.title}>
+<PageHero eyebrow="// ADMIN · MAILINGS · {data.mailing.slug}" heading={data.mailing.title}>
 	<div class="meta-row">
 		<span class="meta-item">{fmtDate(data.mailing.date)}</span>
 		<span class="meta-sep">·</span>
@@ -50,11 +49,11 @@
 		</form>
 
 		{#if form?.error}
-			<span class="feedback err"><Led tone="danger" />{form.error}</span>
+			<span class="feedback err"><Led color="danger" />{form.error}</span>
 		{/if}
 		{#if form?.broadcastId}
 			<span class="feedback ok"
-				><Led tone="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span
+				><Led color="ok" />Sent — <code>{form.broadcastId.slice(0, 8)}…</code></span
 			>
 		{/if}
 	</div>

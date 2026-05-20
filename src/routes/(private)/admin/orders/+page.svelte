@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Led from '$lib/ui/Led.svelte';
-	import PageHero from '$lib/ui/PageHero.svelte';
+	import { Led, PageHero } from '@dxlbnl/ui';
 	import { fmtDateTime, fmtCents } from '$lib/utils/fmt';
 	import type { PageData } from './$types';
 
@@ -51,7 +50,7 @@
 	}
 </script>
 
-<PageHero eyebrow="// ADMIN · ORDERS" title="Orders.">
+<PageHero eyebrow="// ADMIN · ORDERS" heading="Orders.">
 	<div class="meta">
 		<span><b>{data.orders.length}</b> RECORDS</span>
 		{#if filteredOrders.length !== data.orders.length}
@@ -112,11 +111,11 @@
 			<span class="amount">{fmtCents(order.amountTotal, order.currency)}</span>
 			<div class="statuses">
 				<span class="status">
-					<Led tone={statusTone(order.status)} />
+					<Led color={statusTone(order.status)} />
 					{order.status.toUpperCase()}
 				</span>
 				<span class="status">
-					<Led tone={statusTone(order.fulfillmentStatus)} />
+					<Led color={statusTone(order.fulfillmentStatus)} />
 					{order.fulfillmentStatus.toUpperCase()}
 				</span>
 			</div>

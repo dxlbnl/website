@@ -1,15 +1,30 @@
 <script lang="ts">
-	import Nav from '$lib/ui/Nav.svelte';
+	import { Nav } from '@dxlbnl/ui';
+	import { page } from '$app/state';
+	import { getPalette, togglePalette } from '$lib/theme.svelte';
+
 	let { children } = $props();
 
 	const adminItems = [
 		{ label: 'ORDERS', href: '/admin/orders' },
 		{ label: 'MAILINGS', href: '/admin/mailings' }
 	];
+
+	function isActive(href: string) {
+		return page.url.pathname === href || page.url.pathname.startsWith(href);
+	}
+
+	const links = $derived(adminItems.map((item) => ({ ...item, active: isActive(item.href) })));
 </script>
 
 <div class="page">
-	<Nav items={adminItems} />
+	<Nav
+		{links}
+		palette={getPalette() as 'phosphor' | 'paper'}
+		onPaletteToggle={togglePalette}
+		sticky={false}
+		maxWidth="none"
+	/>
 	<main>{@render children()}</main>
 </div>
 

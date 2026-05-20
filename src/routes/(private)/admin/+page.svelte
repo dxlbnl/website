@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Led from '$lib/ui/Led.svelte';
-	import PageHero from '$lib/ui/PageHero.svelte';
+	import { Led, PageHero } from '@dxlbnl/ui';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
 </script>
 
-<PageHero eyebrow="// ADMIN · ACCESS CONTROL" title="Authenticate.">
+<PageHero eyebrow="// ADMIN · ACCESS CONTROL" heading="Authenticate.">
 	<form method="POST" action="?/login" use:enhance class="login-form">
 		<div class="prompt">
 			<span class="caret">&gt;</span>
@@ -19,7 +18,7 @@
 			/>
 		</div>
 		{#if form?.error}
-			<p class="error"><Led tone="danger" />{form.error}</p>
+			<p class="error"><Led color="danger" />{form.error}</p>
 		{/if}
 		<button type="submit" class="btn-ghost">ENTER</button>
 	</form>
