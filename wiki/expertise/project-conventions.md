@@ -25,6 +25,8 @@ Decisions that aren't enforced by any linter but are non-negotiable. Read this b
 
 All frontmatter types are defined in `src/lib/types.ts`. Extend there first before touching markdown files.
 
+**mdsvex content imports components.** A `.md` note can have a `<script>` block that imports and renders Svelte components (e.g. `content/notes/007-zod4-mock/index.md` renders a CTA). So when checking whether a component is unused before deleting it, grep **`content/` as well as `src/`** — a `src`-only scan will report false "0 importers". `pnpm check` will NOT catch a missing import in content; only `pnpm build` compiles the notes. (Triggered 2026-05-20: deleted `$lib/ui/Cta.svelte` as "unused" while a note still imported it.)
+
 ## Image pipeline
 
 New images for notes: put originals in `/content/notes/<slug>/media/`, run `pnpm optimize` to get WebP output in `/static/images/`. Don't put images directly in `/static/`.
