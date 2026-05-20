@@ -9,7 +9,16 @@
 	let { data, form }: Props = $props();
 
 	let sending = $state(false);
+
+	let previewFrame: HTMLIFrameElement | undefined = $state();
+
+	function resizePreview() {
+		if (!previewFrame?.contentDocument) return;
+		previewFrame.style.height = previewFrame.contentDocument.body.scrollHeight + 'px';
+	}
 </script>
+
+<svelte:window onresize={resizePreview} />
 
 <PageHero eyebrow="// ADMIN · MAILINGS · {data.mailing.slug}" heading={data.mailing.title}>
 	<div class="meta-row">
@@ -63,10 +72,13 @@
 	<div class="section-label">// EMAIL PREVIEW</div>
 	<div class="preview-wrap">
 		<iframe
+			bind:this={previewFrame}
 			class="preview"
 			srcdoc={data.emailHtml}
 			title="Email preview"
 			sandbox="allow-same-origin"
+			scrolling="no"
+			onload={resizePreview}
 		></iframe>
 	</div>
 </section>
@@ -200,7 +212,6 @@
 	.preview {
 		display: block;
 		width: 100%;
-		min-height: 600px;
 		border: none;
 		background: transparent;
 	}
