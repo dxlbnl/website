@@ -9,10 +9,10 @@ lede: A zero-config, schema-driven mock library that generates byte-identical da
 ---
 
 <script>
-  import Cta from '$lib/ui/Cta.svelte';
+  import { CtaBlock } from '@dxlbnl/ui';
 </script>
 
-<Cta href="https://github.com/dxlbnl/zod4-mock" eyebrow="// open source" name="zod4-mock" description="Deterministic, schema-driven mock data for Zod v4. One seed. Cross-API consistent." label="VIEW ON GITHUB →" external />
+<CtaBlock as="a" href="https://github.com/dxlbnl/zod4-mock" target="_blank" rel="noopener noreferrer" eyebrow="// open source" heading="zod4-mock" subtext="Deterministic, schema-driven mock data for Zod v4. One seed. Cross-API consistent.">VIEW ON GITHUB →</CtaBlock>
 
 At work, we had a nice setup for mock data in Zod 3, but upgrading to Zod 4 broke almost everything. Existing libraries like `zod-mock` or `zod-fixture` often had two big issues: modifying a schema would cause the generated data to shift completely, and getting referential integrity—like matching IDs between a `User` and an `Order`—required a ton of manual glue code.
 
