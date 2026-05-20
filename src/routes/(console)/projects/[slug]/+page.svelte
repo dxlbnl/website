@@ -4,6 +4,7 @@
 	import Signature from '$lib/Signature.svelte';
 	import ImageCarousel from '$lib/ui/ImageCarousel.svelte';
 	import { resolveProjectImage } from '$lib/utils/image';
+	import { getPalette } from '$lib/theme.svelte';
 	import { resolve } from '$app/paths';
 	import type { Component } from 'svelte';
 	import type { ProjectFrontmatter } from '$lib/types';
@@ -14,7 +15,11 @@
 	let { data }: Props = $props();
 
 	const heroDark = $derived(data.metadata.image ? resolveProjectImage(data.metadata.image) : null);
-	const carouselImages = $derived(heroDark ? [heroDark] : data.images);
+	const heroLight = $derived(
+		data.metadata.imageLight ? resolveProjectImage(data.metadata.imageLight) : null
+	);
+	const hero = $derived(getPalette() === 'paper' && heroLight ? heroLight : heroDark);
+	const carouselImages = $derived(hero ? [hero] : data.images);
 
 	let Body = $derived(data.component);
 
@@ -64,9 +69,7 @@
 	</PageHero>
 
 	<Stack gap="md">
-		{#if carouselImages.length > 0}
-			<ImageCarousel images={carouselImages} />
-		{/if}
+		<ImageCarousel images={carouselImages} />
 
 		<Prose>
 			<Body />
