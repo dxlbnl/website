@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Signature from '$lib/ui/Signature.svelte';
-	import Led from '$lib/ui/Led.svelte';
+	import { Container, Inline, PageHero, Button, Led, Text } from '@dxlbnl/ui';
 	import SEO from '$lib/ui/SEO.svelte';
-	import type { PageData } from './$types';
+	import Signature from '$lib/Signature.svelte';
 	import { resolve } from '$app/paths';
+	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 	const isPreorder = $derived(data.product?.status === 'coming-soon');
@@ -11,6 +11,11 @@
 
 	const headline = $derived(isPreorder ? 'Pre-order received.' : 'Order received.');
 	const label = $derived(isPreorder ? 'PRE-ORDER RECEIVED' : 'ORDER CONFIRMED');
+	const lede = $derived(
+		isPreorder
+			? `Thanks for the support. I'm working hard to get ${productName} ready for you. I'll make sure to keep you updated on the progress.`
+			: `Thanks for the order. I'll be shipping ${productName} soon! You'll get an email with tracking as soon as it's on its way.`
+	);
 </script>
 
 <SEO
@@ -20,59 +25,18 @@
 		: "Your order is in. We'll be in touch when your batch ships."}
 />
 
-<div class="wrap">
-	<div class="box">
-		<div class="label"><Led tone="ok" /> {label}</div>
-		<h1>{headline}</h1>
-		<p>
-			{#if isPreorder}
-				Thanks for the support. I'm working hard to get {productName} ready for you. I'll make sure to
-				keep you updated on the progress.
-			{:else}
-				Thanks for the order. I'll be shipping {productName} soon! You'll get an email with tracking as
-				soon as it's on its way.
-			{/if}
-		</p>
-		<a href={resolve('/catalogue/')} class="btn-back">← RETURN TO CATALOGUE</a>
-	</div>
+<Container size="lg">
+	<PageHero heading={headline} {lede}>
+		{#snippet eyebrow()}
+			<Inline gap="xs">
+				<Led color="ok" />
+				<Text variant="eyebrow" color="ok">{label}</Text>
+			</Inline>
+		{/snippet}
+		<Button as="a" href={resolve('/catalogue/')} variant="back">← RETURN TO CATALOGUE</Button>
+	</PageHero>
+</Container>
+
+<Container size="lg">
 	<Signature />
-</div>
-
-<style>
-	.wrap {
-		max-width: 1440px;
-		margin: 0 auto;
-		padding: 80px 32px;
-
-		@media (max-width: 720px) {
-			padding: 40px 16px;
-		}
-	}
-	.box {
-		max-width: 48ch;
-	}
-	.label {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-family: var(--mono);
-		font-size: var(--t-mono);
-		color: var(--ok);
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-		margin-bottom: 12px;
-	}
-	h1 {
-		font-weight: 500;
-		font-size: var(--t-title);
-		letter-spacing: -0.02em;
-		margin: 0 0 16px;
-		line-height: 1;
-	}
-	p {
-		font-size: var(--t-body);
-		line-height: 1.6;
-		color: var(--ink-dim);
-		margin: 0 0 32px;
-	}
-</style>
+</Container>
