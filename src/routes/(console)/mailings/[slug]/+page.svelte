@@ -25,7 +25,7 @@
 	noindex
 />
 
-<Container size="sm">
+<Container size="md">
 	<Stack gap="md">
 		<iframe
 			bind:this={frame}

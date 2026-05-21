@@ -23,7 +23,9 @@
       "Bash(node:*)",
       "Bash(tsc:*)",
       "Bash(tsx:*)",
-      "WebFetch(domain:www.npmjs.com)"
+      "WebFetch(domain:www.npmjs.com)",
+      "Skill(humanizer)",
+      "Skill(humanizer:*)"
     ],
     "deny": []
   },

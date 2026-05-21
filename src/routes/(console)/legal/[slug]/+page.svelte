@@ -11,7 +11,7 @@
 
 <SEO title={data.metadata.title} description="Legal information for Dexterlabs." />
 
-<Container size="sm">
+<Container size="md">
 	<PageHero
 		eyebrow={`// LEGAL · ${data.metadata.title}`}
 		heading={data.metadata.title}

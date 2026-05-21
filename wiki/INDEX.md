@@ -72,6 +72,7 @@ Every agent reads this page first, before doing anything else.
 | [expertise/project-conventions.md](expertise/project-conventions.md) | Always/never rules: runes, pnpm, static-only, CSS conventions. |
 | [expertise/stripe.md](expertise/stripe.md) | Stripe configuration for Dutch ZZP pre-orders. |
 | [expertise/image-prompts.md](expertise/image-prompts.md) | AI prompt templates for hardware product photography. |
+| [expertise/artwork-prompts.md](expertise/artwork-prompts.md) | Dexter's Laboratory character illustration prompts for note/article headers. |
 | [expertise/website-audit.md](expertise/website-audit.md) | E-commerce compliance, UX, and technical SEO checklist. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,

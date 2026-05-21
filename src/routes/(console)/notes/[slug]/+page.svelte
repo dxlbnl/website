@@ -36,7 +36,7 @@
 	tags={data.metadata.tags}
 />
 
-<Container size="sm">
+<Container size="md">
 	<Stack gap="lg">
 		<PageHero
 			eyebrow={`// ${data.metadata.kind ?? 'LOG'} · ${data.metadata.date.split('T')[0]}`}

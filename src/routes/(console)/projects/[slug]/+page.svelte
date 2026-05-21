@@ -41,7 +41,7 @@
 	tags={data.metadata.tags}
 />
 
-<Container size="sm">
+<Container size="md">
 	<PageHero variant="hero" heading={data.metadata.title} lede={data.metadata.description}>
 		{#snippet eyebrow()}
 			<Text variant="mono" size="xs" color="faint" case="upper">
