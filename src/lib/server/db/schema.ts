@@ -38,7 +38,14 @@ export const pageviews = pgTable('pageviews', {
 	id: serial('id').primaryKey(),
 	path: text('path').notNull(),
 	referrer: text('referrer'),
-	visitedAt: timestamp('visited_at', { withTimezone: true }).notNull().defaultNow()
+	visitedAt: timestamp('visited_at', { withTimezone: true }).notNull().defaultNow(),
+	sessionId: text('session_id'),
+	visitorHash: text('visitor_hash'),
+	country: text('country'),
+	city: text('city'),
+	deviceType: text('device_type'),
+	os: text('os'),
+	browser: text('browser')
 });
 
 export const shareSessions = pgTable('share_sessions', {

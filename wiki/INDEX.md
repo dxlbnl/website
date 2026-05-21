@@ -28,6 +28,13 @@ Every agent reads this page first, before doing anything else.
 | [specs/](specs/) | One detailed spec page per feature/bug. See `specs/README.md`. |
 | [specs/B3-component-library-integration.md](specs/B3-component-library-integration.md) | B3 — Integrate `@dxlbnl/ui` from npm; first-page proving ground on `/order/cancel/`, plus the page-by-page migration plan. |
 | [specs/B1-email-pageview-tracking.md](specs/B1-email-pageview-tracking.md) | B1 — Admin analytics view at `/admin/analytics/`: opens-per-broadcast table + recent pageview log (cap 100). |
+| [specs/B12-analytics-schema-sessions-visitor-geoip-device.md](specs/B12-analytics-schema-sessions-visitor-geoip-device.md) | B12 — Extend `pageviews` table with sessionId, visitorHash, country, city, deviceType, os, browser; populate in hooks.server.ts. |
+
+### Research
+
+| Page | Purpose |
+|------|---------|
+| [research/analytics-dashboard-best-practices.md](research/analytics-dashboard-best-practices.md) | B11 — Analytics dashboard design: charting approach, URL grouping, bot filtering, what to drop. |
 
 ### Codebase reference
 
@@ -74,8 +81,9 @@ Every agent reads this page first, before doing anything else.
 | [expertise/sveltekit.md](expertise/sveltekit.md) | SvelteKit patterns: route files, load functions, auth guards, hooks, env vars, runes, path aliases. Read this instead of node_modules. |
 | [expertise/dxlbnl-ui.md](expertise/dxlbnl-ui.md) | `@dxlbnl/ui` component library reference: all components, props, tokens. Read this instead of node_modules. Full docs at `../dxlb-ui/docs/`. |
 | [expertise/stripe.md](expertise/stripe.md) | Stripe configuration for Dutch ZZP pre-orders. |
+| [expertise/image-workflow.md](expertise/image-workflow.md) | Image generation procedure: content/ → pnpm optimize → static/. Read this before generating any image. |
 | [expertise/image-prompts.md](expertise/image-prompts.md) | AI prompt templates for hardware product photography. |
-| [expertise/artwork-prompts.md](expertise/artwork-prompts.md) | Dexter's Laboratory character illustration prompts for note/article headers. |
+| [expertise/artwork-prompts.md](expertise/artwork-prompts.md) | Dexter's Laboratory character illustration prompts, character sheet library, environment plates. |
 | [expertise/website-audit.md](expertise/website-audit.md) | E-commerce compliance, UX, and technical SEO checklist. |
 
 > The wiki is **open-ended**. Only this `INDEX.md` is structurally required. Add, split,

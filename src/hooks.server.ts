@@ -1,5 +1,7 @@
-import { db } from "$lib/server/db";
-import { pageviews } from "$lib/server/db/schema";
+import { db } from '$lib/server/db';
+import { pageviews } from '$lib/server/db/schema';
+import { parseDeviceType, parseOs, parseBrowser, computeVisitorHash } from '$lib/server/analytics';
+import { VISITOR_HASH_SALT } from '$env/static/private';
 
 export const handle = async ({ event, resolve }) => {
   const palette = event.cookies.get('dxlb-palette') ?? 'phosphor';
@@ -16,10 +18,10 @@ export const handle = async ({ event, resolve }) => {
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
   if (
-    response.headers.get("content-type")?.includes("text/html") &&
-    !event.url.pathname.startsWith("/api/")
+    response.headers.get('content-type')?.includes('text/html') &&
+    !event.url.pathname.startsWith('/api/')
   ) {
-    const rawReferrer = event.request.headers.get("referer");
+    const rawReferrer = event.request.headers.get('referer');
     const referrer = rawReferrer
       ? (() => {
           try {
@@ -30,8 +32,37 @@ export const handle = async ({ event, resolve }) => {
           }
         })()
       : null;
+
+    const existingSid = event.cookies.get('sid');
+    const sessionId = existingSid ?? crypto.randomUUID();
+    if (!existingSid) {
+      event.cookies.set('sid', sessionId, { httpOnly: true, sameSite: 'lax', path: '/' });
+    }
+
+    const ua = event.request.headers.get('user-agent');
+    const salt = VISITOR_HASH_SALT || 'dxlb-default-salt';
+    const today = new Date().toISOString().slice(0, 10);
+    const visitorHash = await computeVisitorHash(event.getClientAddress(), ua ?? '', today, salt);
+
+    const country = event.request.headers.get('x-vercel-ip-country');
+    const city = event.request.headers.get('x-vercel-ip-city');
+
+    const deviceType = parseDeviceType(ua);
+    const os = parseOs(ua);
+    const browser = parseBrowser(ua);
+
     db.insert(pageviews)
-      .values({ path: event.url.pathname, referrer })
+      .values({
+        path: event.url.pathname,
+        referrer,
+        sessionId,
+        visitorHash,
+        country,
+        city,
+        deviceType,
+        os,
+        browser,
+      })
       .execute()
       .catch(() => {});
   }

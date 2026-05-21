@@ -53,3 +53,12 @@ it records the reason here AND states it in chat.
 - researcher: wrote `wiki/research/analytics-dashboard-best-practices.md` — covers time-series vs raw counts, URL grouping, bot filtering, what to drop, sparkline charting approach
 - reviewer: findings comprehensively answer all 5 research questions; recommendations are concrete and actionable (30-day bar chart, grouped paths, hand-rolled SVG sparklines, bot blocklist, probe section)
 - result: done
+
+## 2026-05-21 — B12: Analytics schema — sessions, visitor hash, geoIP, device tracking
+- manager: start, track: feature
+- spec-writer: wrote `wiki/specs/B12-analytics-schema-sessions-visitor-geoip-device.md`, 11 criteria, no blocking open questions
+- manager: spec approved by Dexter
+- test-writer: wrote `src/lib/server/db/schema.test.ts` (7 column-presence tests) + `src/hooks.test.ts` (22 tests: UA parsing + SHA-256 hash). Both failing for right reasons (missing columns / missing module). Pre-existing 75 tests still green.
+- implementer: created `src/lib/server/analytics.ts` (4 pure functions), added 7 columns to `schema.ts`, wired all 7 columns + session cookie + visitor hash in `hooks.server.ts`. 111/111 green, `pnpm check` 0 errors.
+- reviewer: PASS — all 11 AC verified, no scope creep, no new dependencies.
+- result: done — **Dexter: run `pnpm db:push` to sync new columns to Neon; set `VISITOR_HASH_SALT` in Vercel env vars.**

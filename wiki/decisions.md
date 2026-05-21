@@ -66,6 +66,22 @@
 - **Consequences**: One narrow exception to [D3](#d3-rendering--adapter-vercel-with-full-prerender-no-ssr-for-content)'s "content loaders use `+page.ts`" rule — these two mailings routes use `+page.server.ts` because they need the DB. Spirit of D3 (no per-request SSR for content) is preserved by `prerender = true`. The build environment must have `DATABASE_URL` set (already required). Re-prerendering after a new broadcast requires a redeploy (or a triggered rebuild from the admin send action — future work).
 - **Supersedes**: none (extends D3)
 
+## D8: B12 visitor hash uses `$env/static/private` for salt (build-time)
+- **Date**: 2026-05-21
+- **By**: spec-writer (B12)
+- **Context**: The `visitorHash` computation requires a `VISITOR_HASH_SALT` env var. The project convention (D1/D3) is to use `$env/static/private` for all secrets — values are inlined at build time on Vercel. Using `$env/dynamic/private` would allow salt rotation without a redeploy but deviates from convention.
+- **Decision**: Use `$env/static/private`. Salt rotation requires a redeploy; this is acceptable because hash rotation on redeploy is actually desirable for a privacy-preserving unique-visitor count (old hashes become un-linkable). A fallback constant `'dxlb-default-salt'` is used when the env var is absent so local dev works without configuration.
+- **Consequences**: The salt is fixed per deploy. Intentional key rotation = deploy a new salt = all visitor hashes change = previously counted unique visitors are uncorrelated with future ones (a privacy feature, not a bug). If runtime rotation is ever needed, supersede this decision and switch to `$env/dynamic/private`.
+- **Supersedes**: none
+
+## D9: B12 pure-function extraction for analytics helpers into `$lib/server/analytics`
+- **Date**: 2026-05-21
+- **By**: test-writer (B12)
+- **Context**: `hooks.server.ts` is not directly unit-testable (it calls `event.cookies`, `db.insert`, and `event.getClientAddress()`). The UA parsing functions and the SHA-256 visitor hash computation are pure/async-pure and can be extracted cleanly.
+- **Decision**: The implementer creates `src/lib/server/analytics.ts` exposing four functions: `parseDeviceType`, `parseOs`, `parseBrowser` (all `(ua: string | null) => ... | null`), and `computeVisitorHash(ip, ua, date, salt): Promise<string>`. `hooks.server.ts` imports from there. Tests import from there directly, bypassing the hook entirely.
+- **Consequences**: One extra module. The hook stays thin (reads headers, calls helpers, writes to DB). All UA classification logic is isolated, testable, and reusable by future analytics routes. `$lib/server/analytics` is a server-only module (no `.server.ts` suffix needed since it lives under `lib/server/`).
+- **Supersedes**: none
+
 ## D6 (proposed — pending Dexter): scoping of `@dxlbnl/ui` migration
 - **Date**: 2026-05-18
 - **By**: spec-writer (B3)
