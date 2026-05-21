@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db'
 import { emailOpens, mailingBroadcasts, pageviews } from '$lib/server/db/schema'
-import { count, countDistinct, desc } from 'drizzle-orm'
+import { and, count, countDistinct, desc, not, like } from 'drizzle-orm'
 import type { PageServerLoad } from './$types'
 
 export const prerender = false
@@ -38,22 +38,12 @@ export const load: PageServerLoad = async () => {
 		.sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime())
 
 	const pvRows = await db
-		.select({
-			id: pageviews.id,
-			path: pageviews.path,
-			referrer: pageviews.referrer,
-			visitedAt: pageviews.visitedAt,
-		})
+		.select({ path: pageviews.path, visits: count() })
 		.from(pageviews)
-		.orderBy(desc(pageviews.visitedAt))
-		.limit(100)
+		.where(and(not(like(pageviews.path, '/admin%')), not(like(pageviews.path, '/api%'))))
+		.groupBy(pageviews.path)
+		.orderBy(desc(count()))
+		.limit(50)
 
-	const pv = pvRows.map((r) => ({
-		id: r.id,
-		path: r.path,
-		referrer: r.referrer,
-		visitedAt: r.visitedAt instanceof Date ? r.visitedAt.toISOString() : (r.visitedAt as string),
-	}))
-
-	return { opens, pageviews: pv }
+	return { opens, pageviews: pvRows }
 }

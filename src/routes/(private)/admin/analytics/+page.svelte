@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PageHero } from '@dxlbnl/ui'
-	import { fmtDate, fmtDateTime } from '$lib/utils/fmt'
+	import { fmtDate } from '$lib/utils/fmt'
 	import type { PageData } from './$types'
 
 	let { data }: { data: PageData } = $props()
@@ -23,12 +23,11 @@
 </section>
 
 <section class="pageviews">
-	<div class="section-label">// RECENT PAGEVIEWS</div>
-	{#each data.pageviews as row (row.id)}
-		<div class="entry">
-			<span class="date">{fmtDateTime(row.visitedAt)}</span>
+	<div class="section-label">// PAGEVIEWS BY PATH</div>
+	{#each data.pageviews as row (row.path)}
+		<div class="entry pv-entry">
 			<span class="path">{row.path}</span>
-			<span class="referrer">{row.referrer ?? '—'}</span>
+			<span class="visits">{row.visits}</span>
 		</div>
 	{:else}
 		<p class="empty">// NO PAGEVIEWS RECORDED</p>
@@ -86,13 +85,12 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	.referrer {
+	.visits {
 		font-family: var(--mono);
 		font-size: var(--t-mono);
-		color: var(--ink-dim);
+		color: var(--amber);
 		letter-spacing: 0.04em;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		text-align: right;
 		white-space: nowrap;
 	}
 	.empty {
@@ -103,7 +101,7 @@
 		letter-spacing: 0.08em;
 	}
 
-	.pageviews .entry {
-		grid-template-columns: 200px 1fr auto;
+	.pv-entry {
+		grid-template-columns: 1fr auto;
 	}
 </style>
