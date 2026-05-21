@@ -1,6 +1,12 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-type LoadResult = { opens: Record<string, unknown>[]; pageviews: Record<string, unknown>[] }
+type LoadResult = {
+	trend: { days: { day: string; visits: number }[]; totalVisits: number; uniqueVisitors: number }
+	paths: { segment: string; totalVisits: number; paths: { path: string; visits: number; lastSeen: string }[] }[]
+	referrers: { referrer: string; count: number; pct: number }[]
+	opens: Record<string, unknown>[]
+	probes: { path: string; hits: number; lastSeen: string }[]
+}
 
 vi.mock('$lib/server/db', () => ({ db: { select: vi.fn() } }))
 
@@ -10,7 +16,7 @@ function makeDb(results: unknown[]) {
 	let callIndex = 0
 	const makeChain = (result: unknown): Record<string, unknown> => {
 		const chain: Record<string, unknown> = {}
-		for (const m of ['select', 'from', 'where', 'groupBy', 'orderBy', 'limit']) {
+		for (const m of ['select', 'from', 'where', 'groupBy', 'orderBy', 'limit', 'having']) {
 			chain[m] = () => chain
 		}
 		Object.defineProperty(chain, 'then', {
@@ -23,19 +29,41 @@ function makeDb(results: unknown[]) {
 	;(db.select as ReturnType<typeof vi.fn>).mockImplementation(() => makeChain(results[callIndex++]))
 }
 
+// Pad results so the 7-query load function never runs out of mocked results
+function padded(specific: unknown[]): unknown[] {
+	return [...specific, ...Array(10).fill([])]
+}
+
 describe('analytics load function', () => {
+	beforeEach(() => {
+		vi.resetModules()
+	})
+
 	it('merges broadcasts + opens aggregation, zeros for missing', async () => {
 		const now = new Date()
 		const earlier = new Date(now.getTime() - 3600_000)
 
-		makeDb([
-			[
-				{ slug: 'B', broadcastId: 'bid-B', sentAt: earlier, recipientCount: 100 },
-				{ slug: 'A', broadcastId: 'bid-A', sentAt: now, recipientCount: 100 },
-			],
-			[{ broadcastId: 'bid-A', totalOpens: 10, uniqueOpens: 7 }],
-			[],
-		])
+		makeDb(
+			padded([
+				// trend days
+				[],
+				// unique visitors
+				[{ uniqueVisitors: 0 }],
+				// paths
+				[],
+				// referrers
+				[],
+				// broadcasts
+				[
+					{ slug: 'B', broadcastId: 'bid-B', sentAt: earlier, recipientCount: 100 },
+					{ slug: 'A', broadcastId: 'bid-A', sentAt: now, recipientCount: 100 },
+				],
+				// opens-agg
+				[{ broadcastId: 'bid-A', totalOpens: 10, uniqueOpens: 7 }],
+				// probes
+				[],
+			]),
+		)
 
 		const { load } = await import('./+page.server.js')
 		const result = (await load({} as Parameters<typeof load>[0])) as LoadResult
@@ -51,11 +79,17 @@ describe('analytics load function', () => {
 	})
 
 	it('null recipientEmail: numbers pass through verbatim', async () => {
-		makeDb([
-			[{ slug: 'X', broadcastId: 'bid-X', sentAt: new Date(), recipientCount: 50 }],
-			[{ broadcastId: 'bid-X', totalOpens: 5, uniqueOpens: 3 }],
-			[],
-		])
+		makeDb(
+			padded([
+				[],
+				[{ uniqueVisitors: 0 }],
+				[],
+				[],
+				[{ slug: 'X', broadcastId: 'bid-X', sentAt: new Date(), recipientCount: 50 }],
+				[{ broadcastId: 'bid-X', totalOpens: 5, uniqueOpens: 3 }],
+				[],
+			]),
+		)
 
 		const { load } = await import('./+page.server.js')
 		const result = (await load({} as Parameters<typeof load>[0])) as LoadResult
@@ -63,28 +97,36 @@ describe('analytics load function', () => {
 		expect(result.opens[0].totalOpens).toBe(5)
 	})
 
-	it('pageviews: returns path + visit count aggregated', async () => {
-		makeDb([
-			[],
-			[],
-			[
-				{ path: '/notes/001-intro', visits: 42 },
-				{ path: '/catalogue', visits: 17 },
-			],
-		])
+	it('paths: returns grouped path data', async () => {
+		makeDb(
+			padded([
+				[],
+				[{ uniqueVisitors: 0 }],
+				[
+					{ path: '/notes/001-intro', visits: 42, lastSeen: new Date('2026-05-01T00:00:00Z') },
+					{ path: '/catalogue', visits: 17, lastSeen: new Date('2026-05-02T00:00:00Z') },
+				],
+				[],
+				[],
+				[],
+				[],
+			]),
+		)
 
 		const { load } = await import('./+page.server.js')
 		const result = (await load({} as Parameters<typeof load>[0])) as LoadResult
 
-		expect(result.pageviews).toHaveLength(2)
-		expect(result.pageviews[0]).toEqual({ path: '/notes/001-intro', visits: 42 })
+		const notesGroup = result.paths.find((g) => g.segment === '/notes')
+		expect(notesGroup).toBeDefined()
+		expect(notesGroup!.paths[0].path).toBe('/notes/001-intro')
+		expect(notesGroup!.paths[0].visits).toBe(42)
 	})
 
-	it('pageviews: empty when no rows', async () => {
-		makeDb([[], [], []])
+	it('paths: empty when no rows', async () => {
+		makeDb(padded([[], [{ uniqueVisitors: 0 }], [], [], [], [], []]))
 
 		const { load } = await import('./+page.server.js')
 		const result = (await load({} as Parameters<typeof load>[0])) as LoadResult
-		expect(result.pageviews).toHaveLength(0)
+		expect(result.paths).toHaveLength(0)
 	})
 })

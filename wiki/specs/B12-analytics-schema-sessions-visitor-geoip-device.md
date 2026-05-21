@@ -37,9 +37,10 @@ Running `pnpm db:push` after editing `schema.ts` must succeed (no SQL errors).
 
 When the hook writes a pageview row for an HTML response (i.e. the `text/html` content-type branch that already exists) and the incoming request does not carry a `sid` cookie:
 
-- A `sid` cookie must be set on the response with value `crypto.randomUUID()`.
+- A `sid` cookie must be set with value `crypto.randomUUID()`.
 - Cookie attributes: `httpOnly: true`, `sameSite: 'lax'`, `path: '/'`.
 - No `Max-Age` and no `Expires` are set — the cookie is browser-session-scoped.
+- **SvelteKit constraint**: `event.cookies.set()` must be called *before* `resolve(event)`, not after. The content-type check for whether to write a DB row can still happen after `resolve()` — only the cookie set must precede it.
 
 When the incoming request already has a `sid` cookie, no new cookie is set and the existing value is used unchanged.
 

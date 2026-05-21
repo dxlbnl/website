@@ -6,6 +6,13 @@ import { VISITOR_HASH_SALT } from '$env/static/private';
 export const handle = async ({ event, resolve }) => {
   const palette = event.cookies.get('dxlb-palette') ?? 'phosphor';
 
+  // Set sid before resolve — cookies cannot be set after the response is generated
+  const existingSid = event.cookies.get('sid');
+  const sessionId = existingSid ?? crypto.randomUUID();
+  if (!existingSid) {
+    event.cookies.set('sid', sessionId, { httpOnly: true, sameSite: 'lax', path: '/' });
+  }
+
   const response = await resolve(event, {
     transformPageChunk: ({ html }) => html.replace('<html', `<html data-palette="${palette}"`),
   });
@@ -32,12 +39,6 @@ export const handle = async ({ event, resolve }) => {
           }
         })()
       : null;
-
-    const existingSid = event.cookies.get('sid');
-    const sessionId = existingSid ?? crypto.randomUUID();
-    if (!existingSid) {
-      event.cookies.set('sid', sessionId, { httpOnly: true, sameSite: 'lax', path: '/' });
-    }
 
     const ua = event.request.headers.get('user-agent');
     const salt = VISITOR_HASH_SALT || 'dxlb-default-salt';

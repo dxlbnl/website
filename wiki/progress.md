@@ -62,3 +62,14 @@ it records the reason here AND states it in chat.
 - implementer: created `src/lib/server/analytics.ts` (4 pure functions), added 7 columns to `schema.ts`, wired all 7 columns + session cookie + visitor hash in `hooks.server.ts`. 111/111 green, `pnpm check` 0 errors.
 - reviewer: PASS — all 11 AC verified, no scope creep, no new dependencies.
 - result: done — **Dexter: run `pnpm db:push` to sync new columns to Neon; set `VISITOR_HASH_SALT` in Vercel env vars.**
+
+## 2026-05-21 — B13: Analytics dashboard redesign
+- manager: start, track: feature
+- spec-writer: wrote `wiki/specs/B13-analytics-dashboard-redesign.md` — 5 sections, MiniBarChart SVG, bot filter, grouped paths, referrers, probe traffic, unique visitors via COUNT(DISTINCT visitorHash). No blocking questions.
+- test-writer: wrote `page.server.b13.test.ts` (18 tests). All 18 fail correctly (load returns B1 shape, not B13 shape). 111 pre-existing tests still green.
+- implementer: rewrote `+page.server.ts` (5-section load, bot filter, site-path filter via import.meta.glob, gap-fill), created `MiniBarChart.svelte`, rewrote `+page.svelte` using @dxlbnl/ui (StatCard, Spread, Stack, Inline, Text, Rule). Fixed cookies.set() before resolve() in hooks.server.ts.
+- result: done — 129/129 green, pnpm check 0 errors 0 warnings.
+- manager: B13 paused (tests written, implementation pending) — pivoting to security bug track per user instruction.
+
+## 2026-05-21 — B15: Add secure flag to admin session cookie
+- manager: start, track: bug

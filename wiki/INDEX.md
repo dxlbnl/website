@@ -29,6 +29,8 @@ Every agent reads this page first, before doing anything else.
 | [specs/B3-component-library-integration.md](specs/B3-component-library-integration.md) | B3 — Integrate `@dxlbnl/ui` from npm; first-page proving ground on `/order/cancel/`, plus the page-by-page migration plan. |
 | [specs/B1-email-pageview-tracking.md](specs/B1-email-pageview-tracking.md) | B1 — Admin analytics view at `/admin/analytics/`: opens-per-broadcast table + recent pageview log (cap 100). |
 | [specs/B12-analytics-schema-sessions-visitor-geoip-device.md](specs/B12-analytics-schema-sessions-visitor-geoip-device.md) | B12 — Extend `pageviews` table with sessionId, visitorHash, country, city, deviceType, os, browser; populate in hooks.server.ts. |
+| [specs/B13-analytics-dashboard-redesign.md](specs/B13-analytics-dashboard-redesign.md) | B13 — Replace flat path table with five-section analytics dashboard: 30-day bar chart, grouped paths, referrers, email opens, probe traffic. |
+| [specs/B15-admin-cookie-secure-flag.md](specs/B15-admin-cookie-secure-flag.md) | B15 — Add `Secure` flag (and tighten `path` to `/admin`) on the admin session cookie set by the login action. |
 
 ### Research
 
