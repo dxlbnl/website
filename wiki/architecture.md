@@ -24,6 +24,7 @@
 - **Test command**: `pnpm test` (runs once, CI mode)
 - **Watch mode**: `pnpm test:unit`
 - **Test file location**: co-located `*.test.ts` next to source (e.g. `src/lib/content/tags.test.ts`, `src/routes/(console)/share/share.test.ts`)
+- **Test file naming in routes**: do NOT prefix test files with `+` — SvelteKit reserves `+` for route files. For a route like `+page.server.ts`, the test is `page.server.test.ts` (no `+`).
 - **Integration tests**: `*.integration.test.ts` (e.g. `share.integration.test.ts`)
 
 ## Project structure
