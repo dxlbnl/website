@@ -35,22 +35,73 @@ static/Logo-research/dexter-source2.png   ← glasses, outdoors
 |---|---|
 | Curly ginger/red hair | Stylised orange puff or tight-curl shape, same colour |
 | Ginger beard | Retained as a simple orange shape on the jaw |
-| Glasses (round/rectangular) | Thick-framed blue goggles/lenses — matches the show's style |
+| Glasses (round/rectangular) | Thick-framed blue-tinted lenses, aviator style |
 | Wide friendly smile | Exaggerated open grin, show-style |
-| Stocky adult build | Heavier proportions than the child Dexter — this is an adult scientist |
-| White lab coat | White lab coat, same as the show character |
+| Tall, wide-framed build — 1m90, broad shoulders, wide hips, soft non-athletic body | Long legs, wider-than-average torso, no muscle definition — regular tall guy, office-worker physique |
+| Dark t-shirt, jeans | Default outfit — no lab coat unless the scene specifically calls for one |
 
-The character should read as the show's Dexter grown up and filled out — not a child, not a generic cartoon scientist.
+The character should read as the show's Dexter grown up — tall, big-framed, friendly. Not a child, not a bodybuilder, not a short scientist.
+
+**Canonical base image:** `content/art/characters/char-base.png` — locked proportions and likeness, use as reference for all new character generation.
+
+## Character sheet library
+
+A full model-sheet set lives at `content/art/characters/`. Each file is a plain-background character-only image suitable as a reference input for scene generation:
+
+| File | Description |
+|---|---|
+| `char-base.png` | Front neutral — the canonical reference |
+| `char-standing-34-left.png` | 3/4 view left |
+| `char-standing-34-right.png` | 3/4 view right |
+| `char-standing-side.png` | Side profile |
+| `char-standing-back.png` | Back view |
+| `char-sitting-front.png` | Sitting on stool, front |
+| `char-sitting-34.png` | Sitting on stool, 3/4 |
+| `char-sitting-leaning.png` | Leaning on workbench |
+| `char-sitting-relaxed.png` | Relaxed in armchair |
+| `char-crouching.png` | Crouching / inspecting |
+| `char-arms-crossed.png` | Arms crossed, front |
+| `char-explaining.png` | One hand raised, presenting |
+
+Prompts used to generate each image: `content/art/characters/prompts.md`.
+
+## Environment plate library
+
+Character-free 16:9 backgrounds in the Dexter's Lab style. Live at `content/art/environments/`. Pass alongside a character sheet when generating final scene images.
+
+| File | Description |
+|---|---|
+| `env-lab-main.png` | Canonical teal lab — screens, pipes, grid floor |
+| `env-eurorack.png` | Wall of Eurorack modules with patch cables |
+| `env-pcb-bench.png` | Electronics workbench — PCB, soldering iron, scope, magnifier |
+| `env-coding.png` | Dark multi-monitor coding setup, green terminal glow |
+| `env-3d-print.png` | 3D printer mid-print, shelf of printed parts |
+| `env-scope.png` | Oscilloscope bench with waveform, bench gear |
+| `env-city.png` | Delft canal street — gabled buildings, Nieuwe Kerk tower, stone bridge, bicycles |
+| `env-forest.png` | Forest clearing — cartoon trees, mossy ground, dirt path |
+| `env-desert.png` | Desert — sandstone mesas, cacti, wide blue sky |
+| `env-lake.png` | Lakeside — wooden jetty, still water, hills, cartoon clouds |
+| `env-boat.png` | Sailing boat deck — tiller, mast, open water |
+| `env-coffee-shop.png` | Cosy coffee shop interior — chalkboard menu, espresso bar, window |
+| `env-stage.png` | Conference stage — podium, projection screen, stage lighting |
+| `env-workshop.png` | Maker workshop — pegboard walls, heavy bench, drill press |
+| `env-night-sky.png` | Night sky outdoors — stars, full moon, silhouetted hills |
+| `env-rooftop.png` | City rooftop terrace — cityscape, water tower, string lights |
+| `env-train.png` | NS intercity train interior — blue seats, yellow handrails, polder view |
+
+Prompts used to generate each image: `content/art/environments/prompts.md`.
+
+Finished scene images (16:9, character + environment): `static/images/art/` — not yet generated.
 
 ## Tooling note
 
-The `@rlabs-inc/gemini-mcp` server (used in Claude Code) does **not** support reference image inputs — its generation and edit tools are text-prompt-only. For persona generation and any prompt that requires style or likeness references, use **Google AI Studio** ([aistudio.google.com](https://aistudio.google.com)) directly:
+The `gemini-local` MCP server (`mcp__gemini-local__generate_image`) supports reference image inputs via `filePath`. Use model `gemini-3-pro-image-preview` (Nano Banana Pro) for any generation that requires character or style references. Imagen 4 models do not accept reference images.
 
-1. Open a Gemini 2.0 Flash or 2.5 Pro session with image generation enabled
-2. Attach all 6 reference images (drag-and-drop into the prompt)
-3. Paste the prompt text from this page
-
-Once you have canonical persona images generated (standing poses, expression variants), save them alongside the source refs. Those persona outputs can then be used as references in subsequent Claude Code / MCP edit sessions.
+**Workflow for new scene images:**
+1. Pick the character sheet pose closest to the intended action
+2. Pass it as `filePath` reference along with the real likeness photos
+3. Describe the scene, background, and action in the prompt
+4. Save output to `static/images/art/` at 16:9
 
 ## Writing the prompt
 

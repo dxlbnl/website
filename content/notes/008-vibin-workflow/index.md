@@ -4,7 +4,7 @@ title: Vibin — A Multi-Agent Workflow That Actually Holds Together
 date: 2026-05-21
 tags: [AI, Engineering, Testing, SvelteKit]
 kind: PROJECT-LOG
-images: [dexter-vibin.jpg]
+images: [dexter-vibin-v2.png]
 lede: LLMs are good at individual tasks. Getting them to do multi-step projects coherently is a different problem. Here's the pipeline I built to solve it.
 ---
 

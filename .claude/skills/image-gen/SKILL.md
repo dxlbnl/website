@@ -129,7 +129,17 @@ If the user is working on a React/web project (look at recent file context), bia
 - **Don't** explain the prompt engineering after generation unless the user asks. Show the image and move on.
 - **Don't** silently regenerate if the first image is "close" — ask whether to iterate or accept.
 
+## Dexterlabs project context
+
+When generating images for this project, always read `wiki/expertise/image-workflow.md` first. Key rules:
+
+- **Published content images** (notes, products, mailings, projects) → save to `content/{type}/{slug}/`, then run `pnpm optimize`. Reference the `.webp` filename in frontmatter.
+- **Dexterlabs cartoon style** → use the character sheet + environment compositor workflow documented in `wiki/expertise/artwork-prompts.md`. Character sheets live in `content/art/characters/`, environment plates in `content/art/environments/`. Use `gemini-3-pro-image-preview` (supports reference images).
+- **Art library** (`content/art/`) → not optimized, not published directly. Working assets only.
+
 ## References
 
 - `references/model-selection.md` — full decision tree for choosing models with examples
 - `references/prompt-craft.md` — prompt construction conventions, photography cues, style references, text-in-image rules
+- `wiki/expertise/image-workflow.md` — where to save images and how to run optimize
+- `wiki/expertise/artwork-prompts.md` — Dexterlabs cartoon style, character sheets, environment plates, scene compositor workflow
