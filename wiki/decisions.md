@@ -106,6 +106,14 @@
 - **Consequences**: The mock satori always returns `<svg></svg>`. Tests assert on `capturedSatoriNode` directly. The Resvg mock must be a real `class` (not `vi.fn().mockImplementation(...)`) because the server calls `new Resvg(...)`. Sharp is mocked as a plain function returning a fluent chain. All three mocks are defined at module scope with `vi.mock()` hoisting, not inside individual tests.
 - **Supersedes**: none
 
+## D13: B16 hook guard tested by mocking $env/static/private per-test with vi.doMock + vi.resetModules
+- **Date**: 2026-05-21
+- **By**: test-writer (B16)
+- **Context**: `hooks.server.ts` imports `VISITOR_HASH_SALT` from `$env/static/private`, a Vite/SvelteKit build-time virtual module. The test needs to supply two different salt values (the insecure default and a valid secret) in separate test cases to assert `console.error` fires only for the default. A single `vi.mock()` at file scope (hoisted) can only set one value.
+- **Decision**: Use `vi.doMock('$env/static/private', ...)` (not hoisted) inside each `it` body, combined with `vi.resetModules()` in `afterEach` and a dynamic `await import('../../../../hooks.server.js')` per test. `console.error` is captured with `vi.spyOn(console, 'error').mockImplementation(() => {})` in `beforeEach` and restored in `afterEach`. `$lib/server/db` and `$app/environment` are mocked statically (they do not need per-test values). The test file lives at `src/routes/(private)/admin/analytics/page.server.b16.test.ts` per the spec's suggested location.
+- **Consequences**: Each test gets a fresh module copy of `hooks.server.ts` with the intended salt value baked in. The pattern is consistent with B15 (vi.doMock + resetModules). One test (AC1) fails against the current code because the `console.error` call does not exist; AC2 and AC3 pass today because tracking already proceeds and no error is ever called — they remain correct constraints on the implementation.
+- **Supersedes**: none
+
 ## D6 (proposed — pending Dexter): scoping of `@dxlbnl/ui` migration
 - **Date**: 2026-05-18
 - **By**: spec-writer (B3)

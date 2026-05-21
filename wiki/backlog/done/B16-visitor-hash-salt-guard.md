@@ -4,6 +4,7 @@ title: Guard against missing VISITOR_HASH_SALT in production
 type: bug
 priority: medium
 created: 2026-05-21
+spec: wiki/specs/B16-visitor-hash-salt-guard.md
 ---
 
 ## Description

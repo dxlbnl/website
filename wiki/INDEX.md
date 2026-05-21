@@ -32,6 +32,7 @@ Every agent reads this page first, before doing anything else.
 | [specs/B13-analytics-dashboard-redesign.md](specs/B13-analytics-dashboard-redesign.md) | B13 — Replace flat path table with five-section analytics dashboard: 30-day bar chart, grouped paths, referrers, email opens, probe traffic. |
 | [specs/B14-ssrf-og-image-param.md](specs/B14-ssrf-og-image-param.md) | B14 — Reject external URLs in /api/og `image` param (SSRF fix), truncate title/subtitle/cta at 200 chars, add 5 s fetch timeout. |
 | [specs/B15-admin-cookie-secure-flag.md](specs/B15-admin-cookie-secure-flag.md) | B15 — Add `Secure` flag (and tighten `path` to `/admin`) on the admin session cookie set by the login action. |
+| [specs/B16-visitor-hash-salt-guard.md](specs/B16-visitor-hash-salt-guard.md) | B16 — Emit `console.error` when `VISITOR_HASH_SALT` equals the known-insecure default `'dxlb-default-salt'`; tracking still proceeds. |
 
 ### Research
 

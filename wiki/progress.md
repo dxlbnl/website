@@ -81,3 +81,11 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-21 — B14: Fix SSRF in /api/og image param
 - manager: start, track: bug
+- spec-writer: wrote `wiki/specs/B14-ssrf-og-image-param.md`, 13 AC, no open questions
+- test-writer: wrote `src/routes/api/og/og.server.test.ts` — 8 tests fail (SSRF guard, length limits, AbortSignal), 146 existing pass
+- implementer: added `://` guard, `.slice(0,200)` on params, `AbortSignal.timeout(5000)` on bg fetch — 154/154 green
+- reviewer: PASS — all 13 AC verified, no scope creep
+- result: done — commit c6af7ee
+
+## 2026-05-21 — B16: Guard against missing VISITOR_HASH_SALT
+- manager: start, track: bug

@@ -43,7 +43,10 @@ export const handle = async ({ event, resolve }) => {
       : null;
 
     const ua = event.request.headers.get('user-agent');
-    const salt = VISITOR_HASH_SALT || 'dxlb-default-salt';
+    const salt = VISITOR_HASH_SALT;
+    if (salt === 'dxlb-default-salt') {
+      console.error('VISITOR_HASH_SALT is set to the insecure default value. Visitor hashes are predictable. Set a real secret in your environment.');
+    }
     const today = new Date().toISOString().slice(0, 10);
     const visitorHash = await computeVisitorHash(event.getClientAddress(), ua ?? '', today, salt);
 
