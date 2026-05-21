@@ -7,7 +7,8 @@
 
 	const adminItems = [
 		{ label: 'ORDERS', href: '/admin/orders' },
-		{ label: 'MAILINGS', href: '/admin/mailings' }
+		{ label: 'MAILINGS', href: '/admin/mailings' },
+		{ label: 'ANALYTICS', href: '/admin/analytics' }
 	];
 
 	function isActive(href: string) {

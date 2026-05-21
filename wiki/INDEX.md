@@ -70,6 +70,9 @@ Every agent reads this page first, before doing anything else.
 | Page | Purpose |
 |------|---------|
 | [expertise/project-conventions.md](expertise/project-conventions.md) | Always/never rules: runes, pnpm, static-only, CSS conventions. |
+| [expertise/svelte.md](expertise/svelte.md) | Svelte 5 component authoring: runes, snippets, events, bindings, lifecycle, scoped CSS, TypeScript. Read this instead of node_modules. |
+| [expertise/sveltekit.md](expertise/sveltekit.md) | SvelteKit patterns: route files, load functions, auth guards, hooks, env vars, runes, path aliases. Read this instead of node_modules. |
+| [expertise/dxlbnl-ui.md](expertise/dxlbnl-ui.md) | `@dxlbnl/ui` component library reference: all components, props, tokens. Read this instead of node_modules. Full docs at `../dxlb-ui/docs/`. |
 | [expertise/stripe.md](expertise/stripe.md) | Stripe configuration for Dutch ZZP pre-orders. |
 | [expertise/image-prompts.md](expertise/image-prompts.md) | AI prompt templates for hardware product photography. |
 | [expertise/artwork-prompts.md](expertise/artwork-prompts.md) | Dexter's Laboratory character illustration prompts for note/article headers. |

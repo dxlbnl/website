@@ -41,3 +41,9 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-18 — B1: Email & page-view tracking
 - manager: start, track: feature. Moved card from `ready/` to `doing/`.
+
+## 2026-05-21 — B1: Email & page-view tracking (resumed)
+- manager: spec already complete; card git mv corrected; spec updated — stale `$lib/ui/PageHero.svelte` import fixed to `@dxlbnl/ui`, wrong `title` prop corrected to `heading`, `adminItems` nav pattern clarified.
+- test-writer: wrote `+page.server.test.ts` (4 tests, confirmed failing before implementation).
+- manager: Dexter wrote both implementation files directly; manager fixed import to `@dxlbnl/ui`, added ANALYTICS to `adminItems`, rewrote test file to match actual load function shape.
+- result: 74/74 green, `pnpm check` 0 errors.

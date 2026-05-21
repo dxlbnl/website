@@ -91,9 +91,9 @@ Related wiki / source:
    own and **does not** override the layout. A request to `/admin/analytics/`
    without a valid `admin_session` cookie redirects to `/admin/` (303), the same
    redirect target the layout uses today.
-4. The admin nav in `src/routes/(private)/admin/+layout.svelte` gains a third
-   entry: `{ label: 'ANALYTICS', href: '/admin/analytics' }`, appended after
-   `MAILINGS` (so the nav order is `ORDERS · MAILINGS · ANALYTICS`). No other
+4. `src/routes/(private)/admin/+layout.svelte` has a const `adminItems` array.
+   Append `{ label: 'ANALYTICS', href: '/admin/analytics' }` to it, after the
+   `MAILINGS` entry (nav order: `ORDERS · MAILINGS · ANALYTICS`). No other
    change to the layout.
 
 ### B. Opens table: query and shape
@@ -152,26 +152,23 @@ Related wiki / source:
 
 ### D. Page renders both tables with the existing admin styling
 
-11. `src/routes/(private)/admin/analytics/+page.svelte` renders, using the same
-    structural patterns as `/admin/orders/+page.svelte` and
-    `/admin/mailings/+page.svelte`:
-    - A `PageHero` from `$lib/ui/PageHero.svelte` with eyebrow
-      `// ADMIN · ANALYTICS` and title `Analytics.`.
-    - Two `<section>` blocks, each preceded by a `// SECTION-LABEL` element in
-      the same monospace `.section-label` styling those siblings use:
-      - `// OPENS PER BROADCAST` — table/list of `data.opens` entries. Each row
-        shows: slug, `fmtDate(sentAt)`, `{uniqueOpens} / {recipientCount} OPENED`,
+11. `src/routes/(private)/admin/analytics/+page.svelte` follows the same
+    structure as `/admin/orders/+page.svelte` and `/admin/mailings/+page.svelte`:
+    - `import { PageHero } from '@dxlbnl/ui'` — `PageHero` props are
+      `eyebrow="// ADMIN · ANALYTICS"` and `heading="Analytics."` (the prop is
+      `heading`, not `title`).
+    - Two `<section>` blocks, each with a `<div class="section-label">` in the
+      same monospace style the siblings use:
+      - `// OPENS PER BROADCAST` — rows of `data.opens`. Each row shows: slug,
+        `fmtDate(sentAt)`, `{uniqueOpens} / {recipientCount} OPENED`,
         `{totalOpens} TOTAL`.
-      - `// RECENT PAGEVIEWS` — table/list of `data.pageviews` entries. Each row
-        shows: `fmtDateTime(visitedAt)`, `path`, `referrer` (or a visual
-        "—" / `(direct)` glyph when null — pick one and apply it consistently;
-        the test will assert that null referrers do **not** render the literal
-        string `null`).
-    - **No `@dxlbnl/ui` imports**, per B3 "Out of plan" — `/(private)/admin/*`
-      is deferred from the component-library migration. The new page uses the
-      same `$lib/ui/*` components and inline `<style>` block idiom as its sibling
-      admin pages. No raw HTML/CSS shortcuts that the sibling admin pages don't
-      already use.
+      - `// RECENT PAGEVIEWS` — rows of `data.pageviews`. Each row shows:
+        `fmtDateTime(visitedAt)`, `path`, referrer rendered as `—` when null
+        (the test asserts the literal string `null` does not appear).
+    - Scoped `<style>` block using CSS variable tokens (`var(--mono)`,
+      `var(--amber)`, `var(--ink-faint)`, etc.) — same idiom as siblings.
+    - No imports from `$lib/ui/*` — that directory no longer contains admin
+      components. Use `@dxlbnl/ui` for any library component needed.
 12. Empty states:
     - When `data.opens.length === 0`, the opens section renders the text
       `// NO BROADCASTS SENT YET` in the same `.empty` style used by
@@ -240,10 +237,7 @@ Related wiki / source:
 - **Filtering or pagination** of the pageview log. The cap is the cap.
 - **Bot / known-crawler exclusion.** Pageviews are logged as-is by
   `hooks.server.ts`; this spec does not change that behaviour.
-- **`@dxlbnl/ui` migration of admin.** Explicitly deferred per
-  [B3 "Out of plan"](./B3-component-library-integration.md). The new page
-  follows the existing admin styling (`$lib/ui/PageHero`, scoped `<style>`,
-  CSS variables from `app.css`).
+- **`@dxlbnl/ui` migration of other admin pages.** Sibling admin pages (`/admin/orders/`, `/admin/mailings/`) have already been migrated to `@dxlbnl/ui`. This item does not touch them further.
 - **Backfill or schema changes.** `emailOpens.recipientEmail` and
   `emailOpens.broadcastId` stay nullable. `pageviews` stays as-is.
 
