@@ -13,7 +13,7 @@ Dexterlabs is operated by Alexander Esselink, a sole trader (eenmanszaak) regist
 > **Address:**  
 > <span style="display:block;padding-left:1em">Hopstraat 32<br>2611TC Delft<br>Netherlands</span>
 
-For questions, visit our [contact page](/contact).
+For questions, visit our [contact page](/contact/).
 
 ## What data we collect and why
 
@@ -50,7 +50,7 @@ Under the General Data Protection Regulation you have the right to:
 - **Restriction** - ask us to limit how we process your data
 - **Objection** - object to processing based on our legitimate interests
 
-To exercise any of these rights, use our [contact page](/contact). We will respond within one month.
+To exercise any of these rights, use our [contact page](/contact/). We will respond within one month.
 
 You also have the right to lodge a complaint with the Dutch supervisory authority: [Autoriteit Persoonsgegevens](https://autoriteitpersoonsgegevens.nl), +31 (0)88 1805 250.
 

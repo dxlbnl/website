@@ -35,7 +35,7 @@ If a parcel is held at customs and you choose not to pay the applicable duties, 
 
 ## Lost or damaged parcels
 
-If your parcel has not arrived within the estimated window, please reach out via our [contact page](/contact) with your order number. We will investigate with the carrier.
+If your parcel has not arrived within the estimated window, please reach out via our [contact page](/contact/) with your order number. We will investigate with the carrier.
 
 If your item arrives damaged, please photograph the packaging and the damage and contact us within 5 days of receipt. We will arrange a replacement or refund.
 

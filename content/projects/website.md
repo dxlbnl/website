@@ -6,7 +6,7 @@ description: This site. A SvelteKit static site with mdsvex content, Vercel imag
 tags: [SvelteKit, TypeScript, mdsvex]
 image: media/website-dark.png
 imageLight: media/website-light.png
-url: https://dexterlabs.nl
+url: https://www.dexterlabs.nl/
 date: 2024-01-01
 archived: true
 stack:

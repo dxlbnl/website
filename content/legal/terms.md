@@ -14,7 +14,7 @@ These terms apply to all purchases made through dexterlabs.nl.
 > **Address:**  
 > <span style="display:block;padding-left:1em">Hopstraat 32<br>2611TC Delft<br>Netherlands</span>
 
-For questions, visit our [contact page](/contact).
+For questions, visit our [contact page](/contact/).
 
 ## Products
 
@@ -30,13 +30,13 @@ Payment is processed securely by Stripe. We accept major credit and debit cards.
 
 ## Shipping
 
-Products are shipped from Delft, Netherlands. See our [Shipping Policy](/legal/shipping) for delivery estimates and customs information.
+Products are shipped from Delft, Netherlands. See our [Shipping Policy](/legal/shipping/) for delivery estimates and customs information.
 
 ## Right of withdrawal (EU consumers)
 
 If you are a consumer within the European Union you have the right to withdraw from your purchase within **14 days** of receiving your order, without giving a reason (herroepingsrecht).
 
-To exercise this right, contact us via our [contact page](/contact) before the 14-day period expires. You must return the item in its original, unused condition within 14 days of notifying us. Return shipping costs are at your expense unless the item was faulty or incorrectly sent.
+To exercise this right, contact us via our [contact page](/contact/) before the 14-day period expires. You must return the item in its original, unused condition within 14 days of notifying us. Return shipping costs are at your expense unless the item was faulty or incorrectly sent.
 
 We will refund the full purchase price (including original shipping) within 14 days of receiving the returned item.
 
@@ -48,7 +48,7 @@ The withdrawal right does not apply to goods that are clearly personalised or cu
 
 Dexterlabs is not liable for indirect or consequential damages arising from the use of our products, except where required by mandatory law. Our liability for any claim shall not exceed the purchase price of the product concerned.
 
-We are not responsible for customs delays, duties, or import taxes incurred by buyers outside the EU. See the [Shipping Policy](/legal/shipping) for more detail.
+We are not responsible for customs delays, duties, or import taxes incurred by buyers outside the EU. See the [Shipping Policy](/legal/shipping/) for more detail.
 
 ## Applicable law
 
