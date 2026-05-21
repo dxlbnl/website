@@ -47,3 +47,9 @@ it records the reason here AND states it in chat.
 - test-writer: wrote `+page.server.test.ts` (4 tests, confirmed failing before implementation).
 - manager: Dexter wrote both implementation files directly; manager fixed import to `@dxlbnl/ui`, added ANALYTICS to `adminItems`, rewrote test file to match actual load function shape.
 - result: 74/74 green, `pnpm check` 0 errors.
+
+## 2026-05-21 — B11: Analytics dashboard best practices (research)
+- manager: start, track: research
+- researcher: wrote `wiki/research/analytics-dashboard-best-practices.md` — covers time-series vs raw counts, URL grouping, bot filtering, what to drop, sparkline charting approach
+- reviewer: findings comprehensively answer all 5 research questions; recommendations are concrete and actionable (30-day bar chart, grouped paths, hand-rolled SVG sparklines, bot blocklist, probe section)
+- result: done
