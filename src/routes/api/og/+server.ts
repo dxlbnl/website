@@ -26,9 +26,10 @@ async function fetchAssetAsBase64(
   fetch: (input: string | URL | Request, init?: RequestInit) => Promise<Response>,
   path: string,
   defaultContentType = "image/png",
+  init?: RequestInit,
 ) {
   try {
-    const res = await fetch(path);
+    const res = await fetch(path, init);
     if (!res.ok) return "";
     const buffer = await res.arrayBuffer();
     const contentType = res.headers.get("content-type") || defaultContentType;
@@ -39,10 +40,19 @@ async function fetchAssetAsBase64(
 }
 
 export const GET = async ({ url, fetch }) => {
-  const title = url.searchParams.get("title") ?? "DEXTERLABS";
-  const subtitle = url.searchParams.get("subtitle") ?? "HARDWARE // SOFTWARE // EXPERIMENTS";
-  const cta = url.searchParams.get("cta");
-  const rawImageUrl = url.searchParams.get("image");
+  const rawTitle = url.searchParams.get("title") ?? "DEXTERLABS";
+  const rawSubtitle = url.searchParams.get("subtitle") ?? "HARDWARE // SOFTWARE // EXPERIMENTS";
+  const rawCta = url.searchParams.get("cta");
+  const title = rawTitle.slice(0, 200);
+  const subtitle = rawSubtitle.slice(0, 200);
+  const cta = rawCta ? rawCta.slice(0, 200) : rawCta;
+
+  let rawImageUrl = url.searchParams.get("image");
+
+  // SSRF guard: reject any URL containing a scheme (e.g. https://, http://)
+  if (rawImageUrl?.includes("://")) {
+    rawImageUrl = null;
+  }
 
   // Prefer JPEGs for background images to speed up OG fetch
   const imageUrl = rawImageUrl ? rawImageUrl.replace(/\.webp$/, ".jpg") : null;
@@ -54,7 +64,7 @@ export const GET = async ({ url, fetch }) => {
   }
 
   const [bgImageBase64, logoBase64] = await Promise.all([
-    imageUrl ? fetchAssetAsBase64(fetch, imageUrl, "image/jpeg") : Promise.resolve(""),
+    imageUrl ? fetchAssetAsBase64(fetch, imageUrl, "image/jpeg", { signal: AbortSignal.timeout(5000) }) : Promise.resolve(""),
     fetchAssetAsBase64(fetch, CONFIG.logoPath),
   ]);
 

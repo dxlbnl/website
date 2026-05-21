@@ -98,6 +98,14 @@
 - **Consequences**: No browser or network layer is needed. The test is purely a unit test of the action function's call to `cookies.set`. The `vi.resetModules()` + dynamic `import()` pattern (same as B13 tests) ensures mocks apply to each test in isolation. AC1 (`secure: true`) and AC4 (`path: '/admin'`) fail against the current code; AC2, AC3, AC5, AC6 pass because those attributes are already correct.
 - **Supersedes**: none
 
+## D12: B14 OG endpoint tests use a closure-captured satori mock, not vi.spyOn
+- **Date**: 2026-05-21
+- **By**: test-writer (B14)
+- **Context**: `vi.resetModules()` + dynamic `import('./+server.js')` causes the server module to bind to a freshly-resolved copy of `satori`. A `vi.spyOn` applied to the statically-imported `satori` module instance never intercepts calls made through the handler's own module copy. The node-inspection tests (AC5/AC6/AC7/AC8 truncation) need to see what was passed to satori.
+- **Decision**: The `vi.mock('satori')` factory captures every call's `node` argument into a module-level `capturedSatoriNode` variable (reset in `beforeEach`). Because the factory closure is shared across all module instances in the same Vitest worker, the capture works regardless of how many times `resetModules` reloads the server module. `satori`, `@resvg/resvg-js`, and `sharp` are all mocked to avoid native binary dependencies in the test environment.
+- **Consequences**: The mock satori always returns `<svg></svg>`. Tests assert on `capturedSatoriNode` directly. The Resvg mock must be a real `class` (not `vi.fn().mockImplementation(...)`) because the server calls `new Resvg(...)`. Sharp is mocked as a plain function returning a fluent chain. All three mocks are defined at module scope with `vi.mock()` hoisting, not inside individual tests.
+- **Supersedes**: none
+
 ## D6 (proposed — pending Dexter): scoping of `@dxlbnl/ui` migration
 - **Date**: 2026-05-18
 - **By**: spec-writer (B3)

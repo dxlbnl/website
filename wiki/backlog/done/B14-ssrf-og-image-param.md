@@ -4,6 +4,7 @@ title: Fix SSRF in /api/og image param
 type: bug
 priority: high
 created: 2026-05-21
+spec: wiki/specs/B14-ssrf-og-image-param.md
 ---
 
 ## Description

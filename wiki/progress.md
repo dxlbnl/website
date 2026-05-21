@@ -73,3 +73,11 @@ it records the reason here AND states it in chat.
 
 ## 2026-05-21 — B15: Add secure flag to admin session cookie
 - manager: start, track: bug
+- spec-writer: wrote `wiki/specs/B15-admin-cookie-secure-flag.md`, 9 AC, no open questions
+- test-writer: wrote `src/routes/(private)/admin/page.server.test.ts` — 2 tests fail (missing secure:true, path '/'), 4 pass (httpOnly, sameSite, maxAge, bad-token no-cookie)
+- implementer: added `secure: true`, changed `path: '/'` → `'/admin'` in `+page.server.ts` — 135/135 green
+- reviewer: PASS — all 9 AC verified, no scope creep
+- result: done — commit d432493
+
+## 2026-05-21 — B14: Fix SSRF in /api/og image param
+- manager: start, track: bug
