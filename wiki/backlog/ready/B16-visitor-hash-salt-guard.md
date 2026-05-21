@@ -12,6 +12,8 @@ created: 2026-05-21
 
 The fallback should not exist in production. Either throw a startup error if the env var is missing, or at minimum log a loud warning. The current silent fallback gives false confidence that privacy is working.
 
+Drop the fallback entirely. we can set it locally, no worries.
+
 ## Notes
 
 - `src/hooks.server.ts:43`: `const salt = VISITOR_HASH_SALT || 'dxlb-default-salt';`

@@ -3,6 +3,7 @@ id: B17
 title: Require device ownership proof to read WebRTC SDP data
 type: bug
 priority: high
+flags: [blocked]
 created: 2026-05-21
 ---
 
@@ -17,3 +18,4 @@ The fix: require the caller to prove they own either the `hostDeviceId` or `gues
 - `src/routes/api/share/[id]/+server.ts` GET handler, lines 18-34
 - Session data stored in `shareSessions` table — includes `hostDeviceId`, `guestDeviceId`, `offer`, `answer`
 - Share sessions are ephemeral but IDs are guessable if short; enumeration is realistic
+- Postponed indefinitely — not prioritised vs main site work (2026-05-21)

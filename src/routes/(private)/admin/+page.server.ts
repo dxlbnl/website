@@ -17,9 +17,10 @@ export const actions: Actions = {
 			return fail(401, { error: 'Invalid token' });
 		}
 		cookies.set('admin_session', await createAdminSession(), {
-			path: '/',
+			path: '/admin',
 			httpOnly: true,
 			sameSite: 'strict',
+			secure: true,
 			maxAge: 60 * 60 * 24 * 365
 		});
 		redirect(303, '/admin/orders/');

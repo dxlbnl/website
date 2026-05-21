@@ -82,6 +82,22 @@
 - **Consequences**: One extra module. The hook stays thin (reads headers, calls helpers, writes to DB). All UA classification logic is isolated, testable, and reusable by future analytics routes. `$lib/server/analytics` is a server-only module (no `.server.ts` suffix needed since it lives under `lib/server/`).
 - **Supersedes**: none
 
+## D10: B13 test file uses `callIndex` mock pattern with generous padding for flexible DB call counts
+- **Date**: 2026-05-21
+- **By**: test-writer (B13)
+- **Context**: The B13 load function will make multiple `db.select()` calls (trend-days, unique-visitors, paths, referrers, broadcasts, opens-agg, probes — exact count TBD by implementer). The existing `page.server.test.ts` uses a `callIndex` chain pattern where each mock call returns the next item in a `results` array. The new tests need to coexist without conflicting.
+- **Decision**: The B13 tests live in `page.server.b13.test.ts` (different file, no `+` prefix per architecture convention). Each test provides 7 specific mock results followed by 10 empty-array padding entries via a `paddedResults()` helper. This gives the implementer latitude to split or merge queries (e.g. unique-visitors in a separate `select` vs. combined with trend-days) without breaking the tests. The mock chain also includes `.having()` in the chainable method list, which the B13 queries may need. Test assertions are against the *output shape* only, not against the number of DB calls.
+- **Consequences**: Tests are robust to minor query refactoring. The implementer must return the correct shape regardless of how many internal queries are made. `vi.resetModules()` in `beforeEach` ensures the dynamic import re-evaluates the module for each test, so the `callIndex` counter resets correctly.
+- **Supersedes**: none
+
+## D11: B15 login action tested by calling the exported action function directly with mock cookies
+- **Date**: 2026-05-21
+- **By**: test-writer (B15)
+- **Context**: The `login` action in `+page.server.ts` calls `cookies.set(name, value, opts)` with a plain options object. The spec requires asserting specific cookie attributes (`secure`, `path`, `httpOnly`, `sameSite`, `maxAge`). SvelteKit's built-in `cookies` object in tests is unavailable without a full request context.
+- **Decision**: Call `actions.login({ request, cookies })` directly after mocking three modules: `$env/static/private` (returns a known `ADMIN_TOKEN`), `@sveltejs/kit` (mocks `redirect` to throw a catchable sentinel, `fail` to return an object), and `$lib/utils/auth` (returns a fixed session string). The `cookies` argument is a plain object with a `vi.fn()` spy on `set` that records all calls. Tests assert on the captured `opts` argument.
+- **Consequences**: No browser or network layer is needed. The test is purely a unit test of the action function's call to `cookies.set`. The `vi.resetModules()` + dynamic `import()` pattern (same as B13 tests) ensures mocks apply to each test in isolation. AC1 (`secure: true`) and AC4 (`path: '/admin'`) fail against the current code; AC2, AC3, AC5, AC6 pass because those attributes are already correct.
+- **Supersedes**: none
+
 ## D6 (proposed — pending Dexter): scoping of `@dxlbnl/ui` migration
 - **Date**: 2026-05-18
 - **By**: spec-writer (B3)

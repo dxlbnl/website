@@ -4,6 +4,7 @@ title: Add secure flag to admin session cookie
 type: bug
 priority: high
 created: 2026-05-21
+spec: wiki/specs/B15-admin-cookie-secure-flag.md
 ---
 
 ## Description

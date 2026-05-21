@@ -2,8 +2,8 @@
 id: B2
 title: Module interest / pre-order subscribe
 type: feature
-priority: high
-flags: []
+priority: low
+flags: [blocked]
 created: 2026-05-18
 ---
 
@@ -17,3 +17,4 @@ When a product is `coming-soon`, visitors should be able to register their inter
 - Resend subscriber API already exists at `/api/subscribe` — may be reusable or need a separate endpoint with a different segment.
 - The `Pricebox.svelte` component on the product detail page is the right place to conditionally render the interest form vs. the buy button.
 - Consider storing interest in a DB table (vs. Resend-only) so we can query it without hitting the API.
+- Deferred (2026-05-21): no coming-soon product currently active. Revisit when a module is in pre-launch.
