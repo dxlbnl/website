@@ -121,9 +121,9 @@ After the schema and hook changes, `pnpm check` (which runs `svelte-check`) must
 
 `src/routes/(private)/admin/analytics/page.server.test.ts` must pass unchanged. That test mocks `$lib/server/db` entirely; the new schema columns do not affect it. No modifications to that test file are permitted as part of this item.
 
-### 11 — New columns do not appear in non-HTML requests
+### 11 — No tracking during prerendering or non-HTML requests
 
-The pageview write only fires in the existing branch that guards on `content-type: text/html` and non-`/api/` paths. This guard must remain in place; API and asset responses must not trigger pageview writes and must not attempt to set the `sid` cookie.
+The pageview write is guarded by `!building` (from `$app/environment`), `content-type: text/html`, and non-`/api/` paths. All three conditions must hold. During `vite build` / prerendering, `building` is `true` and the entire tracking block is skipped — no DB write, no `getClientAddress()` call.
 
 ## Out of scope
 

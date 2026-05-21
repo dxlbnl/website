@@ -1,3 +1,4 @@
+import { building } from '$app/environment';
 import { db } from '$lib/server/db';
 import { pageviews } from '$lib/server/db/schema';
 import { parseDeviceType, parseOs, parseBrowser, computeVisitorHash } from '$lib/server/analytics';
@@ -25,6 +26,7 @@ export const handle = async ({ event, resolve }) => {
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
   if (
+    !building &&
     response.headers.get('content-type')?.includes('text/html') &&
     !event.url.pathname.startsWith('/api/')
   ) {
